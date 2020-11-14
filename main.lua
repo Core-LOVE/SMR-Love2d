@@ -3,6 +3,7 @@ Audio = require("scripts/base/engine/audio")
 Graphics = require("scripts/base/engine/graphics")
 Credit = require("scripts/base/engine/credits")
 Game = require("scripts/base/engine/game")
+Globals = require("scripts/base/engine/globals")
 
 do
 	love.graphics.clear()
