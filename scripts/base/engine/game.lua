@@ -1,5 +1,13 @@
 local Game = {}
 
+function Game.SetupScreens()
+
+end
+
+function Game.DynamicScreen()
+
+end
+
 function Game.GameLoop()
 
 end
@@ -37,6 +45,18 @@ function Game.UpdateGraphics()
 end
 
 function Game.UpdateGraphics2()
+
+end
+
+function Game.DrawInterface(Z, numScreens)
+
+end
+
+function Game.DrawBackground(S, Z)
+
+end
+
+function Game.DoCredits()
 
 end
 
