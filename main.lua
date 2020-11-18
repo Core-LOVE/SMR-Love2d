@@ -12,8 +12,8 @@ end
 
 function love.load()
 	print(":)")
-	Audio.loadSounds()
-	Graphics.loadGraphics()
+	--Audio.loadSounds()
+	--Graphics.loadGraphics()
 end
 
 function love.draw()
