@@ -1,4 +1,4 @@
---Aaa
+--Aaaa
 
 function love.conf(t)
     t.identity = nil                    -- The name of the save directory (string)
