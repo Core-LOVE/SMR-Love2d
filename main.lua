@@ -14,6 +14,11 @@ function love.load()
 	print(":)")
 	--Audio.loadSounds()
 	--Graphics.loadGraphics()
+
+	-- temp
+	local levelParser = require("scripts/base/engine/levelparser")
+
+	levelParser.load("_test levels/a couple blocks.lvlx")
 end
 
 function love.draw()
