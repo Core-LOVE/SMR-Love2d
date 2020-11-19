@@ -2,6 +2,7 @@ local ms = "scripts/base/"
 
 ini_parser = require(ms.."ini_parser")
 txt_parser = require(ms.."txt_parser")
+inspect = require(ms.."inspect")
 
 Audio = require(ms.."engine/audio")
 Graphics = require(ms.."engine/graphics")

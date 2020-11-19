@@ -66,7 +66,7 @@ function Block.spawn(id, x, y)
 	b.isValid = true
 	
 	Block[#Block + 1] = b
-	print("BLOCK.SPAWN() - IDX: "..b.idx.."; ID: "..b.id.."; X: "..b.x.."; Y: "..b.y)
+	print(inspect(b))
 	return b
 end
 
@@ -80,19 +80,19 @@ function Block.get(idFilter)
 	for i = 1, #Block do
 		if idFilter == nil then
 			ret[#ret + 1] = Block(i)
-			print("BLOCK.GET() - IDX: "..i)
+			print(inspect(Block(i)))
 		else
 			if type(idFilter) == 'number' then
 				local k = idFilter
 				if Block(i).id == k then
 					ret[#ret + 1] = Block(i)
-					print("BLOCK.GET("..k..") - IDX: "..i.."; ID: "..k)
+					print(inspect(Block(i)))
 				end
 			elseif type(idFilter) == 'table' then
 				for k in values(idFilter) do
 					if Block(i).id == k then
 						ret[#ret + 1] = Block(i)
-						print("BLOCK.GET(idFilter["..k.."]) - IDX: "..i.."; ID: "..k)
+						print(inspect(Block(i)))
 					end
 				end
 			end

@@ -42,7 +42,7 @@ function BGO.spawn(id, x, y)
 	n.isValid = true
 	
 	BGO[#BGO + 1] = n
-	print("BGO.SPAWN() - IDX: "..b.idx.."; ID: "..b.id.."; X: "..b.x.."; Y: "..b.y)
+	print(inspect(n))
 	return b
 end
 
@@ -56,19 +56,19 @@ function BGO.get(idFilter)
 	for i = 1, #BGO do
 		if idFilter == nil then
 			ret[#ret + 1] = BGO(i)
-			print("BGO.GET() - IDX: "..i)
+			print(inspect(BGO(i)))
 		else
 			if type(idFilter) == 'number' then
 				local k = idFilter
 				if BGO(i).id == k then
 					ret[#ret + 1] = BGO(i)
-					print("BGO.GET("..k..") - IDX: "..i.."; ID: "..k)
+					print(inspect(BGO(i)))
 				end
 			elseif type(idFilter) == 'table' then
 				for k in values(idFilter) do
 					if BGO(i).id == k then
 						ret[#ret + 1] = BGO(i)
-						print("BGO.GET(idFilter["..k.."]) - IDX: "..i.."; ID: "..k)
+						print(inspect(BGO(i)))
 					end
 				end
 			end

@@ -23,7 +23,6 @@ function graphics.loadGraphics(skip)
 				end
 			end
 			_G[v.path:upper().."_MAX_ID"] = v.max
-			print(v.path:upper().."_MAX_ID")
 		end
 	end
 end

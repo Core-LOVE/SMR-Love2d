@@ -42,7 +42,7 @@ function NPC.spawn(id, x, y)
 	n.isValid = true
 	
 	NPC[#NPC + 1] = n
-	print("NPC.SPAWN() - IDX: "..b.idx.."; ID: "..b.id.."; X: "..b.x.."; Y: "..b.y)
+	print(inspect(n))
 	return b
 end
 
@@ -56,19 +56,19 @@ function NPC.get(idFilter)
 	for i = 1, #NPC do
 		if idFilter == nil then
 			ret[#ret + 1] = NPC(i)
-			print("NPC.GET() - IDX: "..i)
+			print(inspect(NPC(i)))
 		else
 			if type(idFilter) == 'number' then
 				local k = idFilter
 				if NPC(i).id == k then
 					ret[#ret + 1] = NPC(i)
-					print("NPC.GET("..k..") - IDX: "..i.."; ID: "..k)
+					print(inspect(NPC(i)))
 				end
 			elseif type(idFilter) == 'table' then
 				for k in values(idFilter) do
 					if NPC(i).id == k then
 						ret[#ret + 1] = NPC(i)
-						print("NPC.GET(idFilter["..k.."]) - IDX: "..i.."; ID: "..k)
+						print(inspect(NPC(i)))
 					end
 				end
 			end

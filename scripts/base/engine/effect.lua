@@ -40,7 +40,7 @@ function Effect.spawn(id, x, y)
 	b.isValid = true
 	
 	Effect[#Effect + 1] = b
-	print("EFFECT.SPAWN() - IDX: "..b.idx.."; ID: "..b.id.."; X: "..b.x.."; Y: "..b.y)
+	print(inspect(b))
 	return b
 end
 
@@ -54,19 +54,19 @@ function Effect.get(idFilter)
 	for i = 1, #Effect do
 		if idFilter == nil then
 			ret[#ret + 1] = Effect(i)
-			print("EFFECT.GET() - IDX: "..i)
+			print(inspect(Effect(i)))
 		else
 			if type(idFilter) == 'number' then
 				local k = idFilter
 				if Effect(i).id == k then
 					ret[#ret + 1] = Effect(i)
-					print("EFFECT.GET("..k..") - IDX: "..i.."; ID: "..k)
+					print(inspect(Effect(i)))
 				end
 			elseif type(idFilter) == 'table' then
 				for k in values(idFilter) do
 					if Effect(i).id == k then
 						ret[#ret + 1] = Effect(i)
-						print("EFFECT.GET(idFilter["..k.."]) - IDX: "..i.."; ID: "..k)
+						print(inspect(Effect(i)))
 					end
 				end
 			end
