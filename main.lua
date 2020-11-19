@@ -29,9 +29,9 @@ function love.load()
 	--Audio.loadSounds()
 	Graphics.loadGraphics(true)
 	load_objects()
-
+	
 	-- temp
-	local levelParser = require("scripts/base/engine/levelparser")
+	local levelParser = require(ms.."engine/levelparser")
 
 	levelParser.load("_test levels/a couple blocks.lvlx")
 end

@@ -1,4 +1,13 @@
 local level = {}
+local levelParser = require("scripts/base/engine/levelparser")
+
+function level.filename()
+	return LevelFileName
+end
+
+function level.name()
+	return LevelName
+end
 
 function level.exit()
 	
@@ -21,7 +30,7 @@ function level.winTimer(value)
 end
 
 function level.load(levelFilename, episodeFolderName, warpIndex)
-
+	levelParser.load(levelFilename)
 end
 
 function Level.loadPlayerHitBoxes(characterId, powerUpId, iniFilename)

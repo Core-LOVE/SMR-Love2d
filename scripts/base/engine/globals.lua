@@ -1,9 +1,8 @@
 isOverworld = false
 LevelMacro = 0
 LevelMacroCounter = 0
-FileName = ""
-FileNameFull = ""
-FullFileName = ""
+LevelName = ""
+LevelFileName = ""
 
 newRECT = function()
 	return {top = 0, left = 0, right = 0, bottom = 0}
