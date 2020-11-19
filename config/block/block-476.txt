@@ -1,0 +1,6 @@
+lava = true
+ceilingslope = 1
+width = 64
+height = 32
+frames = 4
+framespeed = 8

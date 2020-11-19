@@ -1,0 +1,3 @@
+npcpassthrough = true
+frames = 3
+framespeed = 8

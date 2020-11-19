@@ -1,19 +1,33 @@
-ini_parser = require("scripts/base/ini_parser")
-Audio = require("scripts/base/engine/audio")
-Graphics = require("scripts/base/engine/graphics")
-Credit = require("scripts/base/engine/credits")
-Game = require("scripts/base/engine/game")
-Globals = require("scripts/base/engine/globals")
+local ms = "scripts/base/"
+
+ini_parser = require(ms.."ini_parser")
+txt_parser = require(ms.."txt_parser")
+
+Audio = require(ms.."engine/audio")
+Graphics = require(ms.."engine/graphics")
+Credit = require(ms.."engine/credits")
+Game = require(ms.."engine/game")
+Globals = require(ms.."engine/globals")
+
+Window = love.window
 
 do
 	love.graphics.clear()
 	love.graphics.present()
 end
 
+local function load_objects()
+	Block = require(ms.."engine/block")
+	NPC = require(ms.."engine/npc")
+	BGO = require(ms.."engine/bgo")
+	Player = nil
+	Effect = require(ms.."engine/effect")
+end
+
 function love.load()
-	print(":)")
 	--Audio.loadSounds()
-	--Graphics.loadGraphics()
+	Graphics.loadGraphics(true)
+	load_objects()
 
 	-- temp
 	local levelParser = require("scripts/base/engine/levelparser")
@@ -23,4 +37,8 @@ end
 
 function love.draw()
 
+end
+
+function love.update()
+	Window = love.window
 end

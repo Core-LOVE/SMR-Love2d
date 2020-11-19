@@ -1,0 +1,4 @@
+smashable = true
+pswitch = true
+destroyeffect = 21
+transform = 192

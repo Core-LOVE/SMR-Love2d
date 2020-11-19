@@ -1,0 +1,4 @@
+smashable = true
+pswitch = true
+frames = 4
+framespeed = 8

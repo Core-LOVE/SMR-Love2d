@@ -1,0 +1,4 @@
+width = 64
+height = 64
+smashable = true
+transform = 225

@@ -1,0 +1,4 @@
+bumpable = true
+width = 64
+height = 64
+transform = 225

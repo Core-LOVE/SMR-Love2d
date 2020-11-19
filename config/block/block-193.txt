@@ -1,0 +1,4 @@
+bumpable = true
+frames = 4
+framespeed = 8
+transform = 192

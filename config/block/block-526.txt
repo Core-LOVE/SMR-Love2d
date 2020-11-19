@@ -1,0 +1,2 @@
+smashable = true
+destroyeffect = 107
