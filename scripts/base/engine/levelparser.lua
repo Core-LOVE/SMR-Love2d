@@ -32,6 +32,55 @@ do
     }
 
 
+    local function parseValue(path,line,valueStart)
+        --[[if line:sub(valueStart,valueStart) == "\"" then -- strings are special due to escape characters
+
+        end]]
+
+        local valueEnd = line:find(";",valueStart) -- the end of the value is just the first semicolon for most values
+        parsingAssert(valueEnd ~= nil,"Line '".. line.. "' is unclosed",path)
+
+
+
+        local value = line:sub(valueStart,valueEnd-1)
+
+        -- Convert
+        local number = tonumber(value)
+
+        if number ~= nil then
+            value = number
+        end
+
+
+        return value,valueEnd
+    end
+
+    local function parseObject(parsingData,path,line)
+        local obj = {}
+
+        local pos = 1
+        while (pos < #line) do
+            local remaining = line:sub(pos)
+
+            -- Search for the property name
+            local nameStart,nameEnd = remaining:find("^[^;:]+:")
+            if nameStart == nil or nameEnd == nil then
+                break
+            end
+
+            -- Parse and insert
+            local name = remaining:sub(nameStart,nameEnd-1)
+            local value,valueEnd = parseValue(path,line,pos+nameEnd)
+
+            obj[name] = value
+
+            -- Prepare for next run
+            pos = valueEnd+1
+        end
+
+        return obj
+    end
+
     local function parseLine(parsingData,path,line)
         -- Check if this is an ending
         if parsingData.currentTypeName ~= nil and line == (parsingData.currentTypeName.. "_END") then
@@ -50,27 +99,9 @@ do
 
         -- Parse an object. Each line is an object.
         if parsingData.currentTypeName ~= nil then
-            -- Get each property
-            local output = ""
-            local startPoint = 1
+            local obj = parseObject(parsingData,path,line)
 
-            while true do
-                local start,ending = line:find(".+:[^;]+;",startPoint,false)
-                
-                if start ~= nil and ending ~= nil and ending <= #line then
-                    local colon = line:sub(start,ending):find(":",1,true)
-                    local property = line:sub(start,colon-1)
-                    local value = line:sub(colon+1,ending-1)
-
-                    output = output.. property.. " = ".. value.. ", "
-
-                    startPoint = ending
-                else
-                    break
-                end
-            end
-
-            print(output)
+            print(inspect(obj))
 
             return
         end
