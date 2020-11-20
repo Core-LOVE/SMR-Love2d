@@ -4,10 +4,54 @@ NPC.config = {}
 NPC.script = {}
 for i = 1,NPC_MAX_ID do
 	NPC.config[i] = {
-		width = 32,
-		height = 32,
+		gfxoffsetx=0,
+		gfxoffsety=2,
+		width=32,
+		height=32,
+		gfxwidth=32,
+		gfxheight=32,
 		frames = 1,
 		framespeed = 8,
+		noblockcollision = false,
+
+		playerblock=false,
+		playerblocktop=false,
+		npcblock=false,
+		npcblocktop=false,
+
+		score = 2,
+		
+		grabside=false,
+		grabtop=false,
+
+		jumphurt=false,
+		nohurt=false,
+
+		noblockcollision=false,
+		cliffturn=false,
+		noyoshi=false,
+
+		foreground=false,
+		nofireball=false,
+		noiceball=false,
+		nogravity=false,
+
+		harmlessgrab=false,
+		harmlessthrown=false,
+		spinjumpsafe=false,
+
+		isshell=false,
+		isinteractable=false,
+		iscoin=false,
+		isvine=false,
+		iscollectablegoal=false,
+		isflying=false,
+		iswaternpc=false,
+		isshoe=false,
+		isyoshi=false,
+		isbot=false,
+		isvegetable=false,
+		iswalker=false,
 	}
 	if love.filesystem.getInfo("scripts/npc/npc-"..tostring(i)..".lua") then
 		NPC.script[i] = require("scripts/npcs/npc-"..tostring(i))
@@ -21,6 +65,8 @@ local NPCFields = {
 	y = 0,
 	width = 32,
 	height = 32,
+	grabbingPlayerIndex = 0,
+	tempBlock = {}
 }
 
 local function values(t)
@@ -35,6 +81,9 @@ end})
 function NPC.spawn(id, x, y)
 	local n = {}
 	
+	for k,v in ipairs(NPCFields) do
+		n[k] = v
+	end
 	n.idx = #NPC + 1
 	n.id = id or 1
 	n.x = x or 0
@@ -44,6 +93,10 @@ function NPC.spawn(id, x, y)
 	NPC[#NPC + 1] = n
 	print(inspect(n))
 	return b
+end
+
+function NPC:harm(harmType, damage, reason)
+
 end
 
 function NPC.count()

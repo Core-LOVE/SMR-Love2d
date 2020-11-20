@@ -31,10 +31,11 @@ function love.load()
 	Graphics.loadGraphics(true)
 	load_objects()
 	Section.createSections(21)
+	
 	-- temp
-	-- local levelParser = require(ms.."engine/levelparser")
+	local levelParser = require(ms.."engine/levelparser")
 
-	-- levelParser.load("_test levels/a couple blocks.lvlx")
+	levelParser.load("_test levels/a couple blocks.lvlx")
 end
 
 function love.draw()
@@ -43,4 +44,5 @@ end
 
 function love.update()
 	Window = love.window
+	Block:update()
 end

@@ -2,6 +2,7 @@ local Block = {__type="Block"}
 
 Block.config = {}
 Block.script = {}
+
 for i = 1,BLOCK_MAX_ID do
 	Block.config[i] = {
 		sizeable = false,
@@ -31,6 +32,91 @@ for i = 1,BLOCK_MAX_ID do
 	end
 end
 
+local function physics(v)
+	if v == nil then return end
+	
+	if v.isHidden then
+		v.shakeX = 0
+		v.shakeY = 0
+		v.shakeX2 = 0
+		v.shakeY2 = 0
+		v.shakeX3 = 0
+		v.shakeY3 = 0
+	end
+	
+	if v.shakeY < 0 then
+		v.shakeY = v.shakeY + 2
+		v.shakeY3 = v.shakeY3 - 2
+		if v.shakeY == 0 then
+			if v.triggerHit ~= "" then
+			
+			end
+		end
+	elseif v.shakeY > 0 then
+		v.shakeY = v.shakeY - 2
+		v.shakeY3 = v.shakeY3 + 2
+		if v.shakeY == 0 then
+			if v.triggerHit ~= "" then
+			
+			end
+		end
+	elseif v.shakeY2 > 0 then
+		v.shakeY2 = v.shakeY2 - 2
+		v.shakeY3 = v.shakeY3 + 2
+		if v.rapidHit > 0 and v.ai1 > 0 and v.shakeY3 == 0 then
+			v:hit()
+			v.rapidHit = v.rapidHit - 1
+		end
+	elseif v.shakeY2 < 0 then
+		v.shakeY2 = v.shakeY2 + 2
+		v.shakeY3 = v.shakeY3 - 2
+	end
+	
+	if v.shakeX < 0 then
+		v.shakeX = v.shakeX + 2
+		v.shakeX3 = v.shakeX3 - 2
+		if v.shakeX == 0 then
+			if v.triggerHit ~= "" then
+			
+			end
+		end
+	elseif v.shakeX > 0 then
+		v.shakeX = v.shakeX - 2
+		v.shakeX3 = v.shakeX3 + 2
+		if v.shakeX == 0 then
+			if v.triggerHit ~= "" then
+			
+			end
+		end
+	elseif v.shakeX2 > 0 then
+		v.shakeX2 = v.shakeX2 - 2
+		v.shakeX3 = v.shakeX3 + 2
+		if v.rapidHit > 0 and v.ai1 > 0 and v.shakeX3 == 0 then
+			v:hit()
+			v.rapidHit = v.rapidHit - 1
+		end
+	elseif v.shakeX2 < 0 then
+		v.shakeX2 = v.shakeX2 + 2
+		v.shakeX3 = v.shakeX3 - 2
+	end
+	
+	if v.shakeY3 ~= 0 then
+		for _,n in ipairs(NPC.get()) do
+			if not n.isValid or n.grabbingPlayerIndex ~= 0 or 
+			(NPC.config[n.id].noblockcollision or not NPC.config[n.id].iscoin) or n.tempBlock == v or
+			v.isReally == n or v.shakeY3 > 0 or not NPC.config[n.id].iscoin then break end
+			
+			if not Block.config[v.id].sizeable and not Block.config[v.id].semisolid then
+				n:harm(2, 1, v)
+			else
+				if v.y + 1 >= n.y + n.height - 1 then
+					n:harm(2, 1, v)
+				end
+			end
+		end
+	end
+end
+
 local BlockFields = {
 	idx = 0,
 	id = 1,
@@ -49,10 +135,25 @@ local BlockFields = {
 	layerObj = "",
 	layerName = "",
 	
+	isReally = {},
+	
 	width = 32,
 	height = 32,
 	isSizeable = false,
+	
+	shakeX = 0,
+	shakeY = 0,
+	shakeX2 = 0,
+	shakeY2 = 0,
+	shakeX3 = 0,
+	shakeY3 = 0,
+	
+	triggerHit = "",
+	rapidHit = 0
 }
+for i = 1, 6 do
+	BlockFields['ai'..tostring(i)] = 0
+end
 
 local function values(t)
     local i = 0
@@ -77,10 +178,39 @@ function Block.spawn(id, x, y)
 	b.height = Block.config[id].height or 32
 	b.isSizeable = Block.config[id].sizeable or false
 	b.isValid = true
+	b.onPhysicsBlock = physics
+	b.onTickEndBlock = function(b) end
+	b.onTickBlock = function(b) end
+	
+	if Block.script[b.id] ~= nil then
+		local s = Block.script[b.id]
+		
+		if s.onPhysicsBlock ~= nil then
+			b.onPhysicsBlock = s.onPhysicsBlock
+		end
+		
+		if s.onTickEndBlock ~= nil then
+			b.onTickEndBlock = s.onTickEndBlock
+		end
+		
+		if s.onTickBlock ~= nil then
+			b.onTickBlock = s.onTickBlock
+		end
+	end
 	
 	Block[#Block + 1] = b
 	print(inspect(b))
 	return b
+end
+
+function Block:update()
+	for i = 1, #Block do
+		local b = Block(i)
+		
+		b.onPhysicsBlock(b)
+		b.onTickEndBlock(b)
+		b.onTickBlock(b)
+	end
 end
 
 function Block:translate(dx, dy)
@@ -89,6 +219,10 @@ function Block:translate(dx, dy)
 	end
 	self.x = self.x + dx
 	self.y = self.y + dy
+end
+
+function Block:hit(fromUpperSide, plr, hittingCount)
+
 end
 
 function Block.count()
