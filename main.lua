@@ -23,17 +23,18 @@ local function load_objects()
 	BGO = require(ms.."engine/bgo")
 	Player = nil
 	Effect = require(ms.."engine/effect")
+	Section = require(ms.."engine/section")
 end
 
 function love.load()
 	--Audio.loadSounds()
 	Graphics.loadGraphics(true)
 	load_objects()
-	
+	Section.createSections(21)
 	-- temp
-	local levelParser = require(ms.."engine/levelparser")
+	-- local levelParser = require(ms.."engine/levelparser")
 
-	levelParser.load("_test levels/a couple blocks.lvlx")
+	-- levelParser.load("_test levels/a couple blocks.lvlx")
 end
 
 function love.draw()

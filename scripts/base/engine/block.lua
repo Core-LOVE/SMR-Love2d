@@ -66,7 +66,7 @@ end})
 function Block.spawn(id, x, y)
 	local b = {}
 	
-	for k,v in pairs(BlockFields) do
+	for k,v in ipairs(BlockFields) do
 		b[k] = v
 	end
 	b.idx = #Block + 1
