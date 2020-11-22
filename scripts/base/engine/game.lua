@@ -59,16 +59,32 @@ end
 
 -- Level drawing
 do
-	function Game.drawBlock(camera,block)
-		local img = Graphics.sprites.block[block.id].img
+	function Game.drawBlock(v)
+		local img = Graphics.sprites.block[v.id].img
         
-        love.graphics.draw(img,block.x-camera.x,block.y-camera.y)
+		Graphics.drawImageToSceneWP(img,v.x,v.y,0,0,v.width,v.height,-65)
+	end
+
+
+	local function sortDrawingQueue(a,b)
+		return (a.priority < b.priority)
 	end
 
 	function Game.updateGraphicsLevel()
-		for _,self in ipairs(Camera) do
-			self:draw()
+		for _,v in ipairs(Block) do
+			Game.drawBlock(v)
 		end
+
+
+		table.sort(Graphics.drawingQueue,sortDrawingQueue)
+
+		for _,self in ipairs(Camera) do
+			if self.active then
+				self:draw()
+			end
+		end
+
+		Graphics.drawingQueue = {}
 	end
 end
 

@@ -43,14 +43,12 @@ end
 
 local test
 function Camera:draw()
-    if not self.active then
-        return
-    end
-
     love.graphics.setCanvas(self.canvas)
 
-    for _,block in ipairs(Block) do
-        Game.drawBlock(self,block)
+    for _,draw in ipairs(Graphics.drawingQueue) do
+        if draw.internalDrawFunction ~= nil then
+            draw.internalDrawFunction(draw.args,self)
+        end
     end
 
     love.graphics.setCanvas(nil)
