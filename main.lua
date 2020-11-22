@@ -9,6 +9,7 @@ Graphics = require(ms.."engine/graphics")
 Credit = require(ms.."engine/credits")
 Game = require(ms.."engine/game")
 Globals = require(ms.."engine/globals")
+Defines = require(ms.."engine/defines")
 
 Window = love.window
 
