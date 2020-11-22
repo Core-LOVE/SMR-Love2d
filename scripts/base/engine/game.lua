@@ -61,7 +61,9 @@ end
 do
 	function Game.drawBlock(v)
 		local img = Graphics.sprites.block[v.id].img
-        
+
+		if img == nil then return end
+		
 		Graphics.drawImageToSceneWP(img,v.x,v.y,0,0,v.width,v.height,-65)
 	end
 
