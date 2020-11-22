@@ -45,6 +45,8 @@ local test
 function Camera:draw()
     love.graphics.setCanvas(self.canvas)
 
+    love.graphics.clear()
+
     for _,draw in ipairs(Graphics.drawingQueue) do
         if draw.internalDrawFunction ~= nil then
             draw.internalDrawFunction(draw.args,self)
