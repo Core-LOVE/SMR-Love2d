@@ -44,6 +44,7 @@ for i = 1,NPC_MAX_ID do
 		isinteractable=false,
 		iscoin=false,
 		isvine=false,
+		isplant=false,
 		iscollectablegoal=false,
 		isflying=false,
 		iswaternpc=false,
@@ -79,6 +80,7 @@ function NPC.spawn(id, x, y)
 		
 		animationFrame = 0,
 		animationTimer = 0,
+		isHidden = false,
 		
 		grabbingPlayerIndex = 0,
 		tempBlock = {},
