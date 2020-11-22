@@ -4,6 +4,7 @@ ini_parser = require(ms.."ini_parser")
 txt_parser = require(ms.."txt_parser")
 inspect = require(ms.."inspect")
 
+Camera = require(ms.."engine/camera")
 Audio = require(ms.."engine/audio")
 Graphics = require(ms.."engine/graphics")
 Credit = require(ms.."engine/credits")
@@ -40,7 +41,7 @@ function love.load()
 end
 
 function love.draw()
-
+Game.updateGraphicsLevel()
 end
 
 function love.update()
