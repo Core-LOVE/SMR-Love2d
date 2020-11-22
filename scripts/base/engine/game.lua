@@ -60,6 +60,8 @@ end
 -- Level drawing
 do
 	function Game.drawBlock(v)
+		if v.isHidden or v.hiddenUntilHit then return end
+
 		local img = Graphics.sprites.block[v.id].img
 		
 		if img == nil or v.isHidden then return end
