@@ -2,6 +2,8 @@ local Block = {__type="Block"}
 
 Block.config = {}
 Block.script = {}
+Block.frame = {}
+Block.framecount = {}
 
 for i = 1,BLOCK_MAX_ID do
 	Block.config[i] = {
@@ -27,6 +29,9 @@ for i = 1,BLOCK_MAX_ID do
 		frames = 1,
 		framespeed = 8,
 	}
+	Block.frame[i] = 0
+	Block.framecount[i] = 0
+	
 	if love.filesystem.getInfo("scripts/blocks/block-"..tostring(i)..".lua") then
 		Block.script[i] = require("scripts/blocks/block-"..tostring(i))
 	end
@@ -117,44 +122,6 @@ local function physics(v)
 	end
 end
 
-local BlockFields = {
-	idx = 0,
-	id = 1,
-	contentID = 0,
-	isValid = false,
-	uid = nil,
-	pid = nil,
-	pidIsDirty = nil,
-	lightSource = nil,
-	speedX = 0,
-	speedY = 0,
-	x = 0,
-	y = 0,
-	isHidden = false,
-	slippery = false,
-	layerObj = "",
-	layerName = "",
-	
-	isReally = {},
-	
-	width = 32,
-	height = 32,
-	isSizeable = false,
-	
-	shakeX = 0,
-	shakeY = 0,
-	shakeX2 = 0,
-	shakeY2 = 0,
-	shakeX3 = 0,
-	shakeY3 = 0,
-	
-	triggerHit = "",
-	rapidHit = 0
-}
-for i = 1, 6 do
-	BlockFields['ai'..tostring(i)] = 0
-end
-
 local function values(t)
     local i = 0
     return function() i = i + 1; return t[i] end
@@ -165,19 +132,48 @@ setmetatable(Block, {__call=function(Block, idx)
 end})
 
 function Block.spawn(id, x, y)
-	local b = {}
-	
-	for k,v in ipairs(BlockFields) do
-		b[k] = v
-	end
-	b.idx = #Block + 1
-	b.id = id or 1
-	b.x = x or 0
-	b.y = y or 0
-	b.width = Block.config[id].width or 32
-	b.height = Block.config[id].height or 32
-	b.isSizeable = Block.config[id].sizeable or false
-	b.isValid = true
+	local b = {
+		idx = #Block + 1,
+		id = id or 1,
+		contentID = 0,
+		isValid = true,
+		uid = nil,
+		pid = nil,
+		pidIsDirty = nil,
+		lightSource = nil,
+		speedX = 0,
+		speedY = 0,
+		x = x or 0,
+		y = y or 0,
+		isHidden = false,
+		slippery = false,
+		layerObj = "",
+		layerName = "",
+		
+		isReally = {},
+		
+		width = Block.config[id].width or 32,
+		height = Block.config[id].height or 32,
+		isSizeable = Block.config[id].sizeable or false,
+		
+		shakeX = 0,
+		shakeY = 0,
+		shakeX2 = 0,
+		shakeY2 = 0,
+		shakeX3 = 0,
+		shakeY3 = 0,
+		
+		triggerHit = "",
+		rapidHit = 0,
+		
+		ai1 = 0,
+		ai2 = 0,
+		ai3 = 0,
+		ai4 = 0,
+		ai5 = 0,
+		ai6 = 0
+	}
+
 	b.onPhysicsBlock = physics
 	b.onTickEndBlock = function(b) end
 	b.onTickBlock = function(b) end
@@ -201,16 +197,6 @@ function Block.spawn(id, x, y)
 	Block[#Block + 1] = b
 	print(inspect(b))
 	return b
-end
-
-function Block:update()
-	for i = 1, #Block do
-		local b = Block(i)
-		
-		b.onPhysicsBlock(b)
-		b.onTickEndBlock(b)
-		b.onTickBlock(b)
-	end
 end
 
 function Block:translate(dx, dy)
@@ -255,6 +241,14 @@ function Block.get(idFilter)
 	end
 
 	return ret
+end
+
+function Block:update()
+	for k,b in ipairs(Block.get()) do
+		b.onPhysicsBlock(b)
+		b.onTickEndBlock(b)
+		b.onTickBlock(b)
+	end
 end
 
 return Block

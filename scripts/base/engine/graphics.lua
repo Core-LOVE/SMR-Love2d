@@ -1,6 +1,10 @@
 local graphics = {}
 graphics.sprites = {}
 
+function graphics.CaptureBuffer(w,h,settings)
+	return love.graphics.newCanvas(w, h, settings)
+end
+
 function graphics.loadImage(file)
 	return love.graphics.newImage(file)
 end

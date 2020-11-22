@@ -17,7 +17,7 @@ function Game.PauseGame(plr)
 end
 
 function Game.AddCredit(newCredit)
-	table.insert(Credit, {text = newCredit})
+	Credits[#Credits + 1] = newCredit
 end
 
 function Game.UpdateMacro()

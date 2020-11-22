@@ -14,13 +14,6 @@ for i = 1, EFFECT_MAX_ID do
 	end
 end
 
-local EffectFields = {
-	x = 0,
-	y = 0,
-	width = 32,
-	height = 32,
-}
-
 local function values(t)
     local i = 0
     return function() i = i + 1; return t[i] end
@@ -31,13 +24,15 @@ setmetatable(Effect, {__call=function(Effect, idx)
 end})
 
 function Effect.spawn(id, x, y)
-	local b = {}
-	
-	b.idx = #Effect + 1
-	b.id = id or 1
-	b.x = x or 0
-	b.y = y or 0
-	b.isValid = true
+	local b = {
+		isValid = true,
+		idx = #Effect + 1,
+		id = id or 1,
+		x = x or 0,
+		y = y or 0,
+		width = Effect.config[id].width or 32,
+		height = Effect.config[id].height or 32
+	}
 	
 	Effect[#Effect + 1] = b
 	print(inspect(b))

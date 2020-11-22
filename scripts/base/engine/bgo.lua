@@ -14,15 +14,6 @@ for i = 1, BACKGROUND_MAX_ID do
 	-- end
 end
 
-local BGOFields = {
-	idx = 0,
-	isValid = false,
-	x = 0,
-	y = 0,
-	width = 32,
-	height = 32,
-}
-
 local function values(t)
     local i = 0
     return function() i = i + 1; return t[i] end
@@ -33,13 +24,13 @@ setmetatable(BGO, {__call=function(BGO, idx)
 end})
 
 function BGO.spawn(id, x, y)
-	local n = {}
-	
-	n.idx = #BGO + 1
-	n.id = id or 1
-	n.x = x or 0
-	n.y = y or 0
-	n.isValid = true
+	local n = {
+		idx = #BGO + 1
+		id = id or 1
+		x = x or 0
+		y = y or 0
+		isValid = true
+	}
 	
 	BGO[#BGO + 1] = n
 	print(inspect(n))

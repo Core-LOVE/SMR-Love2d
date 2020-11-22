@@ -19,7 +19,7 @@ local SectionFields = {
 	
 	settings = {},
 	effects = {},
-	boundary = newRECT(),
+	boundary = newRECT()
 }
 
 setmetatable(Section, {__call=function(Section, idx)
@@ -28,17 +28,34 @@ end})
 
 function Section.createSections(max)
 	for i = 0, max do
-		local s = Section(i + 1)
-		for k,v in pairs(SectionFields) do
-			s[k] = v
-		end
-		s.idx = i
-		s.isValid = true
+		local s = {
+			idx = i,
+			isValid = true,
+			
+			musicID = 0,
+			musicPath = "",
+			wrapH = false,
+			wrapV = false,
+			hasOffscreenExit = false,
+			backgroundID = 0,
+			background = nil,
+			origBackgroundID = 0,
+			noTurnBack = false,
+			isUnderwater = false,
+			
+			settings = {},
+			effects = {},
+			boundary = newRECT(),
+			origBoundary = newRECT()
+		}
+		
 		s.boundary.left = -200000 + (20000 * i)
 		s.boundary.top = -200600 + (20000 * i)
 		s.boundary.right = -199200 + (20000 * i)
 		s.boundary.bottom = -200000 + (20000 * i)
 		s.origBoundary = s.boundary
+		
+		Section[#Section + 1] = s
 	end
 end
 

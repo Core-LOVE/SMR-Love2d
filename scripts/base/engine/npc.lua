@@ -58,17 +58,6 @@ for i = 1,NPC_MAX_ID do
 	end
 end
 
-local NPCFields = {
-	idx = 0,
-	isValid = false,
-	x = 0,
-	y = 0,
-	width = 32,
-	height = 32,
-	grabbingPlayerIndex = 0,
-	tempBlock = {}
-}
-
 local function values(t)
     local i = 0
     return function() i = i + 1; return t[i] end
@@ -79,16 +68,28 @@ setmetatable(NPC, {__call=function(NPC, idx)
 end})
 
 function NPC.spawn(id, x, y)
-	local n = {}
-	
-	for k,v in ipairs(NPCFields) do
-		n[k] = v
-	end
-	n.idx = #NPC + 1
-	n.id = id or 1
-	n.x = x or 0
-	n.y = y or 0
-	n.isValid = true
+	local n = {
+		idx = #NPC + 1,
+		id = id or 1
+		isValid = true,
+		x = x or 0,
+		y = y or 0,
+		width = NPC.config[id].width or 32,
+		height = NPC.config[id].height or 32,
+		
+		animationFrame = 0,
+		animationTimer = 0,
+		
+		grabbingPlayerIndex = 0,
+		tempBlock = {},
+		
+		ai1 = 0,
+		ai2 = 0,
+		ai3 = 0,
+		ai4 = 0,
+		ai5 = 0,
+		ai6 = 0
+	}
 	
 	NPC[#NPC + 1] = n
 	print(inspect(n))
