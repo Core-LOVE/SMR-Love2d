@@ -32,10 +32,49 @@ do
     }
 
 
-    local function parseValue(path,line,valueStart)
-        --[[if line:sub(valueStart,valueStart) == "\"" then -- strings are special due to escape characters
+    local stringEscapeCharacters = {
+        ["n"] = "\n",
+        ["\""] = "\"",
+        ["\\"] = "\\",
+        [";"] = ";",
+        [":"] = ":",
+        ["["] = "[",
+        ["]"] = "]",
+        [","] = ",",
+        ["%"] = "%",
+    }
 
-        end]]
+    local function parseValue(path,line,valueStart)
+        if line:sub(valueStart,valueStart) == "\"" then -- strings are special due to escape characters
+            local value = ""
+            local valueEnd = valueStart+1
+
+            local i = valueStart+1
+            while true do
+                parsingAssert(i <= #line,"Unclosed string at line '".. line.. "'",path)
+
+                local here = line:sub(i,i)
+
+                if here == "\"" then -- end of string
+                    valueEnd = i+1
+                    break
+                elseif here == "\\" then -- escape characters
+                    local next = line:sub(i+1,i+1)
+                    local nextEscape = stringEscapeCharacters[next]
+
+                    parsingAssert(nextEscape ~= nil,"Invalid escape sequence '\\".. next.. "' at line '".. line.. "'",path)
+
+                    value = value.. nextEscape
+
+                    i = i + 1 + #nextEscape
+                else
+                    value = value.. here
+                    i = i + 1
+                end
+            end
+
+            return value,valueEnd
+        end
 
         local valueEnd = line:find(";",valueStart) -- the end of the value is just the first semicolon for most values
         parsingAssert(valueEnd ~= nil,"Line '".. line.. "' is unclosed",path)
