@@ -70,7 +70,7 @@ end})
 function NPC.spawn(id, x, y)
 	local n = {
 		idx = #NPC + 1,
-		id = id or 1
+		id = id or 1,
 		isValid = true,
 		x = x or 0,
 		y = y or 0,

@@ -25,11 +25,11 @@ end})
 
 function BGO.spawn(id, x, y)
 	local n = {
-		idx = #BGO + 1
-		id = id or 1
-		x = x or 0
-		y = y or 0
-		isValid = true
+		idx = #BGO + 1,
+		id = id or 1,
+		x = x or 0,
+		y = y or 0,
+		isValid = true,
 	}
 	
 	BGO[#BGO + 1] = n

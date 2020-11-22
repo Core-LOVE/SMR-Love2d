@@ -147,6 +147,7 @@ function Block.spawn(id, x, y)
 		y = y or 0,
 		isHidden = false,
 		slippery = false,
+		hiddenUntilHit = false, -- invisible editor field
 		layerObj = "",
 		layerName = "",
 		
@@ -195,7 +196,7 @@ function Block.spawn(id, x, y)
 	end
 	
 	Block[#Block + 1] = b
-	print(inspect(b))
+	--print(inspect(b))
 	return b
 end
 
@@ -221,19 +222,19 @@ function Block.get(idFilter)
 	for i = 1, #Block do
 		if idFilter == nil then
 			ret[#ret + 1] = Block(i)
-			print(inspect(Block(i)))
+			--print(inspect(Block(i)))
 		else
 			if type(idFilter) == 'number' then
 				local k = idFilter
 				if Block(i).id == k then
 					ret[#ret + 1] = Block(i)
-					print(inspect(Block(i)))
+					--print(inspect(Block(i)))
 				end
 			elseif type(idFilter) == 'table' then
 				for k in values(idFilter) do
 					if Block(i).id == k then
 						ret[#ret + 1] = Block(i)
-						print(inspect(Block(i)))
+						--print(inspect(Block(i)))
 					end
 				end
 			end

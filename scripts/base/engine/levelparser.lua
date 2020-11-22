@@ -8,7 +8,7 @@ local formats = {}
 
 
 local function parsingAssert(condition,err,path)
-    assert(condition,"Could not load level '".. path.. ": ".. err)
+    assert(condition,"Could not load level '".. path.. "': ".. err)
 end
 local function parsingWarn(warning)
     print("LEVEL PARRSING WARNING: ".. warning)
@@ -30,6 +30,27 @@ do
         LAYERS = {},
         EVENTS_CLASSIC = {},
     }
+
+    -- Setup types
+    types.BLOCK.spawn = (function(properties)
+        local v = Block.spawn(properties.ID,properties.X,properties.Y)
+
+        v.width  = properties.W or v.width
+        v.height = properties.H or v.height
+
+        if properties.CN ~= nil then
+            v.contentID = properties.CN
+            
+            if v.contentID < 0 then
+                v.contentID = -v.contentID
+            else
+                v.contentID = v.contentID+1000
+            end
+        end
+
+        v.hiddenUntilHit = properties.IV or false
+        v.slippery = properties.SL or false
+    end)
 
 
     local stringEscapeCharacters = {
@@ -142,6 +163,10 @@ do
 
             print(inspect(obj))
 
+            if parsingData.currentTypeData.spawn ~= nil then
+                parsingData.currentTypeData.spawn(obj)
+            end
+
             return
         end
 
@@ -171,6 +196,8 @@ do
         for line in love.filesystem.lines(path) do
             parseLine(parsingData,path,line)
         end
+
+        print(#Block)
     end
 
     formats.lvlx = loadLevel
