@@ -41,9 +41,9 @@ do
         if properties.CN ~= nil then
             v.contentID = properties.CN
             
-            if v.contentID < 0 then
+            if v.contentID < 0 then -- Coins
                 v.contentID = -v.contentID
-            else
+            elseif v.contentID > 0 then -- NPC's
                 v.contentID = v.contentID+1000
             end
         end
