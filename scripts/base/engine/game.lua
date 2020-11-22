@@ -108,7 +108,14 @@ do
 			Game.drawBlock(v)
 		end
 
-
+		for _,v in ipairs(BGO) do
+			Game.drawBGO(v)
+		end
+		
+		for _,v in ipairs(NPC) do
+			Game.drawNPC(v)
+		end
+		
 		table.sort(Graphics.drawingQueue,sortDrawingQueue)
 
 		for _,self in ipairs(Camera) do

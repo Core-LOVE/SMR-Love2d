@@ -26,7 +26,8 @@ do
 
         BLOCK = {},
         NPC = {},
-
+		BGO = {},
+		
         LAYERS = {},
         EVENTS_CLASSIC = {},
     }
@@ -52,6 +53,18 @@ do
         v.slippery = properties.SL or false
     end)
 
+	types.BGO.spawn = (function(properties)
+		local v = BGO.spawn(properties.ID, properties.X, properties.Y)
+		
+		v.z = properties.ZO or 0
+	end)
+	
+	types.NPC.spawn = (function(properties)
+		local v = NPC.spawn(properties.ID, properties.X, properties.Y)
+		
+		v.direction = properties.D or 0
+		v.spawnDirection = properties.D or 0
+	end)
 
     local stringEscapeCharacters = {
         ["n"] = "\n",

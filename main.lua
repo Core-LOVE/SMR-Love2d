@@ -49,5 +49,8 @@ end
 function love.update()
 	Window = love.window
 	Block.update()
+	
 	Block.frames()
+	BGO.frames()
+	NPC.frames()
 end

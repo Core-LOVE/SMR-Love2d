@@ -262,7 +262,7 @@ end
 
 function Block.frames()
 	for i = 1, BLOCK_MAX_ID do
-		if Block.config[i].frames <= 0 or Block.config[i].framespeed == 0 then break end
+		if Block.config[i].frames <= 1 or Block.config[i].framespeed == 0 then break end
 		
 		Block.framecount[i] = Block.framecount[i] + 1
 		if Block.framecount[i] >= Block.config[i].framespeed then

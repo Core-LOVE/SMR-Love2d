@@ -22,6 +22,13 @@ for i = 1, BACKGROUND_MAX_ID do
 	-- if love.filesystem.getInfo("scripts/bgos/background-"..tostring(i)..".lua") then
 		-- BGO.script[i] = require("scripts/bgos/background-"..tostring(i))
 	-- end
+	
+	if love.filesystem.getInfo("config/background/background-"..tostring(i)..".txt") then
+		local Txt = txt_parser.load("config/background/background-"..tostring(i)..".txt")
+		for k,v in pairs(Txt) do
+			BGO.config[i][k] = v
+		end
+	end
 end
 
 local function values(t)
@@ -39,13 +46,16 @@ function BGO.spawn(id, x, y)
 		id = id or 1,
 		x = x or 0,
 		y = y or 0,
+		width = BGO.config[id].width or 32,
+		height = BGO.config[id].height or 32,
+		z = 0,
 		isValid = true,
 		isHidden = false
 	}
 	
 	BGO[#BGO + 1] = n
 	print(inspect(n))
-	return b
+	return n
 end
 
 function BGO.count()
@@ -78,6 +88,21 @@ function BGO.get(idFilter)
 	end
 
 	return ret
+end
+
+function BGO.frames()
+	for i = 1, BACKGROUND_MAX_ID do
+		if BGO.config[i].frames <= 1 or BGO.config[i].framespeed == 0 then break end
+		
+		BGO.framecount[i] = BGO.framecount[i] + 1
+		if BGO.framecount[i] >= BGO.config[i].framespeed then
+			BGO.frame[i] = BGO.frame[i] + 1
+			if BGO.frame[i] >= BGO.config[i].frames then
+				BGO.frame[i] = 0
+			end
+			BGO.framecount[i] = 0
+		end
+	end
 end
 
 return BGO
