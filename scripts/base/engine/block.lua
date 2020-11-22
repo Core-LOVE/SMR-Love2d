@@ -35,6 +35,13 @@ for i = 1,BLOCK_MAX_ID do
 	if love.filesystem.getInfo("scripts/blocks/block-"..tostring(i)..".lua") then
 		Block.script[i] = require("scripts/blocks/block-"..tostring(i))
 	end
+	
+	if love.filesystem.getInfo("config/block/block-"..tostring(i)..".txt") then
+		local BlockTxt = txt_parser.load("config/block/block-"..tostring(i)..".txt")
+		for k,v in pairs(BlockTxt) do
+			Block.config[i][k] = v
+		end
+	end
 end
 
 local function physics(v)

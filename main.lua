@@ -19,8 +19,6 @@ do
 end
 
 local function load_objects()
-	Camera = require(ms.. "engine/camera")
-
 	Block = require(ms.."engine/block")
 	NPC = require(ms.."engine/npc")
 	BGO = require(ms.."engine/bgo")
@@ -31,10 +29,10 @@ end
 
 function love.load()
 	--Audio.loadSounds()
-	Graphics.loadGraphics(false)
+	Graphics.loadGraphics(true)
 	load_objects()
 	Section.createSections(21)
-	
+
 	-- temp
 	local levelParser = require(ms.."engine/levelparser")
 
@@ -42,10 +40,10 @@ function love.load()
 end
 
 function love.draw()
-	Game.updateGraphicsLevel()
+
 end
 
 function love.update()
 	Window = love.window
-	Block.update()
+	Block:update()
 end
