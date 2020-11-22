@@ -49,4 +49,5 @@ end
 function love.update()
 	Window = love.window
 	Block.update()
+	Block.frames()
 end

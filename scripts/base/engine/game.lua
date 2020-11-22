@@ -61,10 +61,10 @@ end
 do
 	function Game.drawBlock(v)
 		local img = Graphics.sprites.block[v.id].img
-
-		if img == nil then return end
 		
-		Graphics.drawImageToSceneWP(img,v.x,v.y,0,0,v.width,v.height,-65)
+		if img == nil or v.isHidden then return end
+		
+		Graphics.drawImageToSceneWP(img,v.x,v.y,0, Block.frame[v.id] * v.height,v.width,v.height,-65)
 	end
 
 

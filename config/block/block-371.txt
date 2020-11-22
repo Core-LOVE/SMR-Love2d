@@ -1,3 +1,3 @@
 lava = true
 frames = 8
-framespeed = 12
+framespeed = 8
