@@ -40,10 +40,6 @@ function Game.ClearGame(punnish)
 
 end
 
-function Game.UpdateGraphics()
-
-end
-
 function Game.UpdateGraphics2()
 
 end
@@ -58,6 +54,22 @@ end
 
 function Game.DoCredits()
 
+end
+
+
+-- Level drawing
+do
+	function Game.drawBlock(camera,block)
+		local img = Graphics.sprites.block[block.id].img
+        
+        love.graphics.draw(img,block.x-camera.x,block.y-camera.y)
+	end
+
+	function Game.updateGraphicsLevel()
+		for _,self in ipairs(Camera) do
+			self:draw()
+		end
+	end
 end
 
 return Game

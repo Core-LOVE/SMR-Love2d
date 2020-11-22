@@ -244,7 +244,7 @@ function Block.get(idFilter)
 	return ret
 end
 
-function Block:update()
+function Block.update()
 	for k,b in ipairs(Block.get()) do
 		b.onPhysicsBlock(b)
 		b.onTickEndBlock(b)

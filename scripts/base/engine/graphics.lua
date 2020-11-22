@@ -29,6 +29,8 @@ function graphics.loadGraphics(skip)
 			_G[v.path:upper().."_MAX_ID"] = v.max
 		end
 	end
+
+	print("Graphics loading finished")
 end
 
 return graphics
