@@ -1,4 +1,4 @@
-local Liquid = {}
+local Liquid = {__type = "Liquid"}
 
 setmetatable(Liquid, {__call=function(Liquid, idx)
 	return Liquid[idx] or Liquid

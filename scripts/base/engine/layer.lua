@@ -1,4 +1,4 @@
-local Layer = {}
+local Layer = {__type = "Layer"}
 
 setmetatable(Layer, {__call=function(Layer, idx)
 	return Layer[idx] or Layer
