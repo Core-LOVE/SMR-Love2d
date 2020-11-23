@@ -4,7 +4,6 @@ ini_parser = require(ms.."ini_parser")
 txt_parser = require(ms.."txt_parser")
 inspect = require(ms.."inspect")
 
-Camera = require(ms.."engine/camera")
 Audio = require(ms.."engine/audio")
 Graphics = require(ms.."engine/graphics")
 Credit = require(ms.."engine/credits")
@@ -21,7 +20,8 @@ end
 
 local function load_objects()
 	Camera = require(ms.. "engine/camera")
-
+	Layer = require(ms.."engine/layer")
+	Liquid = require(ms.."engine/liquid")
 	Block = require(ms.."engine/block")
 	NPC = require(ms.."engine/npc")
 	BGO = require(ms.."engine/bgo")
@@ -32,6 +32,7 @@ end
 
 function love.load()
 	--Audio.loadSounds()
+	Graphics.loadUi()
 	Graphics.loadGraphics(false)
 	load_objects()
 	Section.createSections(21)

@@ -65,6 +65,10 @@ do
 		v.direction = properties.D or 0
 		v.spawnDirection = properties.D or 0
 	end)
+	
+	types.LAYERS.spawn = (function(properties)
+		local v = Layer.create(properties.LR, properties.HD or false)
+	end)
 
     local stringEscapeCharacters = {
         ["n"] = "\n",
@@ -225,7 +229,8 @@ function levelParser.load(path)
     local formatLoad = formats[format]
 
     parsingAssert(formatLoad ~= nil,"Unknown level format",path)
-
+	print(data..format)
+	
     formatLoad(path)
 end
 

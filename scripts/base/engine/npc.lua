@@ -67,6 +67,12 @@ for i = 1,NPC_MAX_ID do
 	end
 end
 
+local function physics(v)
+	if Defines.levelFreeze then
+	
+	end
+end
+
 local function values(t)
     local i = 0
     return function() i = i + 1 return t[i] end
