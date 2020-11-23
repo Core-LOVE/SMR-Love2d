@@ -14,8 +14,9 @@ for i = 1, BACKGROUND_MAX_ID do
 		climbable = false,
 		npcclimbable = false,
 		foreground = false,
+		priority = nil,
 		water = false,
-		stoponfreeze = false
+		stoponfreeze = false,
 	}
 	BGO.frame[i] = 0
 	BGO.framecount[i] = 0
@@ -48,7 +49,7 @@ function BGO.spawn(id, x, y)
 		y = y or 0,
 		width = BGO.config[id].width or 32,
 		height = BGO.config[id].height or 32,
-		z = 0,
+		zOffset = 0,
 		isValid = true,
 		isHidden = false
 	}

@@ -28,7 +28,8 @@ for i = 1,BLOCK_MAX_ID do
 		diggable = false,
 		frames = 1,
 		framespeed = 8,
-		foreground = false
+		foreground = false,
+		priority = nil,
 	}
 	Block.frame[i] = 0
 	Block.framecount[i] = 0

@@ -56,7 +56,7 @@ do
 	types.BGO.spawn = (function(properties)
 		local v = BGO.spawn(properties.ID, properties.X, properties.Y)
 		
-		v.z = properties.ZO or 0
+		v.zOffset = properties.ZO or 0
 	end)
 	
 	types.NPC.spawn = (function(properties)
@@ -68,7 +68,9 @@ do
 	
 	types.LAYERS.spawn = (function(properties)
 		local v = Layer.create(properties.LR, properties.HD or false)
-	end)
+    end)
+    
+
 
     local stringEscapeCharacters = {
         ["n"] = "\n",

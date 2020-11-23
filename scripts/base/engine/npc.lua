@@ -33,6 +33,8 @@ for i = 1,NPC_MAX_ID do
 		noyoshi=false,
 
 		foreground=false,
+		priority = nil,
+		
 		nofireball=false,
 		noiceball=false,
 		nogravity=false,

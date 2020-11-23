@@ -62,40 +62,47 @@ do
 	function Game.drawNPC(v)
 		if v.isHidden then return end
 		
-		local priority = -45
 		local img = Graphics.sprites.npc[v.id].img
 		
 		if img == nil then return end
+
+		local config = NPC.config[v.id]
+
+		local priority = (config.priority) or (config.foreground and -15) or -45
+
+		local x = v.x+(v.width*0.5)-(config.gfxwidth*0.5)+config.gfxoffsetx
+		local y = v.y+v.height-config.gfxheight+config.gfxoffsety
+
 		
-		if NPC.config[v.id].foreground then priority = -15 elseif NPC.config[v.id].isvine or NPC.config[v.id].isplant then priority = -75 end
-		
-		Graphics.drawImageToSceneWP(img, v.x + NPC.config[v.id].gfxoffsetx, v.y + NPC.config[v.id].gfxoffsety, 0, v.animationFrame * v.height,v.width,v.height, priority)
+		Graphics.drawImageToSceneWP(img, x,y, 0,v.animationFrame * config.gfxheight, config.gfxwidth,config.gfxheight, priority)
 	end
 	
 	function Game.drawBGO(v)
 		if v.isHidden then return end
 		
-		local priority = -85
 		local img = Graphics.sprites.background[v.id].img
 		
 		if img == nil then return end
 		
-		if BGO.config[v.id].foreground then priority = -20 end
+		local config = BGO.config[v.id]
+		local priority = ((config.priority) or -85) + v.zOffset
+
 		
-		Graphics.drawImageToSceneWP(img,v.x,v.y,0, BGO.frame[v.id] * v.height,v.width,v.height, priority)
+		Graphics.drawImageToSceneWP(img, v.x,v.y, 0,BGO.frame[v.id] * v.height, v.width,v.height, priority)
 	end
 	
 	function Game.drawBlock(v)
 		if v.isHidden or v.hiddenUntilHit then return end
 
-		local priority = -65
 		local img = Graphics.sprites.block[v.id].img
 		
 		if img == nil then return end
 		
-		if v.isSizeable then priority = -90 elseif Block.config[v.id].foreground then priority = -10 end
+		local config = Block.config[v.id]
+		local priority = (config.priority) or (config.foreground and -10) or (v.isSizeable and -90) or -65
 		
-		Graphics.drawImageToSceneWP(img,v.x,v.y,0, Block.frame[v.id] * v.height,v.width,v.height, priority)
+		
+		Graphics.drawImageToSceneWP(img, v.x,v.y, 0,Block.frame[v.id] * v.height, v.width,v.height, priority)
 	end
 
 
@@ -115,6 +122,7 @@ do
 		for _,v in ipairs(NPC) do
 			Game.drawNPC(v)
 		end
+		
 		
 		table.sort(Graphics.drawingQueue,sortDrawingQueue)
 
