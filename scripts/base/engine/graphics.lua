@@ -19,6 +19,7 @@ function Graphics.loadGraphics(skip)
 		
 		Graphics.sprites[v.path] = {}
 		if v.max ~= nil then
+			_G[v.path:upper().."_MAX_ID"] = v.max
 			if skip == false then
 				for n = 1, v.max do
 					Graphics.sprites[v.path][n] = {}
@@ -26,7 +27,6 @@ function Graphics.loadGraphics(skip)
 					print("graphics/"..v.path.."/"..v.path.."-"..tostring(n)..".png")
 				end
 			end
-			_G[v.path:upper().."_MAX_ID"] = v.max
 		end
 	end
 

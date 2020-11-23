@@ -59,6 +59,7 @@ for i = 1,NPC_MAX_ID do
 		NPC.script[i] = require("scripts/npcs/npc-"..tostring(i))
 	end
 	
+	
 	if love.filesystem.getInfo("config/npc/npc-"..tostring(i)..".txt") then
 		local Txt = txt_parser.load("config/npc/npc-"..tostring(i)..".txt")
 		for k,v in pairs(Txt) do
@@ -68,8 +69,51 @@ for i = 1,NPC_MAX_ID do
 end
 
 local function physics(v)
-	if Defines.levelFreeze then
+	local oldSlope = 0
+	local HitSpot = 0 --used for collision detection
+	local tempHit = 0
+	local tmpBlock = {}
+	local tempHitBlock = 0
+	local tempSpeedA = 0
+	local tempTurn = false
+	local tempLocation = newLocation()
+	local tempLocation2 = newLocation()
+	local preBeltLoc = newLocation()
+	local beltCount = 0
+	local tempBlockHit = {[3] = 0}
+	local winningBlock = 0
+	local numTempBlock = 0
+	local speedVar = 0
 	
+	local tempBool = false
+	local newY = 0
+	local blankBlock = {}
+	local oldBeltSpeed = 0
+	local oldDirection = 0
+	
+	--used for collision detection
+	local fBlock = 0
+	local lBlock = 0
+	local fBlock2 = 0
+	local lBlock2 = 0
+	local bCheck = 0
+	local bCheck2 = 0
+	local addBelt = 0
+	local numAct = 0
+	local beltClear = false --stops belt movement when on a wall
+	local resetBeltSpeed = false
+	local PlrMid = 0
+	local Slope = 0
+	local SlopeTurn = false
+	
+	--for attaching to layers
+	local lyrX = 0
+	local lyrY = 0
+	
+	if not Defines.levelFreeze then
+		if not NPC.config[v.id].nogravity then
+			v.speedY = v.speedY + Defines.npc_grav
+		end
 	end
 end
 
