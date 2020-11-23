@@ -220,18 +220,23 @@ do
     formats.lvlx = loadLevel
 end
 
-
 function levelParser.load(path)
     local data = love.filesystem.read(path)
     parsingAssert(data ~= nil,"Could not find file",path)
 
     local format = path:match("^.*%.(.+)$")
     local formatLoad = formats[format]
-
+	
     parsingAssert(formatLoad ~= nil,"Unknown level format",path)
-	print(data..format)
 	
     formatLoad(path)
+	
+	script_path = string.gsub(path, ".lvlx", "")
+	
+	if love.filesystem.getInfo(script_path.."/luna.lua") then
+		LevelScript = require(script_path.."/luna")
+		print(inspect(onTick))
+	end
 end
 
 return levelParser

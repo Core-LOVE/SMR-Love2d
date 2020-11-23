@@ -111,8 +111,22 @@ local function physics(v)
 	local lyrY = 0
 	
 	if not Defines.levelFreeze then
+		v.x = v.x + v.speedX
+		v.y = v.y + v.speedY
+		
 		if not NPC.config[v.id].nogravity then
-			v.speedY = v.speedY + Defines.npc_grav
+			if v.collidesBlockBottom ~= true then
+				v.speedY = v.speedY + Defines.npc_grav
+			elseif v.collidesBlockBottom == true and v.speedY ~= 0 then
+				v.speedY = 0
+			end
+		end
+		
+		for k,b in ipairs(Block) do
+			if BasicColliders.side(v,b) == 1 then v.collidesBlockBottom = true else v.collidesBlockBottom = false end
+			if BasicColliders.side(v,b) == 3 then v.collidesBlockTop = true else v.collidesBlockTop = false end
+			if BasicColliders.side(v,b) == 2 then v.collidesBlockLeft = true else v.collidesBlockLeft = false end
+			if BasicColliders.side(v,b) == 4 then v.collidesBlockRight = true else v.collidesBlockRight = false end
 		end
 	end
 end
@@ -164,6 +178,12 @@ function NPC.spawn(id, x, y)
 		tempBlock = {},
 		section = 0,
 		
+		collidesBlockBottom = false,
+		collidesBlockLeft = false,
+		collidesBlockRight = false,
+		collidesBlockTop = false,
+		collidesBlockSide = 5,
+		
 		ai1 = 0,
 		ai2 = 0,
 		ai3 = 0,
@@ -171,6 +191,8 @@ function NPC.spawn(id, x, y)
 		ai5 = 0,
 		ai6 = 0
 	}
+	
+	n.onPhysics = physics
 	
 	NPC[#NPC + 1] = n
 	print(inspect(n))
@@ -211,6 +233,12 @@ function NPC.get(idFilter)
 	end
 
 	return ret
+end
+
+function NPC.update()
+	for k,v in ipairs(NPC) do
+		v.onPhysics(v)
+	end
 end
 
 function NPC.frames()

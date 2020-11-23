@@ -17,6 +17,20 @@ newLocation = function()
 	return {x = 0, y = 0, width = 0, height = 0, speedX = 0, speedY = 0}
 end
 
+Text = {}
+Text.print = function(...)
+	local string = arg[1]
+	local type = 2
+	local x = arg[2]
+	local y = arg[3]
+	
+	if #args == 4 then
+		type = arg[2]
+		x = arg[3]
+		y = arg[4]
+	end
+end
+
 onTick = function() end
 onTickEnd = function() end
 onDraw = function() end

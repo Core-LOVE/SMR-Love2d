@@ -50,9 +50,19 @@ end
 
 function love.update()
 	Window = love.window
+	
 	Block.update()
+	NPC.update()
 	
 	Block.frames()
 	BGO.frames()
 	NPC.frames()
+end
+
+function love.filedropped(file)
+	file:open("r")
+	local data = file:read()
+	
+	local levelParser = require(ms.."engine/levelparser")
+	levelParser.load(data)
 end
