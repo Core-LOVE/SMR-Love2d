@@ -93,15 +93,17 @@ end
 
 function BGO.frames()
 	for i = 1, BACKGROUND_MAX_ID do
-		if BGO.config[i].frames <= 1 or BGO.config[i].framespeed == 0 then break end
-		
-		BGO.framecount[i] = BGO.framecount[i] + 1
-		if BGO.framecount[i] >= BGO.config[i].framespeed then
-			BGO.frame[i] = BGO.frame[i] + 1
-			if BGO.frame[i] >= BGO.config[i].frames then
-				BGO.frame[i] = 0
+		local config = BGO.config[i]
+
+		if config.frames > 1 and config.framespeed > 0 then
+			BGO.framecount[i] = BGO.framecount[i] + 1
+			if BGO.framecount[i] >= config.framespeed then
+				BGO.frame[i] = BGO.frame[i] + 1
+				if BGO.frame[i] >= config.frames then
+					BGO.frame[i] = 0
+				end
+				BGO.framecount[i] = 0
 			end
-			BGO.framecount[i] = 0
 		end
 	end
 end

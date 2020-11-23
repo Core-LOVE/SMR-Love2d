@@ -14,6 +14,10 @@ BasicColliders = require(ms.."engine/collision")
 
 Window = love.window
 
+
+FRAMES_PER_SECOND = 64.102
+
+
 do
 	love.graphics.clear()
 	love.graphics.present()
@@ -48,7 +52,7 @@ function love.draw()
 	Game.updateGraphicsLevel()
 end
 
-function love.update()
+function love.update(dt)
 	Window = love.window
 	
 	Block.update()
@@ -57,6 +61,10 @@ function love.update()
 	Block.frames()
 	BGO.frames()
 	NPC.frames()
+
+	if dt < 1/FRAMES_PER_SECOND then
+		love.timer.sleep(1/FRAMES_PER_SECOND - dt)
+	end
 end
 
 function love.filedropped(file)
