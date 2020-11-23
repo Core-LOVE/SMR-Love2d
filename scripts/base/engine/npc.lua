@@ -115,14 +115,21 @@ local function physics(v)
 		v.y = v.y + v.speedY
 		
 		if not NPC.config[v.id].nogravity then
-			if v.collidesBlockBottom ~= true then
+			if v.collidesBlockSide ~= 1 then
 				v.speedY = v.speedY + Defines.npc_grav
-			elseif v.collidesBlockBottom == true and v.speedY ~= 0 then
+			elseif v.collidesBlockSide == 1 and v.speedY ~= 0 then
 				v.speedY = 0
 			end
 		end
 		
 		for k,b in ipairs(Block) do
+			if not BasicColliders.check(v,b) then 
+				v.collidesBlockSide = 5
+				break 
+			else
+				v.collidesBlockSide = BasicColliders.side(v,b)
+			end
+			
 			if BasicColliders.side(v,b) == 1 then v.collidesBlockBottom = true else v.collidesBlockBottom = false end
 			if BasicColliders.side(v,b) == 3 then v.collidesBlockTop = true else v.collidesBlockTop = false end
 			if BasicColliders.side(v,b) == 2 then v.collidesBlockLeft = true else v.collidesBlockLeft = false end
