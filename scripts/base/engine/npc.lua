@@ -1,5 +1,9 @@
 local NPC = {__type="NPC"}
 
+
+NPC_MAX_ID = 1000
+
+
 NPC.config = {}
 NPC.script = {}
 for i = 1,NPC_MAX_ID do
@@ -180,7 +184,7 @@ function NPC.spawn(id, x, y)
 	local n = {
 		__type = "NPC",
 
-		
+
 		idx = #NPC + 1,
 		id = id or 1,
 		isValid = true,

@@ -1,5 +1,9 @@
 local BGO = {__type="BGO"}
 
+
+BACKGROUND_MAX_ID = 1000
+
+
 BGO.config = {}
 BGO.script = {}
 BGO.frame = {}
@@ -7,8 +11,6 @@ BGO.framecount = {}
 
 for i = 1, BACKGROUND_MAX_ID do
 	BGO.config[i] = {
-		width = Graphics.sprites.background[i].img:getWidth(),
-		height = Graphics.sprites.background[i].img:getHeight(),
 		frames = 1,
 		framespeed = 8,
 		climbable = false,
@@ -43,13 +45,27 @@ setmetatable(BGO, {__call=function(BGO, idx)
 end})
 
 function BGO.spawn(id, x, y)
+	local config = BGO.config[id]
+
+	if config.width == nil or config.height == nil then
+		local img = Graphics.sprites.background[id].img
+
+		if img ~= nil then
+			config.width = img:getWidth()
+			config.height = img:getHeight()/config.frames
+		else
+			config.width = 32
+			config.height = 32
+		end
+	end
+
 	local n = {
 		idx = #BGO + 1,
 		id = id or 1,
 		x = x or 0,
 		y = y or 0,
-		width = BGO.config[id].width or 32,
-		height = BGO.config[id].height or 32,
+		width = config.width or 32,
+		height = config.height or 32,
 		zOffset = 0,
 		isValid = true,
 		isHidden = false

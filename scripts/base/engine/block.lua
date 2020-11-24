@@ -4,6 +4,10 @@
 
 local Block = {__type="Block"}
 
+
+BLOCK_MAX_ID = 1000
+
+
 Block.config = {}
 Block.script = {}
 Block.frame = {}

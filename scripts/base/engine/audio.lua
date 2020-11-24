@@ -19,7 +19,8 @@ function sounds.loadSounds()
 		print("sound/"..sfx['sound-'..tostring(i)].file)
 	end
 	
-	local w_mx = 17
+	-- temp
+	--[[local w_mx = 17
 	local l_mx = 59
 	local s_mx = 3
 	local mfx = ini_parser.load("music.ini")
@@ -44,7 +45,7 @@ function sounds.loadSounds()
 		sounds.musics.special[i].name = mfx['special-music-'..tostring(i)].name
 		sounds.musics.special[i].sfx = mfx['special-music-'..tostring(i)].file
 		print("music/"..mfx['special-music-'..tostring(i)].file)
-	end
+	end]]
 end
 
 return sounds

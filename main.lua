@@ -39,7 +39,7 @@ function love.load()
 	love.graphics.setDefaultFilter("nearest", "nearest")
 	Audio.loadSounds()
 	Graphics.loadUi()
-	Graphics.loadGraphics(false)
+	--Graphics.loadGraphics(false)
 	load_objects()
 	Section.createSections(21)
 	-- temp

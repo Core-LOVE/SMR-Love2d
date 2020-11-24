@@ -1,5 +1,9 @@
 local Effect = {__type="Effect"}
 
+
+EFFECT_MAX_ID = 1000
+
+
 Effect.config = {}
 Effect.script = {}
 for i = 1, EFFECT_MAX_ID do

@@ -9,7 +9,40 @@ function Graphics.loadImage(file)
 	return love.graphics.newImage(file)
 end
 
-function Graphics.loadGraphics(skip)
+
+-- Graphics.sprites
+do
+	local spritesCategoryMT = {
+		__index = (function(self,key)
+			-- Load it
+			local path = "graphics/".. self._name.. "/".. self._name.. "-".. tostring(key).. ".png"
+
+			local imgObj = {}
+
+			if love.filesystem.getInfo(path) ~= nil then
+				imgObj.img = Graphics.loadImage(path)
+				print(self._name.. "-".. tostring(key).. ".png successfully loaded")
+			end
+			
+
+			self[key] = imgObj
+
+			return imgObj
+		end),
+	}
+
+	Graphics.sprites = setmetatable({},{
+		__index = (function(self,key)
+			local category = setmetatable({_name = key},spritesCategoryMT)
+
+			rawset(self,key,category)
+
+			return category
+		end),
+	})
+end
+
+--[[function Graphics.loadGraphics(skip)
 	if ini_parser == nil then return end
 	
 	local gfx = ini_parser.load("graphics.ini")
@@ -32,7 +65,7 @@ function Graphics.loadGraphics(skip)
 	end
 
 	print("Graphics loading finished")
-end
+end]]
 
 function Graphics.loadUi()
 	if ini_parser == nil then return end
