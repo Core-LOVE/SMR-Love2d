@@ -28,6 +28,7 @@ function Graphics.loadGraphics(skip)
 				end
 			end
 		end
+		collectgarbage()
 	end
 
 	print("Graphics loading finished")

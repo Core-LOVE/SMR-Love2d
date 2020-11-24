@@ -35,6 +35,8 @@ Text.print = function(...)
 	end
 end
 
+onStart = function() end
 onTick = function() end
 onTickEnd = function() end
 onDraw = function() end
+onDrawEnd = function() end

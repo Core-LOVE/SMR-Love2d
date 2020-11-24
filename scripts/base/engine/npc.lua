@@ -177,7 +177,7 @@ function NPC.spawn(id, x, y)
 		spawnId = id or 1,
 		spawnAi1 = 0,
 		spawnAi2 = 0,
-		
+	
 		width = NPC.config[id].width or 32,
 		height = NPC.config[id].height or 32,
 		direction = 0,
@@ -202,6 +202,11 @@ function NPC.spawn(id, x, y)
 		collidesBlockRight = false,
 		collidesBlockTop = false,
 		collidesBlockSide = 5,
+		
+		dontMove = false,
+		friendly = false,
+		legacyBoss = false,
+		msg = "",
 		
 		ai1 = 0,
 		ai2 = 0,

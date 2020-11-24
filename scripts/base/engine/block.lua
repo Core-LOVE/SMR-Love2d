@@ -154,6 +154,7 @@ function Block.spawn(id, x, y)
 		speedY = 0,
 		x = x or 0,
 		y = y or 0,
+		
 		isHidden = false,
 		slippery = false,
 		hiddenUntilHit = false, -- invisible editor field

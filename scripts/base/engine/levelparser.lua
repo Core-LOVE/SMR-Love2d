@@ -71,6 +71,12 @@ do
 			}
 			v.direction = t[math.floor(math.random(1,2))]
 		end
+		
+		if properties.BS ~= nil then v.legacyBoss = true end
+		if properties.NM ~= nil then v.dontMove = true end
+		if properties.FD ~= nil then v.friendly = true end
+		
+		v.msg = properties.MG or ""
 	end)
 	
 	types.LAYERS.spawn = (function(properties)
@@ -244,7 +250,7 @@ function levelParser.load(path)
 	
 	if love.filesystem.getInfo(script_path.."/luna.lua") then
 		LevelScript = require(script_path.."/luna")
-		print(inspect(onTick))
+		onStart()
 	end
 end
 

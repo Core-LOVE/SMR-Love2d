@@ -17,7 +17,6 @@ Window = love.window
 
 FRAMES_PER_SECOND = 64.102
 
-
 do
 	love.graphics.clear()
 	love.graphics.present()
@@ -38,11 +37,11 @@ end
 function love.load()
 	--Audio.loadSounds()
 	love.graphics.setDefaultFilter("nearest", "nearest")
+	Audio.loadSounds()
 	Graphics.loadUi()
 	Graphics.loadGraphics(false)
 	load_objects()
 	Section.createSections(21)
-
 	-- temp
 	local levelParser = require(ms.."engine/levelparser")
 
@@ -50,11 +49,15 @@ function love.load()
 end
 
 function love.draw()
+	onDrawEnd()
 	Game.updateGraphicsLevel()
+	onDraw()
 end
 
 function love.update(dt)
 	Window = love.window
+	
+	onTickEnd()
 	
 	Block.update()
 	NPC.update()
@@ -66,6 +69,9 @@ function love.update(dt)
 	if dt < 1/FRAMES_PER_SECOND then
 		love.timer.sleep(1/FRAMES_PER_SECOND - dt)
 	end
+	
+	onTick()
+	collectgarbage()
 end
 
 function love.filedropped(file)
