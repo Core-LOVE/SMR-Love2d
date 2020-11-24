@@ -14,7 +14,7 @@ function Collision.check(Loc1, Loc2, section) --simple collision check
 	return false
 end
 
-function Collision.checkWS(Loc1, Loc2) --check collision with speed
+function Collision.checkWithSpeed(Loc1, Loc2) --check collision with speed
     if(Loc1.y + Loc1.height + Loc1.speedY >= Loc2.y + Loc2.speedY) then
         if(Loc1.y + Loc1.speedY <= Loc2.y + Loc2.height + Loc2.speedY) then 
             if(Loc1.x + Loc1.speedX <= Loc2.x + Loc2.width + Loc2.speedX) then
@@ -179,6 +179,13 @@ function Collision.side(Loc1, Loc2, section)
 	end
 	
 	return tempFindCollision
+end
+
+
+function Collision.applySpeedWithCollision(obj)
+    local objType = type(obj)
+
+    
 end
 
 return Collision

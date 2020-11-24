@@ -1,3 +1,7 @@
+-- TODO:
+-- Sorted block array to increase speed
+-- Better config implementation, maybe as a separate library
+
 local Block = {__type="Block"}
 
 Block.config = {}
@@ -131,10 +135,6 @@ local function physics(v)
 	end
 end
 
-local function values(t)
-    local i = 0
-    return function() i = i + 1; return t[i] end
-end
 
 setmetatable(Block, {__call=function(Block, idx)
 	return Block[idx] or Block
@@ -222,37 +222,74 @@ function Block:hit(fromUpperSide, plr, hittingCount)
 
 end
 
-function Block.count()
-	return #Block
-end
 
-function Block.get(idFilter)
-	local ret = {}
+-- "Get" functions
+do
+	function Block.count()
+		return #Block
+	end
 
-	for i = 1, #Block do
-		if idFilter == nil then
-			ret[#ret + 1] = Block(i)
-			--print(inspect(Block(i)))
-		else
-			if type(idFilter) == 'number' then
-				local k = idFilter
-				if Block(i).id == k then
-					ret[#ret + 1] = Block(i)
-					--print(inspect(Block(i)))
-				end
-			elseif type(idFilter) == 'table' then
-				for k in values(idFilter) do
-					if Block(i).id == k then
-						ret[#ret + 1] = Block(i)
-						--print(inspect(Block(i)))
-					end
-				end
+	function Block.get(idFilter)
+		local ret = {}
+
+		local idFilterType = type(idFilter)
+		local idMap
+		if idFilter == "table" then
+			idMap = {}
+
+			for _,id in ipairs(idFilter) do
+				idMap[id] = true
 			end
+		end
+
+
+		for _,v in ipairs(Block) do
+			if idFilter == nil or idFilter == v.id or (idMap ~= nil and idMap[v.id]) then
+				ret[#ret + 1] = v
+			end
+		end
+
+		return ret
+	end
+
+	function Block.getIntersecting(x1,y1,x2,y2)
+		local ret = {}
+
+		for _,v in ipairs(Block) do
+			if v.x <= x2 and v.y <= y2 and v.x+v.width >= x1 and v.y+v.height >= y1 then
+				ret[#ret + 1] = v
+			end
+		end
+
+		return ret
+	end
+
+
+	function Block.iterate()
+		return ipairs(Block)
+	end
+
+	-- Based on the lunalua implementation
+	local function iterateIntersecting(args,i)
+		while (i <= #Block) do
+			local v = Block[i]
+
+			if v.x <= args[3] and v.y <= args[4] and v.x+v.width >= args[1] and v.y+v.height >= args[2] then
+				return i+1,v
+			end
+
+			i = i + 1
 		end
 	end
 
-	return ret
+	function Block.iterateIntersecting(x1,y1,x2,y2)
+		local args = {x1,y1,x2,y2}
+
+		return iterateIntersecting, args, 1
+	end
 end
+
+
 
 function Block.update()
 	for k,b in ipairs(Block.get()) do
