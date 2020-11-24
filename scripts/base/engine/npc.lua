@@ -59,7 +59,6 @@ for i = 1,NPC_MAX_ID do
 		
 		gravity = Defines.npc_grav,
 		maxgravity = 8,
-		const_speed = 1.2
 	}
 	if love.filesystem.getInfo("scripts/npc/npc-"..tostring(i)..".lua") then
 		NPC.script[i] = require("scripts/npcs/npc-"..tostring(i))
@@ -75,7 +74,7 @@ for i = 1,NPC_MAX_ID do
 end
 
 local function physics(v)
-	local oldSlope = 0
+	--[[local oldSlope = 0
 	local HitSpot = 0 --used for collision detection
 	local tempHit = 0
 	local tmpBlock = {}
@@ -147,7 +146,22 @@ local function physics(v)
 		end
 		
 		v.speedX = NPC.config[v.id].const_speed * v.direction
+	end]]
+
+	local config = NPC.config[v.id]
+
+	if v.turnAround then
+		v.direction = -v.direction
+		v.turnAround = false
 	end
+
+	if config.iswalker then
+		v.speedX = 1.5 * v.direction
+	end
+
+	v.speedY = math.min(v.speedY + config.gravity,config.maxgravity)
+
+	BasicColliders.applySpeedWithCollision(v)
 end
 
 local function values(t)
@@ -159,8 +173,14 @@ setmetatable(NPC, {__call=function(NPC, idx)
 	return NPC[idx] or NPC
 end})
 
+
+local npcMT = {__type = "NPC"}
+
 function NPC.spawn(id, x, y)
 	local n = {
+		__type = "NPC",
+
+		
 		idx = #NPC + 1,
 		id = id or 1,
 		isValid = true,
@@ -197,12 +217,6 @@ function NPC.spawn(id, x, y)
 		tempBlock = {},
 		section = 0,
 		
-		collidesBlockBottom = false,
-		collidesBlockLeft = false,
-		collidesBlockRight = false,
-		collidesBlockTop = false,
-		collidesBlockSide = 5,
-		
 		dontMove = false,
 		friendly = false,
 		legacyBoss = false,
@@ -213,8 +227,15 @@ function NPC.spawn(id, x, y)
 		ai3 = 0,
 		ai4 = 0,
 		ai5 = 0,
-		ai6 = 0
+		ai6 = 0,
+
+		turnAround = false,
 	}
+
+	setmetatable(n,npcMT)
+
+	BasicColliders.addCollisionProperties(n)
+
 	
 	if n.direction == 0 then
 		local t = {

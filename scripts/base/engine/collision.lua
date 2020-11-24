@@ -165,27 +165,113 @@ function Collision.warp(Loc1, A, section) --not complete port!
     end
 end
 
+
+COLLISION_SIDE_TOP     = 1
+COLLISION_SIDE_RIGHT   = 2
+COLLISION_SIDE_BOTTOM  = 3
+COLLISION_SIDE_LEFT    = 4
+COLLISION_SIDE_UNKNOWN = 5
+
 function Collision.side(Loc1, Loc2, section)
-    local tempFindCollision = 5
-	
     if(Loc1.y + Loc1.height - Loc1.speedY <= Loc2.y - Loc2.speedY) then
-        tempFindCollision = 1
+        return COLLISION_SIDE_TOP
     elseif(Loc1.x - Loc1.speedX >= Loc2.x + Loc2.width - Loc2.speedX) then
-        tempFindCollision = 2
+        return COLLISION_SIDE_RIGHT
     elseif(Loc1.x + Loc1.width - Loc1.speedX <= Loc2.x - Loc2.speedX) then
-        tempFindCollision = 4
+        return COLLISION_SIDE_LEFT
     elseif(Loc1.y - Loc1.speedY > Loc2.y + Loc2.height - Loc2.speedY - 0.1) then
-        tempFindCollision = 3
+        return COLLISION_SIDE_BOTTOM
+    else
+        return COLLISION_SIDE_UNKNOWN
 	end
-	
-	return tempFindCollision
 end
 
 
-function Collision.applySpeedWithCollision(obj)
-    local objType = type(obj)
+-- Actual collision stuff, shared by NPC's and players
+do
+    function Collision.addCollisionProperties(v)
+        local vType = type(v)
+        
+        v.collidingBlocks = {}
+		v.collidingBlocksSides = {}
 
-    
+		v.collidesBlockBottom = false
+		v.collidesBlockLeft = false
+		v.collidesBlockRight = false
+		v.collidesBlockTop = false
+    end
+
+    function Collision.addSolidvectProperties(v)
+        local vType = type(v)
+    end
+
+
+    local function hitSolid(v,vType,block,side)
+        if side == COLLISION_SIDE_LEFT or side == COLLISION_SIDE_RIGHT then
+            if vType == "NPC" then
+                v.turnAround = true
+            else
+                v.speedX = 0
+            end
+        elseif side == COLLISION_SIDE_TOP or side == COLLISION_SIDE_BOTTOM then
+            v.speedY = 0
+        end
+    end
+
+
+    local ejectionFunctions = {}
+
+    ejectionFunctions[COLLISION_SIDE_TOP] = (function(v,vType,block)
+        v.y = block.y - v.height
+    end)
+    ejectionFunctions[COLLISION_SIDE_RIGHT] = (function(v,vType,block)
+        v.x = block.x + block.width
+    end)
+    ejectionFunctions[COLLISION_SIDE_BOTTOM] = (function(v,vType,block)
+        v.y = block.y + block.height
+    end)
+    ejectionFunctions[COLLISION_SIDE_LEFT] = (function(v,vType,block)
+        v.x = block.x - v.width
+    end)
+    ejectionFunctions[COLLISION_SIDE_UNKNOWN] = (function(v,vType,block)
+        
+    end)
+
+
+    function Collision.applySpeedWithCollision(v)
+        local vType = v.__type
+
+        -- Reset collision fields
+        for i=1,#v.collidingBlocks do
+            v.collidingBlocks[i] = nil
+            v.collidingBlocksSides[i] = nil
+        end
+
+        v.collidesBlockBottom = false
+		v.collidesBlockLeft = false
+		v.collidesBlockRight = false
+        v.collidesBlockTop = false
+        
+
+
+        v.x = v.x + v.speedX
+        v.y = v.y + v.speedY
+
+        -- Interact with blocks
+        for _,block in Block.iterateIntersecting(v.x,v.y,v.x+v.width,v.y+v.height) do
+            -- Get side
+            local side = Collision.side(v,block)
+
+            hitSolid(v,vType,block,side)
+
+            ejectionFunctions[side](v,vType,block)
+
+
+            table.insert(v.collidingBlocks,block)
+            table.insert(v.collidingBlocksSides,side)
+        end
+    end
 end
+
 
 return Collision

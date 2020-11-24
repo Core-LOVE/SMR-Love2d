@@ -7,7 +7,7 @@ function LTP.load(fileName)
 	local data = {}
 
 	for line in love.filesystem.lines(fileName) do
-		local param, value = line:match('^([%w|_]+)%s-=%s-(.+)$');
+		local param, value = line:match('^([%w|_]+)%s*=%s*(.+)$');
 		if(param and value ~= nil)then
 			if(tonumber(value))then
 				value = tonumber(value);
