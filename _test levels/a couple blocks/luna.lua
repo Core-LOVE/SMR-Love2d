@@ -1,5 +1,5 @@
-function onTick()
-	for k,v in ipairs(Layer.get()) do
-		Text.print(tostring(v.layerName), 10, 10 + (25 * k))
+function onCameraDraw()
+	for k,v in ipairs(NPC.get()) do
+		Text.print(v.speedY, 10, 10)
 	end
 end

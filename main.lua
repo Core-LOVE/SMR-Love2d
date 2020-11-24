@@ -30,13 +30,14 @@ local function load_objects()
 	Block = require(ms.."engine/block")
 	NPC = require(ms.."engine/npc")
 	BGO = require(ms.."engine/bgo")
-	Player = nil
+	Player = require(ms.."engine/player")
 	Effect = require(ms.."engine/effect")
 	Section = require(ms.."engine/section")
 end
 
 function love.load()
 	--Audio.loadSounds()
+	love.graphics.setDefaultFilter("nearest", "nearest")
 	Graphics.loadUi()
 	Graphics.loadGraphics(false)
 	load_objects()

@@ -64,6 +64,13 @@ do
 		
 		v.direction = properties.D or 0
 		v.spawnDirection = properties.D or 0
+		if v.direction == 0 then
+			local t = {
+			[1] = -1,
+			[2] = 1
+			}
+			v.direction = t[math.floor(math.random(1,2))]
+		end
 	end)
 	
 	types.LAYERS.spawn = (function(properties)

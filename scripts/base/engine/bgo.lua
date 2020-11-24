@@ -7,8 +7,8 @@ BGO.framecount = {}
 
 for i = 1, BACKGROUND_MAX_ID do
 	BGO.config[i] = {
-		width = 32,
-		height = 32,
+		width = Graphics.sprites.background[i].img:getWidth(),
+		height = Graphics.sprites.background[i].img:getHeight(),
 		frames = 1,
 		framespeed = 8,
 		climbable = false,
@@ -18,6 +18,7 @@ for i = 1, BACKGROUND_MAX_ID do
 		water = false,
 		stoponfreeze = false,
 	}
+	
 	BGO.frame[i] = 0
 	BGO.framecount[i] = 0
 	-- if love.filesystem.getInfo("scripts/bgos/background-"..tostring(i)..".lua") then

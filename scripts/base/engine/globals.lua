@@ -17,6 +17,10 @@ newLocation = function()
 	return {x = 0, y = 0, width = 0, height = 0, speedX = 0, speedY = 0}
 end
 
+newControls = function()
+	return {right = false, left = false, up = false, down = false, run = false, jump = false, dropItem = false, altRun = false, altJump = false, start = false}
+end
+
 Text = {}
 Text.print = function(...)
 	local string = arg[1]

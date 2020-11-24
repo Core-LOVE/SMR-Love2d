@@ -56,6 +56,10 @@ for i = 1,NPC_MAX_ID do
 		isbot=false,
 		isvegetable=false,
 		iswalker=false,
+		
+		gravity = Defines.npc_grav,
+		maxgravity = 8,
+		const_speed = 1.2
 	}
 	if love.filesystem.getInfo("scripts/npc/npc-"..tostring(i)..".lua") then
 		NPC.script[i] = require("scripts/npcs/npc-"..tostring(i))
@@ -116,27 +120,33 @@ local function physics(v)
 		v.x = v.x + v.speedX
 		v.y = v.y + v.speedY
 		
-		if not NPC.config[v.id].nogravity then
-			if v.collidesBlockSide ~= 1 then
-				v.speedY = v.speedY + Defines.npc_grav
-			elseif v.collidesBlockSide == 1 and v.speedY ~= 0 then
-				v.speedY = 0
+		for k,b in ipairs(Block) do
+			if not BasicColliders.check(b,v) then 
+				v.collidesBlockSide = 5
+				
+				if not NPC.config[v.id].nogravity and NPC.config[v.id].gravity ~= 0 then
+					v.speedY = v.speedY + NPC.config[v.id].gravity
+					if v.speedY > NPC.config[v.id].maxgravity then
+						v.speedY = NPC.config[v.id].maxgravity
+					end
+				end
+			else
+				if BasicColliders.side(v,b) == 1 then v.collidesBlockBottom = true else v.collidesBlockBottom = false end
+				if BasicColliders.side(v,b) == 3 then v.collidesBlockTop = true else v.collidesBlockTop = false end
+				if BasicColliders.side(v,b) == 2 then v.collidesBlockLeft = true else v.collidesBlockLeft = false end
+				if BasicColliders.side(v,b) == 4 then v.collidesBlockRight = true else v.collidesBlockRight = false end
+				
+				v.collidesBlockSide = BasicColliders.side(v,b)
+			
+				if v.y + v.height + 0.1 > b.y then
+					v.speedY = 0
+					v.y = b.y - v.height - 0.1
+					break
+				end
 			end
 		end
 		
-		for k,b in ipairs(Block) do
-			if not BasicColliders.check(v,b) then 
-				v.collidesBlockSide = 5
-				break 
-			else
-				v.collidesBlockSide = BasicColliders.side(v,b)
-			end
-			
-			if BasicColliders.side(v,b) == 1 then v.collidesBlockBottom = true else v.collidesBlockBottom = false end
-			if BasicColliders.side(v,b) == 3 then v.collidesBlockTop = true else v.collidesBlockTop = false end
-			if BasicColliders.side(v,b) == 2 then v.collidesBlockLeft = true else v.collidesBlockLeft = false end
-			if BasicColliders.side(v,b) == 4 then v.collidesBlockRight = true else v.collidesBlockRight = false end
-		end
+		v.speedX = NPC.config[v.id].const_speed * v.direction
 	end
 end
 
@@ -200,6 +210,14 @@ function NPC.spawn(id, x, y)
 		ai5 = 0,
 		ai6 = 0
 	}
+	
+	if n.direction == 0 then
+		local t = {
+		[1] = -1,
+		[2] = 1
+		}
+		n.direction = t[math.floor(math.random(1,2))]
+	end
 	
 	n.onPhysics = physics
 	
