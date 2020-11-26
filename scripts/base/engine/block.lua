@@ -144,8 +144,15 @@ setmetatable(Block, {__call=function(Block, idx)
 	return Block[idx] or Block
 end})
 
+
+local blockMT = {
+	__type = "Block",
+}
+
 function Block.spawn(id, x, y)
 	local b = {
+		__type = "Block",
+		
 		idx = #Block + 1,
 		id = id or 1,
 		contentID = 0,
@@ -188,6 +195,10 @@ function Block.spawn(id, x, y)
 		ai5 = 0,
 		ai6 = 0
 	}
+
+	setmetatable(b,blockMT)
+
+	BasicColliders.addSolidObjectProperties(b)
 
 	b.onPhysicsBlock = physics
 	b.onTickEndBlock = function(b) end
