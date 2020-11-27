@@ -35,6 +35,18 @@ Text.print = function(...)
 	end
 end
 
+globalKeys = {}
+
+globalKeys[1] = {
+left = 'left',
+right = 'right',
+up = 'up',
+down = 'down',
+run = 'x',
+jump = 'z',
+altJump = 'a'
+}
+
 onStart = function() end
 onTick = function() end
 onTickEnd = function() end

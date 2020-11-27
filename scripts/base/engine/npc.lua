@@ -303,7 +303,15 @@ end
 
 function NPC.update()
 	for k,v in ipairs(NPC) do
-		v.onPhysics(v)
+		local scr = NPC.script[v.id]
+		
+		if scr ~= nil then
+			if scr.onPhysicsNPC ~= nil then scr.onPhysicsNPC(v) else physics(v) end
+			if scr.onTickEndNPC ~= nil then scr.onTickEndNPC(v) end
+			if scr.onTickNPC ~= nil then scr.onTickNPC(v) end
+		else
+			physics(v)
+		end
 	end
 end
 

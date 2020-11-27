@@ -23,61 +23,6 @@ for i = 1, 5 do
 	end
 end
 
-Player.Height[1][1] = 30        -- Little Mario
-Player.Width[1][1] = 24         -- ------------
-Player.GrabSpotX[1][1] = 18     -- ---------
-Player.GrabSpotY[1][1] = -2     -- ---------
-Player.Height[1][2] = 54        -- Big Mario
-Player.Width[1][2] = 24         -- ---------
-Player.DuckHeight[1][2] = 30    -- ---------
-Player.GrabSpotX[1][2] = 18     -- ---------
-Player.GrabSpotY[1][2] = 16     -- ---------
-Player.Height[1][3] = 54        -- Fire Mario
-Player.Width[1][3] = 24         -- ---------
-Player.DuckHeight[1][3] = 30    -- ---------
-Player.GrabSpotX[1][3] = 18     -- ---------
-Player.GrabSpotY[1][3] = 16     -- ---------
-Player.Height[1][7] = 54        -- Ice Mario
-Player.Width[1][7] = 24         -- ---------
-Player.DuckHeight[1][7] = 30    -- ---------
-Player.GrabSpotX[1][7] = 18     -- ---------
-Player.GrabSpotY[1][7] = 16     -- ---------
-
-Player.Height[1][6] = 54        -- Hammer Mario
-Player.Width[1][6] = 24         -- ---------
-Player.DuckHeight[1][6] = 30    -- ---------
-Player.GrabSpotX[1][6] = 18     -- ---------
-Player.GrabSpotY[1][6] = 16     -- ---------
-
-Player.Height[1][4] = 54        -- Racoon Mario
-Player.Width[1][4] = 24         -- ---------
-Player.DuckHeight[1][4] = 30    -- ---------
-Player.GrabSpotX[1][4] = 18     -- ---------
-Player.GrabSpotY[1][4] = 16     -- ---------
-Player.Height[1][5] = 54        -- Tanooki Mario
-Player.Width[1][5] = 24         -- ---------
-Player.DuckHeight[1][5] = 30    -- ---------
-Player.GrabSpotX[1][5] = 18     -- ---------
-Player.GrabSpotY[1][5] = 16     -- ---------
-
-Player.Height[1][8] = 32        -- Frog Mario
-Player.Width[1][8] = 16         -- ---------
-Player.DuckHeight[1][8] = 22    -- ---------
-Player.GrabSpotX[1][8] = 7     -- ---------
-Player.GrabSpotY[1][8] = 0     -- ---------
-
-Player.Height[1][9] = 20        -- Mini Mario
-Player.Width[1][9] = 18         -- ---------
-Player.DuckHeight[1][9] = 23    -- ---------
-Player.GrabSpotX[1][9] = 9     -- ---------
-Player.GrabSpotY[1][9] = 8     -- ---------
-
-Player.Height[1][10] = 54        -- Propeller Mario
-Player.Width[1][10] = 24         -- ---------
-Player.DuckHeight[1][10] = 30    -- ---------
-Player.GrabSpotX[1][10] = 18     -- ---------
-Player.GrabSpotY[1][10] = 16     -- ---------
-
 Player.Height[2][1] = 30        -- Little Luigi
 Player.Width[2][1] = 24         -- ------------
 Player.GrabSpotX[2][1] = 16     -- ---------
@@ -309,8 +254,11 @@ Player.GrabSpotX[5][10] = 18     -- ---------
 Player.GrabSpotY[5][10] = 16     -- ---------
 
 local function physics(v)
-	v.width = Player.Width[v.character][v.powerup]
-	v.height = Player.Width[v.character][v.powerup]
+	local scr = Player.script[v.character]
+	if scr ~= nil then
+		v.width = scr.Width[v.powerup] or 32
+		v.height = scr.Height[v.powerup] or 32
+	end
 	
 	BasicColliders.applySpeedWithCollision(v)
 end
@@ -331,8 +279,6 @@ function Player.spawn(character, x, y)
 		speedX = 0,
 		speedY = 0,
 		reservePowerup = nil,
-		width = Player.Width[character or 1][1],
-		height = Player.Height[character or 1][1],
 		
 		frame = 1,
 		
@@ -345,18 +291,17 @@ function Player.spawn(character, x, y)
 	BasicColliders.addCollisionProperties(p)
 	BasicColliders.addSolidObjectProperties(p)
 	
-	if Player.script[character] ~= nil then
-		p.onPhysicsPlayer = Player.script[character].onPhysicsPlayer or physics
-		p.onTickEndPlayer = Player.script[character].onTickEndPlayer or function(v) end
-		p.onTickPlayer = Player.script[character].onTickEndPlayer or function(v) end
-		p.name = Player.script[character].name or "mario"
+	local scr = Player.script[p.character]
+	if scr ~= nil then
+		p.width = scr.Width[p.powerup] or 32
+		p.height = scr.Height[p.powerup] or 32
+		p.name = Player.script[p.character].name or "mario"
 	else
+		p.width = 32
+		p.height = 32
+		
 		if p.character == 1 then p.name = "mario"
 		elseif p.character == 2 then p.name = "luigi" end
-		
-		p.onPhysicsPlayer = physics
-		p.onTickEndPlayer = function(v) end
-		p.onTickPlayer = function(v) end
 	end
 	
 	Player[#Player + 1] =  p
@@ -365,9 +310,15 @@ end
 
 function Player.update()
 	for k,v in ipairs(Player) do
-		v.onPhysicsPlayer(v)
-		v.onTickEndPlayer(v)
-		v.onTickPlayer(v)
+		local scr = Player.script[v.character]
+		
+		if scr ~= nil then
+			if scr.onPhysicsPlayer ~= nil then scr.onPhysicsPlayer(v) else physics(v) end
+			if scr.onTickEndPlayer ~= nil then scr.onTickEndPlayer(v) end
+			if scr.onTickPlayer ~= nil then scr.onTickPlayer(v) end
+		else
+			physics(v)
+		end
 	end
 end
 
