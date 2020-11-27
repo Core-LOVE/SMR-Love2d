@@ -59,6 +59,59 @@ end
 
 -- Level drawing
 do
+	local function pfrX(plrFrame)
+		local A
+		A = plrFrame
+		A = A - 50
+		
+		while(A > 100) do
+			A = A - 100
+		end
+		
+		if(A > 90) then
+			A = 9
+		elseif(A > 90) then
+			A = 9
+		elseif(A > 80) then
+			A = 8
+		elseif(A > 70) then
+			A = 7
+		elseif(A > 60) then
+			A = 6
+		elseif(A > 50) then
+			A = 5
+		elseif(A > 40) then
+			A = 4
+		elseif(A > 30) then
+			A = 3
+		elseif(A > 20) then
+			A = 2
+		elseif(A > 10) then
+			A = 1
+		else
+			A = 0
+		end
+		
+		return A * 100
+	end
+
+	local function pfrY(plrFrame)
+		local A
+		A = plrFrame
+		A = A - 50
+		
+		while(A > 100) do
+			A = A - 100
+		end
+		
+		A = A - 1
+		while(A > 9) do
+			A = A - 10
+		end
+		
+		return A * 100
+	end	
+	
 	function Game.drawNPC(v)
 		if v.isHidden then return end
 		
@@ -105,7 +158,15 @@ do
 		Graphics.drawImageToSceneWP(img, v.x,v.y, 0,Block.frame[v.id] * v.height, v.width,v.height, priority)
 	end
 
-
+	function Game.drawPlayer(v)
+		local img = Graphics.sprites[v.name][v.powerup].img
+		
+		local fx = Player.frames[v.name]['FrameX'][(v.powerup * 100) + (v.frame * v.direction)]
+		local fy = Player.frames[v.name]['FrameX'][(v.powerup * 100) + (v.frame * v.direction)]
+		
+		Graphics.drawImageToSceneWP(img, v.x + fx, v.y + fy, pfrX(100 + v.frame * v.direction), pfrY(100 + v.frame * v.direction), 100, 100, -25)
+	end
+	
 	local function sortDrawingQueue(a,b)
 		return (a.priority < b.priority)
 	end
@@ -123,6 +184,9 @@ do
 			Game.drawNPC(v)
 		end
 		
+		for _,v in ipairs(Player) do
+			Game.drawPlayer(v)
+		end
 		
 		table.sort(Graphics.drawingQueue,sortDrawingQueue)
 

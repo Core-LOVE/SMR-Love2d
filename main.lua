@@ -62,6 +62,7 @@ function love.update(dt)
 	
 	Block.update()
 	NPC.update()
+	Player.update()
 	
 	Block.frames()
 	BGO.frames()

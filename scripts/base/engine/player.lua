@@ -1,15 +1,26 @@
 local Player = {__type = "Player"}
+
+Player.script = {}
+Player.frames = require("scripts/base/engine/player_frames")
+
 Player.Width = {}
 Player.Height = {}
 Player.DuckHeight = {}
 Player.GrabSpotX = {}
 Player.GrabSpotY = {}
+
 for i = 1, 5 do
 	Player.Width[i] = {}
 	Player.Height[i] = {}
 	Player.DuckHeight[i] = {}
 	Player.GrabSpotX[i] = {}
 	Player.GrabSpotY[i] = {}
+	
+	if love.filesystem.getInfo("scripts/characters/character-"..tostring(i)..".lua") then
+		Player.script[i] = require("scripts/characters/character-"..tostring(i))
+	else
+		Player.script[i] = nil
+	end
 end
 
 Player.Height[1][1] = 30        -- Little Mario
@@ -297,6 +308,13 @@ Player.DuckHeight[5][10] = 44    -- ---------
 Player.GrabSpotX[5][10] = 18     -- ---------
 Player.GrabSpotY[5][10] = 16     -- ---------
 
+local function physics(v)
+	v.width = Player.Width[v.character][v.powerup]
+	v.height = Player.Width[v.character][v.powerup]
+	
+	BasicColliders.applySpeedWithCollision(v)
+end
+
 setmetatable(Player, {__call=function(Player, idx)
 	return Player[idx] or Player
 end})
@@ -310,15 +328,47 @@ function Player.spawn(character, x, y)
 		powerup = 1,
 		x = x or 0,
 		y = y or 0,
+		speedX = 0,
+		speedY = 0,
 		reservePowerup = nil,
 		width = Player.Width[character or 1][1],
 		height = Player.Height[character or 1][1],
+		
+		frame = 1,
+		
+		nogravity = 0,
+		vine = 0,
 		holdingNPC = {},
 		keys = newControls()
 	}
 	
+	BasicColliders.addCollisionProperties(p)
+	BasicColliders.addSolidObjectProperties(p)
+	
+	if Player.script[character] ~= nil then
+		p.onPhysicsPlayer = Player.script[character].onPhysicsPlayer or physics
+		p.onTickEndPlayer = Player.script[character].onTickEndPlayer or function(v) end
+		p.onTickPlayer = Player.script[character].onTickEndPlayer or function(v) end
+		p.name = Player.script[character].name or "mario"
+	else
+		if p.character == 1 then p.name = "mario"
+		elseif p.character == 2 then p.name = "luigi" end
+		
+		p.onPhysicsPlayer = physics
+		p.onTickEndPlayer = function(v) end
+		p.onTickPlayer = function(v) end
+	end
+	
 	Player[#Player + 1] =  p
 	return p
+end
+
+function Player.update()
+	for k,v in ipairs(Player) do
+		v.onPhysicsPlayer(v)
+		v.onTickEndPlayer(v)
+		v.onTickPlayer(v)
+	end
 end
 
 return Player
