@@ -14,13 +14,14 @@ BasicColliders = require(ms.."engine/collision")
 
 Window = love.window
 
-
-FRAMES_PER_SECOND = 64.102
-
 do
 	love.graphics.clear()
+	local quad = love.graphics.newQuad(0, 0, 32, 32, 32, 128)
+	love.graphics.draw(love.graphics.newImage('graphics/ui/LoadCoin.png'), quad, 800 - 48, 600 - 48)
 	love.graphics.present()
 end
+
+FRAMES_PER_SECOND = 64.102
 
 local function load_objects()
 	Camera = require(ms.. "engine/camera")

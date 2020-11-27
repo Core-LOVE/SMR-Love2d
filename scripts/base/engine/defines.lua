@@ -4,9 +4,22 @@ Defines.gravity = 12
 Defines.earthquake = 0
 Defines.jumpheight = 20
 Defines.jumpheight_bounce = 20
+Defines.block_jumpheight = 25
+Defines.head_jumpheight = 22
+Defines.npc_jumpheight = 22
+Defines.spring_jumpheight = 55
 Defines.player_runspeed = 6
 Defines.player_walkspeed = 3
 Defines.player_grav = 0.4
+
+Defines.npc_timeoffscreen = 180
+Defines.shell_speed = 7.1
+Defines.shell_speedY = 11
+Defines.npc_canhurtwait = 30
+Defines.npc_walkingspeed = 1.2
+Defines.npc_walkingonspeed = 1
+Defines.npc_mushroomspeed = 1.8
+Defines.npc_pswitch = 777
 Defines.npc_grav = 0.26
 
 Defines.player_grabSideEnabled = true

@@ -160,7 +160,7 @@ local function physics(v)
 	end
 
 	if config.iswalker then
-		v.speedX = 1.5 * v.direction
+		v.speedX = Defines.npc_walkingspeed * v.direction
 	end
 
 	v.speedY = math.min(v.speedY + config.gravity,config.maxgravity)
@@ -208,6 +208,9 @@ function NPC.spawn(id, x, y)
 		speedX = 0,
 		speedY = 0,
 		projectile = false,
+		
+		holdingPlayer = 0,
+		projectile = 0,
 		
 		offscreenFlag = false,
 		offscreenFlag2 = false,

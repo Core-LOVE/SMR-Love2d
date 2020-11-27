@@ -1,1 +1,2 @@
 iswalker=true
+framestyle=2
