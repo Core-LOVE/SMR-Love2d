@@ -165,6 +165,11 @@ local function physics(v)
 
 	v.speedY = math.min(v.speedY + config.gravity,config.maxgravity)
 
+	-- temp
+	if love.keyboard.isDown("a") then
+		v.speedY = -4
+	end
+
 	BasicColliders.applySpeedWithCollision(v)
 end
 
@@ -242,6 +247,7 @@ function NPC.spawn(id, x, y)
 	setmetatable(n,npcMT)
 
 	BasicColliders.addCollisionProperties(n)
+	BasicColliders.addSolidObjectProperties(n)
 
 	
 	if n.direction == 0 then
