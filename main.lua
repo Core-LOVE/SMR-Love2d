@@ -59,6 +59,8 @@ function love.update(dt)
 	Window = love.window
 	
 	onTickEnd()
+
+	Player.updateKeys()
 	
 	Block.update()
 	NPC.update()

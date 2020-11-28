@@ -8,8 +8,14 @@ Defines.block_jumpheight = 25
 Defines.head_jumpheight = 22
 Defines.npc_jumpheight = 22
 Defines.spring_jumpheight = 55
+Defines.player_jumpspeed = -5.7
 Defines.player_runspeed = 6
 Defines.player_walkspeed = 3
+Defines.player_walkingAcceleration = 0.1
+Defines.player_runningAcceleration = 0.05
+Defines.player_turningAcceleration = 0.18
+Defines.player_deceleration = 0.07
+Defines.player_runToWalkDeceleration = 0.1
 Defines.player_grav = 0.4
 
 Defines.npc_timeoffscreen = 180

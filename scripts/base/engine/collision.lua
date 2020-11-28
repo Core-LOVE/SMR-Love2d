@@ -203,12 +203,14 @@ do
         local vType = v.__type
         
         v.collidingSolids = {}
-		v.collidingSolidsSides = {}
+        v.collidingSolidsSides = {}
+        
+        v.collidingSlope = nil
 
 		v.collidesBlockBottom = false
 		v.collidesBlockLeft = false
 		v.collidesBlockRight = false
-		v.collidesBlockUp = false
+        v.collidesBlockUp = false
     end
 
     function Collision.addSolidObjectProperties(v)
@@ -223,7 +225,7 @@ do
             v.solidData.semisolid = (config.semisolid or config.sizeable) and not v.solidData.passthrough
 
             v.solidData.floorSlope = config.floorslope
-            v.solidData.ceilingSlope = config.ceilingSlope
+            v.solidData.ceilingSlope = config.ceilingslope
 
             v.solidData.solid = (not v.solidData.passthrough and not v.solidData.semisolid)
         elseif vType == "NPC" then
@@ -236,14 +238,24 @@ do
     end
 
 
-    local function getSlopeEjectionPosition(v,vType,solid,solidData)
+    local function getSlopeData(solidData)
         if solidData.floorSlope ~= 0 then
-            local vSide     = (v.x    +(v.width    *0.5))-((v.width    *0.5)*solidData.floorSlope)
-            local solidSide = (solid.x+(solid.width*0.5))+((solid.width*0.5)*solidData.floorSlope)
+            return solidData.floorSlope,    COLLISION_SIDE_TOP   ,false
+        elseif solidData.ceilingSlope ~= 0 then
+            return -solidData.ceilingSlope, COLLISION_SIDE_BOTTOM,true
+        end
+    end
 
-            local distance = (solidSide-vSide)*solidData.floorSlope
+    local function getSlopeEjectionPosition(v,vType,solid,solidData,slopeDirection)
+        local vSide     = (v.x    +(v.width    *0.5))-((v.width    *0.5)*slopeDirection)+v.speedX
+        local solidSide = (solid.x+(solid.width*0.5))+((solid.width*0.5)*slopeDirection)+solid.speedX
 
-            return (solid.y+solid.height) - (clamp(distance/solid.width,0,1) * solid.height)
+        local distance = (solidSide-vSide)*slopeDirection
+
+        if solidData.floorSlope ~= 0 then
+            return (solid.y+solid.height) - (clamp(distance/solid.width,0,1) * solid.height) - v.height
+        elseif solidData.ceilingSlope ~= 0 then
+            return solid.y + (clamp(distance/solid.width,0,1) * solid.height)
         end
     end
 
@@ -252,14 +264,20 @@ do
 
         local solidData = solid.solidData
 
-
+        
+        -- Slope handling
+        local slopeDirection,slopeEjectSide,ceiling = getSlopeData(solidData)
         local slopeEjectionPosition
-        if solidData.floorSlope ~= 0 then
-            if side == COLLISION_SIDE_TOP or (solidData.floorSlope == -1 and side == COLLISION_SIDE_LEFT) or (solidData.floorSlope == 1 and side == COLLISION_SIDE_RIGHT) or side == COLLISION_SIDE_UNKNOWN then
-                slopeEjectionPosition = getSlopeEjectionPosition(v,vType,solid,solidData)
+
+        if slopeDirection ~= nil then
+            if side == slopeEjectSide or side == COLLISION_SIDE_UNKNOWN or (slopeDirection == -1 and side == COLLISION_SIDE_LEFT) or (slopeDirection == 1 and side == COLLISION_SIDE_RIGHT) then
+                slopeEjectionPosition = getSlopeEjectionPosition(v,vType,solid,solidData,slopeDirection)
+
+                local topLeniency,bottomLeniency = 1.5,-2
+                local positionCheckSpeed = v.speedY * ((ceiling and -1) or 1)
                 
-                if v.y+v.height-v.speedY <= slopeEjectionPosition+1.5 and v.y+v.height+v.speedY >= slopeEjectionPosition-2 then
-                    side = COLLISION_SIDE_TOP
+                if slopeEjectionPosition ~= nil and (v.collidingSlope == nil or solidData.ceilingSlope == 0 or solid.y >= v.collidingSlope.y+v.collidingSlope.height) and v.y-positionCheckSpeed <= slopeEjectionPosition+topLeniency and v.y+positionCheckSpeed >= slopeEjectionPosition+bottomLeniency then
+                    side = slopeEjectSide
                 else
                     side = COLLISION_SIDE_NONE
                 end
@@ -279,7 +297,15 @@ do
                 v.speedX = 0
             end
         elseif side == COLLISION_SIDE_TOP or side == COLLISION_SIDE_BOTTOM then
-            v.speedY = 0
+            if solidData.collidingSlope == 0 then
+                v.speedY = 0
+            else
+                v.speedY = 1
+            end
+
+            if vType == "Player" then
+                v.jumpForce = 0
+            end
         end
 
         -- Ejection
@@ -287,7 +313,8 @@ do
             if slopeEjectionPosition == nil then
                 v.y = solid.y-v.height
             else
-                v.y = slopeEjectionPosition-v.height
+                v.y = slopeEjectionPosition
+                v.collidingSlope = solid
             end
 
             v.collidesBlockBottom = true
@@ -295,7 +322,13 @@ do
             v.x = solid.x+solid.width
             v.collidesBlockLeft = true
         elseif side == COLLISION_SIDE_BOTTOM then
-            v.y = solid.y+solid.height
+            if slopeEjectionPosition == nil then
+                v.y = solid.y+solid.height
+            else
+                v.y = slopeEjectionPosition
+                v.collidingSlope = solid
+            end
+
             v.collidesBlockUp = true
         elseif side == COLLISION_SIDE_LEFT then
             v.x = solid.x-v.width
@@ -317,6 +350,8 @@ do
             v.collidingSolidsSides[i] = nil
         end
 
+        v.collidingSlope = nil
+
         v.collidesBlockBottom = false
 		v.collidesBlockLeft = false
 		v.collidesBlockRight = false
@@ -329,7 +364,6 @@ do
 
         -- Interact with blocks
         for _,block in Block.iterateIntersecting(v.x,v.y,v.x+v.width,v.y+v.height) do
-            -- Get side
             hitSolid(v,vType,block)
         end
     end

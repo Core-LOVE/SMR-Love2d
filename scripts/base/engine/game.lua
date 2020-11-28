@@ -166,6 +166,8 @@ do
 		
 		Graphics.drawImageToSceneWP(img, v.x + fx, v.y + fy, pfrX(100 + v.frame * v.direction), pfrY(100 + v.frame * v.direction), 100, 100, -25)
 	end
+
+	
 	
 	local function sortDrawingQueue(a,b)
 		return (a.priority < b.priority)

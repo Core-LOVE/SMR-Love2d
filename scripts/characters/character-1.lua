@@ -66,7 +66,7 @@ char.DuckHeight[10] = 30    -- ---------
 char.GrabSpotX[10] = 18     -- ---------
 char.GrabSpotY[10] = 16     -- ---------
 
-function char.onTickEndPlayer(v)
+--[[function char.onTickEndPlayer(v)
 	if v.vine == 0 and v.nogravity == 0 then
 		v.speedY = v.speedY + Defines.player_grav
 		
@@ -89,6 +89,6 @@ function char.onTickEndPlayer(v)
 		v.nogravity = v.nogravity - 1
 	end
 	
-end
+end]]
 
 return char
