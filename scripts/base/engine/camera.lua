@@ -60,6 +60,24 @@ function Camera:draw()
     end
 end
 
+function Camera.getIntersecting(x1,y1, x2,y2)
+	if (type(x1) ~= "number") or (type(y1) ~= "number") or (type(x2) ~= "number") or (type(y2) ~= "number") then
+		error("Invalid parameters to getIntersecting")
+	end
+	
+	local ret = {}
+
+	for _,v in ipairs(Camera) do
+		if x2 > v.x and
+		y2 > v.y and
+		v.x + v.width > x1 and
+		v.y + v.height > y1 then
+			ret[#ret + 1] = v
+		end
+	end
+	
+	return ret
+end
 
 camera = Camera.create()
 camera.renderToScreen = true

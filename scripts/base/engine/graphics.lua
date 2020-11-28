@@ -1,5 +1,7 @@
 local Graphics = {}
 Graphics.sprites = {}
+Graphics.levelHUD = true
+Graphics.overworldHUD = true
 
 function Graphics.CaptureBuffer(w,h,settings)
 	return love.graphics.newCanvas(w, h, settings)
