@@ -266,6 +266,10 @@ do
 
         
         -- Slope handling
+        if v.collidingSlope ~= nil and solidData.floorSlope == 0 and solidData.ceilingSlope == 0 then
+            return
+        end
+
         local slopeDirection,slopeEjectSide,ceiling = getSlopeData(solidData)
         local slopeEjectionPosition
 
