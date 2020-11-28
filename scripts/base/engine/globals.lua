@@ -25,7 +25,7 @@ Text.print = function(...)
 	local x = arg[2]
 	local y = arg[3]
 	
-	if #args == 4 then
+	if #arg == 4 then
 		type = arg[2]
 		x = arg[3]
 		y = arg[4]
@@ -35,7 +35,7 @@ Text.print = function(...)
 	local C = 0
 	
 	if type == 2 then
-        for c = 1, string do
+        for c = 1, #string do
             if(c >= 48 and c <= 57) then
                 C = (c - 48) * 16
                 Graphics.drawImage(Graphics.sprites.hardcoded['45-1'], x + B, y, C, 0, 15, 17)
@@ -68,6 +68,21 @@ Text.print = function(...)
                 B = B + 16
             end
         end	
+	elseif type == 3 then
+		local str = string:upper()
+		
+		for c = 1, #str do
+            if(c >= 33 and c <= 126) then
+                C = (c - 33) * 32
+				Graphics.drawImage(Graphics.sprites.hardcoded['45-2'], x + B, y, 2, C, 18, 16)
+                B = B + 18
+                if(c == 'M') then
+                    B = B + 2
+				end
+            else
+                B = B + 16
+            end
+		end
 	end
 end
 
