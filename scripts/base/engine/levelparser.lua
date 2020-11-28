@@ -83,10 +83,14 @@ do
 		local v = Layer.create(properties.LR, properties.HD or false)
     end)
     
-	types.STARTPOINT.spawn = (function(properties)
+    types.STARTPOINT.spawn = (function(properties)
+        if #Player > 0 then return end
+
 		local v = Player.spawn(properties.ID, properties.X, properties.Y)
 		v.direction = properties.D
-	end)
+    end)
+    
+    
 
     local stringEscapeCharacters = {
         ["n"] = "\n",

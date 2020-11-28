@@ -247,8 +247,8 @@ do
     end
 
     local function getSlopeEjectionPosition(v,vType,solid,solidData,slopeDirection)
-        local vSide     = (v.x    +(v.width    *0.5))-((v.width    *0.5)*slopeDirection)
-        local solidSide = (solid.x+(solid.width*0.5))+((solid.width*0.5)*slopeDirection)
+        local vSide     = (v.x    +(v.width    *0.5))-((v.width    *0.5)*slopeDirection)+v.speedX
+        local solidSide = (solid.x+(solid.width*0.5))+((solid.width*0.5)*slopeDirection)+solid.speedX
 
         local distance = (solidSide-vSide)*slopeDirection
 
@@ -301,6 +301,10 @@ do
                 v.speedY = 0
             else
                 v.speedY = 1
+            end
+
+            if vType == "Player" then
+                v.jumpForce = 0
             end
         end
 
@@ -360,7 +364,6 @@ do
 
         -- Interact with blocks
         for _,block in Block.iterateIntersecting(v.x,v.y,v.x+v.width,v.y+v.height) do
-            -- Get side
             hitSolid(v,vType,block)
         end
     end
