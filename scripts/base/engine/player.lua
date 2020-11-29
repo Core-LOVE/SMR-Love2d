@@ -351,6 +351,8 @@ function Player.spawn(character, x, y)
 		keys = newControls(),
 		rawKeys = newControls(),
 
+		section = 0,
+		
 		jumpForce = 0,
 	}
 	

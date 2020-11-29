@@ -174,6 +174,12 @@ do
 	end
 
 	function Game.updateGraphicsLevel()
+		for k,z in ipairs(Camera) do
+			local s = Player(k % 2).section
+		
+			Backgrounds.draw(s,z)
+		end
+		
 		for _,v in ipairs(Block) do
 			Game.drawBlock(v)
 		end
