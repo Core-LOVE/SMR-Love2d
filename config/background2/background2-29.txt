@@ -1,0 +1,12 @@
+fill-color = #183048
+
+[BG]
+img=29
+parallaxX=0.5
+maxParallaxY=1
+frames=4
+framespeed=12
+alignY=BOTTOM
+repeatX=true
+fitY=true
+depth=100

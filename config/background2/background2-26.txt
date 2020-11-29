@@ -1,0 +1,10 @@
+fill-color = #F8B028
+
+[BG]
+img=26
+parallaxX=0.5
+parallaxY=1
+alignY=TOP
+marginTop=-32
+repeatX=true
+depth=100

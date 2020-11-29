@@ -1,0 +1,11 @@
+fill-color = black
+
+[BG]
+img=24
+parallaxX=0.5
+parallaxY=1
+alignY=TOP
+marginTop=-32
+repeatX=true
+repeatY=true
+depth=100

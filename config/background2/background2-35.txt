@@ -1,0 +1,18 @@
+fill-color = #9890F8
+
+[BG]
+img=35
+alignY=BOTTOM
+parallaxX=0.5
+parallaxY=1
+repeatX=true
+depth=90
+
+[Clouds]
+img=36
+parallaxX=0.25
+parallaxY=1
+alignY=BOTTOM
+y=-500
+repeatX=true
+depth=100

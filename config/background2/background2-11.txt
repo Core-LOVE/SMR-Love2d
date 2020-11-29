@@ -1,0 +1,10 @@
+fill-color = #0060B8
+
+[BG]
+img=12
+parallaxX=0.5
+maxParallaxY=1
+alignY=BOTTOM
+fitY=true
+repeatX=true
+depth=100

@@ -1,0 +1,11 @@
+fill-color = #202020
+
+[BG]
+img=44
+parallaxX=0.5
+maxParallaxY=1
+alignY=BOTTOM
+repeatX=true
+repeatY=true
+fitY=true
+depth=100

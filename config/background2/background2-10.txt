@@ -1,0 +1,10 @@
+fill-color = #5890A8
+
+[BG]
+img=11
+parallaxX=0.5
+maxParallaxY=1
+fitY=true
+alignY=BOTTOM
+repeatX=true
+depth=100

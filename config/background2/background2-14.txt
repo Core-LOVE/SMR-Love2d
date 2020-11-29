@@ -1,0 +1,11 @@
+fill-color = #F07840
+
+[BG]
+img=14
+parallaxX=0.5
+maxParallaxY=1
+alignY=BOTTOM
+fitY=true
+repeatX=true
+depth=100
+alignY=BOTTOM

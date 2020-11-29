@@ -33,6 +33,7 @@ local function load_objects()
 	Player = require(ms.."engine/player")
 	Effect = require(ms.."engine/effect")
 	Section = require(ms.."engine/section")
+	Backgrounds = require(ms.."engine/background2")
 end
 
 function love.load()
