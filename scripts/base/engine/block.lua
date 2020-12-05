@@ -259,7 +259,7 @@ do
 
 
 		for _,v in ipairs(Block) do
-			if idFilter == nil or idFilter == v.id or (idMap ~= nil and idMap[v.id]) then
+			if idFilter == nil or idFilter == -1 or idFilter == v.id or (idMap ~= nil and idMap[v.id]) then
 				ret[#ret + 1] = v
 			end
 		end
@@ -280,16 +280,42 @@ do
 	end
 
 
-	function Block.iterate()
-		return ipairs(Block)
-	end
-
 	-- Based on the lunalua implementation
-	local function iterateIntersecting(args,i)
-		while (i <= #Block) do
+
+	local function iterate(args,i)
+		while (i <= args[1]) do
 			local v = Block[i]
 
-			if v.x <= args[3] and v.y <= args[4] and v.x+v.width >= args[1] and v.y+v.height >= args[2] then
+			local idFilter = args[2]
+			local idMap = args[3]
+
+			if idFilter == nil or idFilter == -1 or idFilter == v.id or (idMap ~= nil and idMap[v.id]) then
+				return i+1,v
+			end
+
+			i = i + 1
+		end
+	end
+
+	function Block.iterate(idFilter)
+		local args = {#Block,idFilter}
+
+		if type(idFilter) == "table" then
+			args[3] = {}
+
+			for _,id in ipairs(idFilter) do
+				args[3][id] = true
+			end
+		end
+
+		return iterate, args, 1
+	end
+
+	local function iterateIntersecting(args,i)
+		while (i <= args[1]) do
+			local v = Block[i]
+
+			if v.x <= args[4] and v.y <= args[5] and v.x+v.width >= args[2] and v.y+v.height >= args[3] then
 				return i+1,v
 			end
 
@@ -298,7 +324,7 @@ do
 	end
 
 	function Block.iterateIntersecting(x1,y1,x2,y2)
-		local args = {x1,y1,x2,y2}
+		local args = {#Block,x1,y1,x2,y2}
 
 		return iterateIntersecting, args, 1
 	end

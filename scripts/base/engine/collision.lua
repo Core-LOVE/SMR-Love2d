@@ -190,15 +190,6 @@ end
 
 -- Actual collision stuff, shared by NPC's and players
 do
-    local function getConfig(v,vType)
-        if vType == "NPC" then
-            return NPC.config[v.id]
-        elseif vType == "Block" then
-            return Block.config[v.id]
-        end
-    end
-
-
     function Collision.addCollisionProperties(v)
         local vType = v.__type
         
@@ -216,10 +207,10 @@ do
     function Collision.addSolidObjectProperties(v)
         local vType = v.__type
 
-        local config = getConfig(v,vType)
+        v.solidData = {}
 
         if vType == "Block" then
-            v.solidData = {}
+            local config = Block.config[v.id]
 
             v.solidData.passthrough = config.passthrough
             v.solidData.semisolid = (config.semisolid or config.sizeable) and not v.solidData.passthrough
@@ -229,7 +220,10 @@ do
 
             v.solidData.solid = (not v.solidData.passthrough and not v.solidData.semisolid)
         elseif vType == "NPC" then
-            v.solidData = {passthrough = true}
+            local config = NPC.config[v.id]
+
+            v.solidData.semisolid = (config.playerblocktop)
+            v.solidData.solid = (config.playerblock and not v.solidData.semisolid)
         end
     end
 
@@ -247,8 +241,8 @@ do
     end
 
     local function getSlopeEjectionPosition(v,vType,solid,solidData,slopeDirection)
-        local vSide     = (v.x    +(v.width    *0.5))-((v.width    *0.5)*slopeDirection)+v.speedX
-        local solidSide = (solid.x+(solid.width*0.5))+((solid.width*0.5)*slopeDirection)+solid.speedX
+        local vSide     = (v.x    +(v.width    *0.5))-((v.width    *0.5)*slopeDirection)
+        local solidSide = (solid.x+(solid.width*0.5))+((solid.width*0.5)*slopeDirection)
 
         local distance = (solidSide-vSide)*slopeDirection
 
@@ -277,7 +271,8 @@ do
             if side == slopeEjectSide or side == COLLISION_SIDE_UNKNOWN or (slopeDirection == -1 and side == COLLISION_SIDE_LEFT) or (slopeDirection == 1 and side == COLLISION_SIDE_RIGHT) then
                 slopeEjectionPosition = getSlopeEjectionPosition(v,vType,solid,solidData,slopeDirection)
 
-                local topLeniency,bottomLeniency = 1.5,-2
+                local topLeniency = 1.5
+                local bottomLeniency = -2
                 local positionCheckSpeed = v.speedY * ((ceiling and -1) or 1)
                 
                 if slopeEjectionPosition ~= nil and (v.collidingSlope == nil or solidData.ceilingSlope == 0 or solid.y >= v.collidingSlope.y+v.collidingSlope.height) and v.y-positionCheckSpeed <= slopeEjectionPosition+topLeniency and v.y+positionCheckSpeed >= slopeEjectionPosition+bottomLeniency then
@@ -369,6 +364,10 @@ do
         -- Interact with blocks
         for _,block in Block.iterateIntersecting(v.x,v.y,v.x+v.width,v.y+v.height) do
             hitSolid(v,vType,block)
+        end
+
+        for _,npc in NPC.iterateIntersecting(v.x,v.y,v.x+v.width,v.y+v.height) do
+            hitSolid(v,vType,npc)
         end
     end
 end

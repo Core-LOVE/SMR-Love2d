@@ -165,11 +165,6 @@ local function physics(v)
 
 	v.speedY = math.min(v.speedY + config.gravity,config.maxgravity)
 
-	-- temp
-	if love.keyboard.isDown("a") then
-		v.speedY = -4
-	end
-
 	BasicColliders.applySpeedWithCollision(v)
 end
 
@@ -273,33 +268,99 @@ function NPC.count()
 	return #NPC
 end
 
-function NPC.get(idFilter)
-	local ret = {}
 
-	for i = 1, #NPC do
-		if idFilter == nil then
-			ret[#ret + 1] = NPC(i)
-			print(inspect(NPC(i)))
-		else
-			if type(idFilter) == 'number' then
-				local k = idFilter
-				if NPC(i).id == k then
-					ret[#ret + 1] = NPC(i)
-					print(inspect(NPC(i)))
-				end
-			elseif type(idFilter) == 'table' then
-				for k in values(idFilter) do
-					if NPC(i).id == k then
-						ret[#ret + 1] = NPC(i)
-						print(inspect(NPC(i)))
-					end
-				end
+-- "Get" functions
+do
+	function NPC.count()
+		return #NPC
+	end
+
+	function NPC.get(idFilter)
+		local ret = {}
+
+		local idFilterType = type(idFilter)
+		local idMap
+		if idFilter == "table" then
+			idMap = {}
+
+			for _,id in ipairs(idFilter) do
+				idMap[id] = true
 			end
+		end
+
+
+		for _,v in ipairs(NPC) do
+			if idFilter == nil or idFilter == -1 or idFilter == v.id or (idMap ~= nil and idMap[v.id]) then
+				ret[#ret + 1] = v
+			end
+		end
+
+		return ret
+	end
+
+	function NPC.getIntersecting(x1,y1,x2,y2)
+		local ret = {}
+
+		for _,v in ipairs(NPC) do
+			if v.x <= x2 and v.y <= y2 and v.x+v.width >= x1 and v.y+v.height >= y1 then
+				ret[#ret + 1] = v
+			end
+		end
+
+		return ret
+	end
+
+
+	-- Based on the lunalua implementation
+
+	local function iterate(args,i)
+		while (i <= args[1]) do
+			local v = NPC[i]
+
+			local idFilter = args[2]
+			local idMap = args[3]
+
+			if idFilter == nil or idFilter == -1 or idFilter == v.id or (idMap ~= nil and idMap[v.id]) then
+				return i+1,v
+			end
+
+			i = i + 1
 		end
 	end
 
-	return ret
+	function NPC.iterate(idFilter)
+		local args = {#NPC,idFilter}
+
+		if type(idFilter) == "table" then
+			args[3] = {}
+
+			for _,id in ipairs(idFilter) do
+				args[3][id] = true
+			end
+		end
+
+		return iterate, args, 1
+	end
+
+	local function iterateIntersecting(args,i)
+		while (i <= args[1]) do
+			local v = NPC[i]
+
+			if v.x <= args[4] and v.y <= args[5] and v.x+v.width >= args[2] and v.y+v.height >= args[3] then
+				return i+1,v
+			end
+
+			i = i + 1
+		end
+	end
+
+	function NPC.iterateIntersecting(x1,y1,x2,y2)
+		local args = {#NPC,x1,y1,x2,y2}
+
+		return iterateIntersecting, args, 1
+	end
 end
+
 
 function NPC.update()
 	for k,v in ipairs(NPC) do
