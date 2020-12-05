@@ -86,3 +86,12 @@ function love.filedropped(file)
 	local levelParser = require(ms.."engine/levelparser")
 	levelParser.load(data)
 end
+
+
+local screenshotter = require(ms.. "engine/screenshotter")
+
+function love.keypressed(key,scancode,isrepeat)
+	if key == "f12" and not isrepeat then
+		screenshotter.takeScreenshot()
+	end
+end
