@@ -256,6 +256,12 @@ Player.GrabSpotY[5][10] = 16     -- ---------
 
 
 local function physics(v)
+	if v.keys.left then
+		v.direction = -1
+	elseif v.keys.right then
+		v.direction = 1
+	end
+	
 	local scr = Player.script[v.character]
 	if scr ~= nil then
 		v.width = scr.Width[v.powerup] or 32
@@ -342,15 +348,17 @@ function Player.spawn(character, x, y)
 		speedX = 0,
 		speedY = 0,
 		reservePowerup = 0,
+		direction = 1,
 		
 		frame = 1,
+		frameTimer = 0,
 		
 		nogravity = 0,
 		vine = 0,
 		holdingNPC = nil,
 		keys = newControls(),
 		rawKeys = newControls(),
-
+		
 		section = 0,
 		
 		jumpForce = 0,
@@ -381,13 +389,13 @@ function Player.spawn(character, x, y)
 	return p
 end
 
-
 function Player.update()
 	for k,v in ipairs(Player) do
 		local scr = Player.script[v.character]
 		
 		if scr ~= nil then
 			if scr.onPhysicsPlayer ~= nil then scr.onPhysicsPlayer(v) else physics(v) end
+			if scr.onAnimationPlayer ~= nil then scr.onAnimationPlayer(v) end
 			if scr.onTickEndPlayer ~= nil then scr.onTickEndPlayer(v) end
 			if scr.onTickPlayer ~= nil then scr.onTickPlayer(v) end
 		else
@@ -396,6 +404,10 @@ function Player.update()
 	end
 end
 
+function Player:isGroundTouching()
+	if self.collidesBlockBottom then return true end
+	return false
+end
 
 -- Keys (heavily based on the x2 rendition)
 do

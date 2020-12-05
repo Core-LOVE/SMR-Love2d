@@ -66,29 +66,33 @@ char.DuckHeight[10] = 30    -- ---------
 char.GrabSpotX[10] = 18     -- ---------
 char.GrabSpotY[10] = 16     -- ---------
 
---[[function char.onTickEndPlayer(v)
-	if v.vine == 0 and v.nogravity == 0 then
-		v.speedY = v.speedY + Defines.player_grav
-		
-		if v.holdingNPC ~= nil and (v.holdingNPC.id == 278 or v.holdingNPC == 279) then
-			if (v.keys.jump or v.keys.altJump) then
-				v.speedY = v.speedY - (Defines.player_grav * 0.8)
-				
-				if v.speedY > Defines.player_grav * 3 then
-					v.speedY = Defines.player_grav * 3
-				end
-			else
-				v.holdingNPC.ai1 = 0
+function char.onAnimationPlayer(v)
+	if v.collidesBlockBottom then
+		if v.speedX ~= 0 then
+			v.frameTimer = v.frameTimer + 1
+			if v.speedX > Defines.player_walkspeed - 1.5 or v.speedX < -Defines.player_walkspeed + 1.5 then
+				v.frameTimer = v.frameTimer + 1 end
+			if v.speedX > Defines.player_walkspeed or v.speedX < -Defines.player_walkspeed then
+				v.frameTimer = v.frameTimer + 1 end
+			if v.speedX > Defines.player_walkspeed + 1 or v.speedX < -Defines.player_walkspeed - 1 then
+				v.frameTimer = v.frameTimer + 1 end
+			if v.speedX > Defines.player_walkspeed + 2 or v.speedX < -Defines.player_walkspeed - 2 then
+				v.frameTimer = v.frameTimer + 1 end
+
+			if v.frameTimer >= 10 then
+				v.frameTimer = 0
+				if v.frame == 1 then v.frame = 2 else v.frame = 1 end
 			end
+		else
+			v.frame = 1
 		end
-		
-		if v.speedY > Defines.gravity then
-			v.speedY = Defines.gravity
-		end
-	elseif v.nogravity ~= 0 then
-		v.nogravity = v.nogravity - 1
+	else
+		v.frame = 3
 	end
-	
-end]]
+end
+
+function char.onTickEndPlayer(v)
+
+end
 
 return char

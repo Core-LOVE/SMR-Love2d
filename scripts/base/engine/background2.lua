@@ -25,23 +25,32 @@ for i = 1, ORIG_BG_MAX_ID do
 end
 
 function Backgrounds.draw(s,c)
-	-- local sec = Section(s)
-	-- local v = Backgrounds.objs[sec.backgroundID].layers
+	if #Section == 0 or Section(s).backgroundID == 0 then return end
 	
-	-- for _,l in ipairs(v) do
-		-- local img = nil
+	local sec = Section(s)
+	local v = Backgrounds.objs[1].layers
+	
+	for _,l in ipairs(v) do
+		local img = nil
+		local qd = nil
 		
-		-- if v.img == 'number' then
-			-- img = Graphics.sprites.background2[v.img].img
-		-- end
+		if type(v.img) == 'number' then
+			img = Graphics.sprites.background2[v.img].img
+		elseif type(v.img) ~= 'number' and v.img ~= nil then
+			img:setWrap("repeat", "repeat")
+		end
 		
-		-- local cx = (sec.boundary.left - (c.x + sec.boundary.left)) * v.parallaxX
-		-- local cy = (sec.boundary.top - (c.y + sec.boundary.top)) * v.parallaxY
+		local cx = (sec.boundary.left - (c.x + sec.boundary.left)) * v.parallaxX
+		local cy = (sec.boundary.top - (c.y + sec.boundary.top)) * v.parallaxY
 		
-		-- if img ~= nil then
-			-- Graphics.drawImageWP(img, cx, cy, l.priority)
-		-- end
-	-- end
+		if not qd then
+			-- qd = love.graphics.newQuad(cx, cy, , map_height_in_pixels, bg_image:getWidth(), bg_image:getHeight())
+		end
+		
+		if img ~= nil then
+			Graphics.drawImageWP(img, cx, cy, l.priority)
+		end
+	end
 end
 
 return Backgrounds

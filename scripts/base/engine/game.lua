@@ -162,7 +162,7 @@ do
 		local img = Graphics.sprites[v.name][v.powerup].img
 		
 		local fx = Player.frames[v.name]['FrameX'][(v.powerup * 100) + (v.frame * v.direction)]
-		local fy = Player.frames[v.name]['FrameX'][(v.powerup * 100) + (v.frame * v.direction)]
+		local fy = Player.frames[v.name]['FrameY'][(v.powerup * 100) + (v.frame * v.direction)]
 		
 		Graphics.drawImageToSceneWP(img, v.x + fx, v.y + fy, pfrX(100 + v.frame * v.direction), pfrY(100 + v.frame * v.direction), 100, 100, -25)
 	end
@@ -175,7 +175,7 @@ do
 
 	function Game.updateGraphicsLevel()
 		for k,z in ipairs(Camera) do
-			local s = Player(k % 2).section
+			local s = Player(k).section
 		
 			Backgrounds.draw(s,z)
 		end
