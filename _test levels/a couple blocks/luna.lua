@@ -1,3 +1,3 @@
-function onDraw()
-	--Text.print("E", 10, 10)
+function onStart()
+	Effect.spawn(1, 1, 1)
 end

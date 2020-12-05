@@ -27,6 +27,7 @@ do
         BLOCK = {},
         NPC = {},
 		BGO = {},
+		PHYSICS = {},
 		
         LAYERS = {},
         EVENTS_CLASSIC = {},
@@ -90,9 +91,9 @@ do
 		v.direction = properties.D
     end)
     
-    -- types.PHYSICS.spawn = (function(properties)
-		-- local v = Liquid.create(properties.ET + 1, properties.X, properties.Y, properties.W, properties.H)
-	-- end)
+    types.PHYSICS.spawn = (function(properties)
+		local v = Liquid.create(properties.ET + 1, properties.X, properties.Y, properties.W, properties.H)
+	end)
 
     local stringEscapeCharacters = {
         ["n"] = "\n",

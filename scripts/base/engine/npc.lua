@@ -60,6 +60,7 @@ for i = 1,NPC_MAX_ID do
 		isbot=false,
 		isvegetable=false,
 		iswalker=false,
+		ismushroom=false,
 		
 		gravity = Defines.npc_grav,
 		maxgravity = 8,
@@ -67,7 +68,6 @@ for i = 1,NPC_MAX_ID do
 	if love.filesystem.getInfo("scripts/npc/npc-"..tostring(i)..".lua") then
 		NPC.script[i] = require("scripts/npcs/npc-"..tostring(i))
 	end
-	
 	
 	if love.filesystem.getInfo("config/npc/npc-"..tostring(i)..".txt") then
 		local Txt = txt_parser.load("config/npc/npc-"..tostring(i)..".txt")
@@ -159,10 +159,28 @@ local function physics(v)
 		v.turnAround = false
 	end
 
-	if config.iswalker then
+	if config.iswalker and not config.ismushroom then
 		v.speedX = Defines.npc_walkingspeed * v.direction
+	elseif config.ismushroom then
+		v.speedX = Defines.npc_mushroomspeed * v.direction
 	end
-
+	
+	if v.dontMove and v.projectile == 0 then
+		v.speedX = 0
+		local C = 0
+		
+		for k,p in ipairs(Player) do
+			if (p.section == v.section) and (C == 0 or math.abs(v.x + (v.width / 2) - p.x + (p.width / 2)) < 0) then
+				C = math.abs(v.x + (v.width / 2) - p.x + (p.width / 2))
+				if v.x + (v.width / 2) > p.x + (p.width / 2) then
+					v.direction = -1
+				else
+					v.direction = 1
+				end
+			end
+		end
+	end
+	
 	v.speedY = math.min(v.speedY + config.gravity,config.maxgravity)
 
 	BasicColliders.applySpeedWithCollision(v)

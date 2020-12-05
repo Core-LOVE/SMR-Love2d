@@ -113,7 +113,7 @@ do
 	end	
 	
 	function Game.drawNPC(v)
-		if v.isHidden then return end
+		if v.isHidden or v.id <= 0 then return end
 		
 		local img = Graphics.sprites.npc[v.id].img
 		
@@ -131,7 +131,7 @@ do
 	end
 	
 	function Game.drawBGO(v)
-		if v.isHidden then return end
+		if v.isHidden or v.id <= 0 then return end
 		
 		local img = Graphics.sprites.background[v.id].img
 		
@@ -145,7 +145,7 @@ do
 	end
 	
 	function Game.drawBlock(v)
-		if v.isHidden or v.hiddenUntilHit then return end
+		if v.isHidden or v.hiddenUntilHit or v.id <= 0 then return end
 
 		local img = Graphics.sprites.block[v.id].img
 		

@@ -409,6 +409,9 @@ function Player:isGroundTouching()
 	return false
 end
 
+function Player:kill()
+
+end
 -- Keys (heavily based on the x2 rendition)
 do
 	KEYS_UP = false

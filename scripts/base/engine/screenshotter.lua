@@ -1,6 +1,5 @@
 local screenshotter = {}
 
-
 -- TODO: most of this is love2d-depent. replace it later.
 
 local function getName()
@@ -24,5 +23,6 @@ end
 
 function screenshotter.update()
 
+end
 
 return screenshotter
