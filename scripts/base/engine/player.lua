@@ -303,6 +303,10 @@ local function physics(v)
 
 	-- Jumping
 	if v.keys.jump then
+		if v.collidesBlockBottom then
+			SFX.play(1)
+		end
+		
 		if v.keys.jump == KEYS_PRESSED and v.collidesBlockBottom then
 			v.jumpForce = Defines.jumpheight
 		end
@@ -317,7 +321,6 @@ local function physics(v)
 	elseif v.jumpForce > 0 then
 		v.jumpForce = math.max(0,v.jumpForce - 1)
 	end
-
 
 	v.speedY = math.min(Defines.gravity,v.speedY + Defines.player_grav)
 

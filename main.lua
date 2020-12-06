@@ -11,6 +11,7 @@ Game = require(ms.."engine/game")
 Globals = require(ms.."engine/globals")
 Defines = require(ms.."engine/defines")
 BasicColliders = require(ms.."engine/collision")
+SFX = require(ms.."sfx")
 
 Window = love.window
 

@@ -1,14 +1,10 @@
 local SFX = {}
 
-function SFX.play(...)
-	if Audio == nil or arg[1] == nil then return end
+function SFX.play(sfx)
+	if Audio == nil or sfx == nil then return end
 	
-	if type(arg[1]) ~= 'number' then
-		local i = #Audio.sounds + 1
-		Audio.sounds[i] = {}
-		Audio.sounds[i].sfx = arg[1]
-		Audio.sounds[i].volume = arg[2] or 1
-		Audio.sounds[i].loops = arg[3] or 1
+	if type(sfx) == 'number' then
+		love.audio.play(Audio.sounds[sfx].sfx)
 	end
 end
 

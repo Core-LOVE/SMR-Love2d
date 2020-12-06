@@ -55,6 +55,26 @@ for i = 1, EFFECT_MAX_ID do
 	end
 end
 
+function Effect:remove(npcID)
+	local v = Effect[self.idx]
+	local n = nil
+	
+	if npcID ~= nil and npcID > 0 and type(npcID) ~= 'number' then
+		n = NPC.spawn(npcID, v.x + (v.width / 2), v.y - 1)
+		n.x = n.x - (n.width / 2)
+	end
+
+	collectgarbage()
+	return v,n
+end
+
+local function physics(v)
+	v.lifetime = v.lifetime - 1
+	if v.lifetime <= 0 then
+		v:remove(v.npcID)
+	end
+end
+
 local function values(t)
     local i = 0
     return function() i = i + 1; return t[i] end
@@ -129,7 +149,81 @@ function Effect.getIntersecting(x1,y1,x2,y2)
 end
 
 function Effect.frames()
-
+	--WIP!!
+	for k,v in ipairs(Effect) do
+		if(Effect.config[v.id].frames > 0) then
+			v.animationTimer = v.animationTimer + 1
+			if(Effect.config[v.id].framestyle == 2 and (v.projectile ~= 0)) then
+				v.animationTimer = v.animationTimer + 1
+			end
+			if(v.animationTimer >= Effect.config[v.id].framespeed) then
+				if(Effect.config[v.id].framestyle == 0) then
+					v.animationFrame = v.animationFrame + 1 * v.direction
+				else
+					v.animationFrame = v.animationFrame + 1
+				end
+				v.animationTimer = 0
+			end
+			if(Effect.config[v.id].framestyle == 0) then
+				if(v.animationFrame >= Effect.config[v.id].frames) then
+					v.animationFrame = 0
+				end
+				if(v.animationFrame < 0) then
+					v.animationFrame = Effect.config[v.id].frames - 1
+				end
+			elseif(Effect.config[v.id].framestyle == 1) then
+				if(v.direction == -1) then
+					if(v.animationFrame >= Effect.config[v.id].frames) then
+						v.animationFrame = 0
+					end
+					if(v.animationFrame < 0) then
+						v.animationFrame = Effect.config[v.id].frames
+					end
+				else
+					if(v.animationFrame >= Effect.config[v.id].frames * 2) then
+						v.animationFrame = Effect.config[v.id].frames
+					end
+					if(v.animationFrame < Effect.config[v.id].frames) then
+						v.animationFrame = Effect.config[v.id].frames
+					end
+				end
+			elseif(Effect.config[v.id].framestyle == 2) then
+				if(v.holdingPlayer == 0 and v.projectile == 0) then
+					if(v.direction == -1) then
+						if(v.animationFrame >= Effect.config[v.id].frames) then
+							v.animationFrame = 0
+						end
+						if(v.animationFrame < 0) then
+							v.animationFrame = Effect.config[v.id].frames - 1
+						end
+					else
+						if(v.animationFrame >= Effect.config[v.id].frames * 2) then
+							v.animationFrame = Effect.config[v.id].frames
+						end
+						if(v.animationFrame < Effect.config[v.id].frames) then
+							v.animationFrame = Effect.config[v.id].frames * 2 - 1
+						end
+					end
+				else
+					if(v.direction == -1) then
+						if(v.animationFrame >= Effect.config[v.id].frames * 3) then
+							v.animationFrame = Effect.config[v.id].frames * 2
+						end
+						if(v.animationFrame < Effect.config[v.id].frames * 2) then
+							v.animationFrame = Effect.config[v.id].frames * 3 - 1
+						end
+					else
+						if(v.animationFrame >= Effect.config[v.id].frames * 4) then
+							v.animationFrame = Effect.config[v.id].frames * 3
+						end
+						if(v.animationFrame < Effect.config[v.id].frames * 3) then
+							v.animationFrame = Effect.config[v.id].frames * 4 - 1
+						end
+					end
+				end
+			end
+		end
+	end
 end
 
 return Effect
