@@ -1,3 +1,17 @@
+require("lovefs")
+fs = lovefs(love.filesystem.getWorkingDirectory())
+path = string.gsub(fs.current, [[\]], [[/]])
+
+do
+	local function compile(bool)
+		if bool == false then return end
+		
+		love.filesystem.setRequirePath(path.."/")
+	end
+
+	compile(false)
+end
+
 local ms = "scripts/base/"
 
 ini_parser = require(ms.."ini_parser")
@@ -12,13 +26,14 @@ Globals = require(ms.."engine/globals")
 Defines = require(ms.."engine/defines")
 BasicColliders = require(ms.."engine/collision")
 SFX = require(ms.."sfx")
+error_handler = require(ms.."error_handler")
 
 Window = love.window
 
 do
 	love.graphics.clear()
 	local quad = love.graphics.newQuad(0, 0, 32, 32, 32, 128)
-	love.graphics.draw(love.graphics.newImage('graphics/ui/LoadCoin.png'), quad, 800 - 48, 600 - 48)
+	love.graphics.draw(Graphics.loadImage('graphics/ui/LoadCoin.png'), quad, 800 - 48, 600 - 48)
 	love.graphics.present()
 end
 
@@ -44,6 +59,7 @@ function love.load()
 	Graphics.loadUi()
 	--Graphics.loadGraphics(false)
 	load_objects()
+
 	Section.createSections(21)
 	-- temp
 	local levelParser = require(ms.."engine/levelparser")
@@ -72,8 +88,8 @@ function love.update(dt)
 	BGO.frames()
 	NPC.frames()
 
-	if dt < 1/FRAMES_PER_SECOND then
-		love.timer.sleep(1/FRAMES_PER_SECOND - dt)
+	if dt < 1 / FRAMES_PER_SECOND then
+		love.timer.sleep(1 / FRAMES_PER_SECOND - dt)
 	end
 	
 	onTick()

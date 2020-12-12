@@ -1,0 +1,1 @@
+start "" "%CD%\compile\love.exe".

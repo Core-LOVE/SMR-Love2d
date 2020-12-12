@@ -154,12 +154,13 @@ do
 		local config = Block.config[v.id]
 		local priority = (config.priority) or (config.foreground and -10) or (v.isSizeable and -90) or -65
 		
-		
 		Graphics.drawImageToSceneWP(img, v.x,v.y, 0,Block.frame[v.id] * v.height, v.width,v.height, priority)
 	end
 
 	function Game.drawPlayer(v)
 		local img = Graphics.sprites[v.name][v.powerup].img
+		
+		if img == nil then return end
 		
 		local fx = Player.frames[v.name]['FrameX'][(v.powerup * 100) + (v.frame * v.direction)]
 		local fy = Player.frames[v.name]['FrameY'][(v.powerup * 100) + (v.frame * v.direction)]
@@ -167,7 +168,14 @@ do
 		Graphics.drawImageToSceneWP(img, v.x + fx, v.y + fy, pfrX(100 + v.frame * v.direction), pfrY(100 + v.frame * v.direction), 100, 100, -25)
 	end
 
-	
+	function Game.drawEffect(v)
+		local img = Graphics.sprites.effect[v.id].img
+		
+		if img == nil then return end
+		
+		local config = Effect.config[v.id]
+		local priority = (config.priority) or (config.foreground and -5) or -60
+	end
 	
 	local function sortDrawingQueue(a,b)
 		return (a.priority < b.priority)

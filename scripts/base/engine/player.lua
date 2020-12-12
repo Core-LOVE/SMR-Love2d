@@ -303,7 +303,7 @@ local function physics(v)
 
 	-- Jumping
 	if v.keys.jump then
-		if v.collidesBlockBottom then
+		if v.collidesBlockBottom and v.keys.jump == KEYS_PRESSED then
 			SFX.play(1)
 		end
 		
