@@ -3,6 +3,11 @@ Graphics.sprites = {}
 Graphics.levelHUD = true
 Graphics.overworldHUD = true
 
+Graphics.HUD_NONE = 0
+Graphics.HUD_HEARTS = 1
+Graphics.HUD_ITEMBOX = 2
+HUDOverride.multiplayerOffsets = {[Graphics.HUD_NONE] = 0, [Graphics.HUD_ITEMBOX] = 40, [Graphics.HUD_HEARTS] = 57}
+
 function Graphics.CaptureBuffer(w,h,settings)
 	return love.graphics.newCanvas(w, h, settings)
 end
@@ -95,6 +100,12 @@ function Graphics.loadUi()
 			print("Graphics.sprites.hardcoded["..k..k2.."] = graphics/ui/"..key..".png")
 		end
 	end
+end
+
+function Graphics.overrideHUD(func) 
+	if func == nil or type(func) ~= 'function' then return end
+	
+	Game.drawHud = func
 end
 
 Graphics.drawingQueue = {}

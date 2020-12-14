@@ -177,6 +177,19 @@ do
 		local priority = (config.priority) or (config.foreground and -5) or -60
 	end
 	
+	local imgcon = love.graphics.newImage("graphics/ui/Container0.png")
+	function Game.drawHud()
+		-- for k,v in ipairs(Player) do
+			width = love.graphics.getWidth()
+			height = love.graphics.getHeight()
+			
+			local offset = {x = HUDOverride.offsets.itembox.x, y = HUDOverride.offsets.itembox.y}
+			local itembox = {img = imgcon, x = (width / 2) - 48, y = 0}
+			
+			Graphics.drawImageWP(itembox.img, itembox.x + offset.x, itembox.y + offset.y, HUDOverride.priority)
+		-- end
+	end
+	
 	local function sortDrawingQueue(a,b)
 		return (a.priority < b.priority)
 	end
@@ -203,6 +216,8 @@ do
 		for _,v in ipairs(Player) do
 			Game.drawPlayer(v)
 		end
+		
+		Game.drawHud()
 		
 		table.sort(Graphics.drawingQueue,sortDrawingQueue)
 
