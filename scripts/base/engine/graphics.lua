@@ -151,17 +151,22 @@ do
 		drawImageGeneric(texture,x,y,sourceX,sourceY,sourceWidth,sourceHeight,opacity,false,RENDER_PRIORITY_DEFAULT)
 	end
 	function Graphics.drawImageWP(texture,x,y,sourceX,sourceY,sourceWidth,sourceHeight,opacity,priority)
-		if sourceX == nil then
-			if sourceY == nil then
-				priority = sourceX
-			else
-				opacity = sourceX
-				priority = sourceY
-			end
+		if sourceY == nil then -- texture,x,y,priority
+			priority = sourceX
+		elseif sourceWidth == nil then -- texture,x,y,opacity,priority
+			opacity = sourceX
+			priority = sourceY
+		elseif priority == nil then -- texture,x,y,sourceX,sourceY,sourceWidth,sourceHeight,priority
+			priority = opacity
+			opacity = nil
 		end
 
 		drawImageGeneric(texture,x,y,sourceX,sourceY,sourceWidth,sourceHeight,opacity,false,priority)
 	end
+	-- Graphics.drawImageWP(img,x,y,sourceX,sourceY,sourceWidth,sourceHeight,opacity,priority)
+	-- Graphics.drawImageWP(img,x,y,sourceX,sourceY,sourceWidth,sourceHeight,priority)
+	-- Graphics.drawImageWP(img,x,y,opacity,priority)
+	-- Graphics.drawImageWP(img,x,y,priority)
 
 	function Graphics.drawImageToScene(texture,x,y,sourceX,sourceY,sourceWidth,sourceHeight,opacity)
 		if sourceX == nil then
@@ -171,13 +176,14 @@ do
 		drawImageGeneric(texture,x,y,sourceX,sourceY,sourceWidth,sourceHeight,opacity,true,RENDER_PRIORITY_DEFAULT)
 	end
 	function Graphics.drawImageToSceneWP(texture,x,y,sourceX,sourceY,sourceWidth,sourceHeight,opacity,priority)
-		if sourceX == nil then
-			if sourceY == nil then
-				priority = sourceX
-			else
-				opacity = sourceX
-				priority = sourceY
-			end
+		if sourceY == nil then -- texture,x,y,priority
+			priority = sourceX
+		elseif sourceWidth == nil then -- texture,x,y,opacity,priority
+			opacity = sourceX
+			priority = sourceY
+		elseif priority == nil then -- texture,x,y,sourceX,sourceY,sourceWidth,sourceHeight,priority
+			priority = opacity
+			opacity = nil
 		end
 
 		drawImageGeneric(texture,x,y,sourceX,sourceY,sourceWidth,sourceHeight,opacity,true,priority)
