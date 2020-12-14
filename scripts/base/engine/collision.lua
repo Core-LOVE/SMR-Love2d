@@ -213,7 +213,7 @@ do
             local config = Block.config[v.id]
 
             v.solidData.passthrough = config.passthrough
-            v.solidData.semisolid = (config.semisolid or config.sizeable) and not v.solidData.passthrough
+            v.solidData.semisolid = (config.semisolid or config.sizable) and not v.solidData.passthrough
 
             v.solidData.floorSlope = config.floorslope
             v.solidData.ceilingSlope = config.ceilingslope
@@ -222,8 +222,10 @@ do
         elseif vType == "NPC" then
             local config = NPC.config[v.id]
 
-            v.solidData.semisolid = (config.playerblocktop)
-            v.solidData.solid = (config.playerblock and not v.solidData.semisolid)
+            v.solidData.passthrough = (not config.playerblock and not config.playerblocktop)
+            v.solidData.semisolid = (config.playerblocktop and not v.solidData.passthrough)
+
+            v.solidData.solid = (not v.solidData.passthrough and not v.solidData.semisolid)
         end
     end
 
@@ -289,6 +291,7 @@ do
         end
 
 
+        -- Effects
         if side == COLLISION_SIDE_LEFT or side == COLLISION_SIDE_RIGHT then
             if vType == "NPC" then
                 v.turnAround = true
@@ -306,6 +309,11 @@ do
                 v.jumpForce = 0
             end
         end
+
+        if side == COLLISION_SIDE_BOTTOM and vType == "Player" then
+            SFX.play(3)
+        end
+
 
         -- Ejection
         if side == COLLISION_SIDE_TOP then

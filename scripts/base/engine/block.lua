@@ -15,7 +15,7 @@ Block.framecount = {}
 
 for i = 1,BLOCK_MAX_ID do
 	Block.config[i] = {
-		sizeable = false,
+		sizable = false,
 		connecting = false,
 		playerpassthrough = false,
 		npcpassthrough = false,
