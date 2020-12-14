@@ -1,2 +1,4 @@
 iswalker=true
 framestyle=2
+playerblocktop=true
+grabtop=true
