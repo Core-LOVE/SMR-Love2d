@@ -303,13 +303,6 @@ local function physics(v)
 
 	-- Jumping
 	if v.keys.jump then
-<<<<<<< Updated upstream
-		if v.collidesBlockBottom and v.keys.jump == KEYS_PRESSED then
-			SFX.play(1)
-		end
-		
-=======
->>>>>>> Stashed changes
 		if v.keys.jump == KEYS_PRESSED and v.collidesBlockBottom then
 			v.jumpForce = Defines.jumpheight
 			SFX.play(1)
