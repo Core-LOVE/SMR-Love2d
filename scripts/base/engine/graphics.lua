@@ -143,7 +143,7 @@ do
 
 			texture = texture,x = x,y = y,
 			sourceX = sourceX or 0,sourceY = sourceY or 0,
-			sourceWidth = sourceWidth or texture.width,sourceHeight = sourceHeight or texture.height,
+			sourceWidth = sourceWidth or texture:getWidth(),sourceHeight = sourceHeight or texture:getHeight(),
 			opacity = opacity,priority = priority or RENDER_PRIORITY_DEFAULT,sceneCoords = sceneCoords,
 		}
 	end
