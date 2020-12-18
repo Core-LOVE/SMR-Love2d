@@ -1,3 +1,4 @@
+GUI = require("libs/gui")
 require("lovefs")
 fs = lovefs(love.filesystem.getWorkingDirectory())
 path = string.gsub(fs.current, [[\]], [[/]])

@@ -102,12 +102,6 @@ function Graphics.loadUi()
 	end
 end
 
-function Graphics.overrideHUD(func) 
-	if func == nil or type(func) ~= 'function' then return end
-	
-	Game.drawHud = func
-end
-
 Graphics.drawingQueue = {}
 
 -- Basic rendering functions
