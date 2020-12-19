@@ -123,6 +123,10 @@ function Player.spawn(character, x, y)
 		
 		nogravity = 0,
 		vine = 0,
+		
+		dead = false,
+		deathTimer = 0,
+		
 		holdingNPC = nil,
 		keys = newControls(),
 		rawKeys = newControls(),
@@ -172,9 +176,50 @@ function Player.update()
 	end
 end
 
+function Player.count()
+	return #Player
+end
+
 function Player:isGroundTouching()
 	if self.collidesBlockBottom then return true end
 	return false
+end
+
+function Player.getIntersecting(x1,y1,x2,y2)
+	local ret = {}
+
+	for _,v in ipairs(Player) do
+		if v.x <= x2 and v.y <= y2 and v.x+v.width >= x1 and v.y+v.height >= y1 then
+			ret[#ret + 1] = v
+		end
+	end
+
+	return ret
+end
+	
+function Player.getNearest(x, y)
+	if type(x) ~= "number" or type(y) ~= "number" then
+		error("Invalid parameters to getNearest")
+	end
+	
+	local players = #Player
+	if #Player == 1 then
+		return Player(1)
+	else
+		local p
+		local dist = math.huge
+		for _, v in ipairs(Player) do
+			if not v.dead then
+				local dx, dy = math.abs(v.x + v.width / 2 - x), math.abs(v.y + v.height / 2 - y)
+				local cdist = math.sqrt(dx * dx + dy * dy)
+				if cdist < dist then
+					dist = cdist
+					p = v
+				end
+			end
+		end
+		return p or player
+	end
 end
 
 function Player:kill()
@@ -184,8 +229,8 @@ end
 do
 	KEYS_UP = false
 	KEYS_RELEASED = nil
-	KEYS_PRESSED = 1
 	KEYS_DOWN = true
+	KEYS_PRESSED = 1
 
 	local keysMT = {
 		__index = (function(self,key)
@@ -260,5 +305,11 @@ do
 	end
 end
 
+player = Player(1)
+if Player.count() > 1 then
+	for k = 2, Player.count() do
+		_G['player'..tostring(k)] = Player(k)
+	end
+end
 
 return Player

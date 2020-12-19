@@ -1,6 +1,22 @@
 local Window = {__type = "Window"}
 Window.__index = Window
 
+local function hex(hex, alpha)
+    hex = hex:gsub("#","")
+    return tonumber("0x"..hex:sub(1,2)) / 255, tonumber("0x"..hex:sub(3,4)) / 255, tonumber("0x"..hex:sub(5,6)) / 255, alpha
+end
+
+local function checkMouse(x,y,w,h)
+	if love.mouse.getX() >= x and
+	love.mouse.getY() >= y and
+	love.mouse.getX() <= x + w and
+	love.mouse.getY() <= y + h then
+		return true
+	end
+	
+	return false
+end
+
 function Window.new()
    local w = {x = 0, y = 0, width = 100, height = 100, canClose = true, dx = 0, dy = 0}
    w.resize = 0
@@ -139,9 +155,6 @@ function Window:update(v)
 		v.realY = love.mouse.getY() - v.dy
 		v.realX = 0
 	end
-	
-	math.clamp(v.x, v.minX, v.maxX - v.width)
-	math.clamp(v.y, v.minY, v.maxY - v.height)
 end
 
 return Window

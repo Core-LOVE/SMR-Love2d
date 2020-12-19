@@ -175,6 +175,8 @@ do
 		
 		local config = Effect.config[v.id]
 		local priority = (config.priority) or (config.foreground and -5) or -60
+		
+		Graphics.drawImageToSceneWP(img, v.x, v.y, 0, v.height, v.width, v.height, priority)
 	end
 	
 	local imgcon = love.graphics.newImage("graphics/ui/Container0.png")
@@ -199,6 +201,10 @@ do
 			local s = Player(k).section
 		
 			Backgrounds.draw(s,z)
+		end
+		
+		for _,v in ipairs(Effect) do
+			Game.drawEffect(v)
 		end
 		
 		for _,v in ipairs(Block) do

@@ -119,6 +119,22 @@ function Collision.n00b(Loc1, Loc2, section)
     end
 end
 
+function Collision.shouldTurnAround(Loc1, Loc2, Direction, Section)
+	if(Loc1.y + Loc1.height + 8 <= Loc2.y + Loc2.height) then
+        if(Loc1.y + Loc1.height + 8 >= Loc2.y) then
+            if(Loc1.x + Loc1.width * 0.5 + (8 * Direction) <= Loc2.x + Loc2.width) then            
+                if(Loc1.x + Loc1.width * 0.5 + (8 * Direction) >= Loc2.x) then
+                    if(Loc2.y > Loc1.y + Loc1.height - 8) then
+                        return false
+                    end
+                end
+            end
+        end
+    end
+	
+	return true
+end
+
 function Collision.npcStart(Loc1, Loc2, section) --sed when a NPC is activated to see if it should spawn
 	if(Loc1.x < Loc2.x + Loc2.width) then
         if(Loc1.x + Loc1.width > Loc2.x) then

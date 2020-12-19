@@ -1,0 +1,5 @@
+gfxheight=48
+gfxwidth=40
+iswalker=true
+frames = 4
+framespeed = 9

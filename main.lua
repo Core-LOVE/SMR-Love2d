@@ -1,4 +1,17 @@
 GUI = require("libs/gui")
+-- local w = GUI.createWindow{
+	-- name = "Super Mario ReInvent", 
+	-- width = 800, 
+	-- height = 600, 
+	-- alpha = 1,
+-- }
+-- w.contentDraw = function(self)
+	-- onDrawEnd()
+	-- love.graphics.setColor(1,1,1,self.alpha)
+	-- Game.updateGraphicsLevel()
+	-- onDraw()
+-- end
+
 require("lovefs")
 fs = lovefs(love.filesystem.getWorkingDirectory())
 path = string.gsub(fs.current, [[\]], [[/]])
@@ -15,6 +28,9 @@ end
 
 local ms = "scripts/base/"
 
+require(ms.."io")
+require(ms.."math")
+
 ini_parser = require(ms.."ini_parser")
 txt_parser = require(ms.."txt_parser")
 inspect = require(ms.."inspect")
@@ -30,7 +46,7 @@ BasicColliders = require(ms.."engine/collision")
 SFX = require(ms.."sfx")
 error_handler = require(ms.."error_handler")
 
-Window = love.window
+-- Window = love.window
 
 do
 	love.graphics.clear()
@@ -73,10 +89,11 @@ function love.draw()
 	onDrawEnd()
 	Game.updateGraphicsLevel()
 	onDraw()
+	-- GUI:draw()
 end
 
 function love.update(dt)
-	Window = love.window
+	-- Window = love.window
 	
 	onTickEnd()
 
@@ -95,6 +112,8 @@ function love.update(dt)
 	end
 	
 	onTick()
+	
+	-- GUI:tick()
 	collectgarbage()
 end
 

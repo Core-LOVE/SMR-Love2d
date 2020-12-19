@@ -56,7 +56,7 @@ function gui:tick()
 				table.remove(gui.windows, k)
 				return self
 			end
-		end
+		end		
 		Window:update(v)
 	end
 end

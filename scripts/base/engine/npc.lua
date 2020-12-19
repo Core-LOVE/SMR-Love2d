@@ -65,8 +65,9 @@ for i = 1,NPC_MAX_ID do
 		gravity = Defines.npc_grav,
 		maxgravity = 8,
 	}
-	if love.filesystem.getInfo("scripts/npc/npc-"..tostring(i)..".lua") then
+	if love.filesystem.getInfo("scripts/npcs/npc-"..tostring(i)..".lua") then
 		NPC.script[i] = require("scripts/npcs/npc-"..tostring(i))
+		print(true)
 	end
 	
 	if love.filesystem.getInfo("config/npc/npc-"..tostring(i)..".txt") then
@@ -156,6 +157,7 @@ local function physics(v)
 
 	if v.turnAround then
 		v.direction = -v.direction
+		v.speedX = -v.speedX
 		v.turnAround = false
 	end
 
@@ -165,18 +167,54 @@ local function physics(v)
 		v.speedX = Defines.npc_mushroomspeed * v.direction
 	end
 	
+	if config.isshell then
+		if v.speedX == 0 then
+			v.animationFrame = 0
+			v.animationTimer = 0
+		end
+	end
+	
+	if config.cliffturn and not v.projectile then
+		for k,b in ipairs(Block) do
+			local tempLoc = {
+				x = v.x,
+				y = v.y,
+				width = 16,
+				height = 16
+			}
+			tempLoc.y = tempLoc.y + tempLoc.height - 8
+			tempLoc.height = 16
+			
+			if v.collidingSlope ~= nil and v.collidingSlope > 0 then
+				tempLoc.height = 32
+			end
+			tempLoc.width = 16
+			
+			if v.direction > 0 then 
+				tempLoc.x = tempLoc.x + v.width - 20
+			else 
+				tempLoc.x = tempLoc.x - v.width + 20
+			end
+			
+			if not BasicColliders.check(tempLoc, b) then
+				v.turnAround = true
+				break
+			else
+				v.turnAround = false
+			end
+		end
+	end
+	
 	if v.dontMove and v.projectile == 0 then
 		v.speedX = 0
 		local C = 0
 		
-		for k,p in ipairs(Player) do
-			if (p.section == v.section) and (C == 0 or math.abs(v.x + (v.width / 2) - p.x + (p.width / 2)) < 0) then
-				C = math.abs(v.x + (v.width / 2) - p.x + (p.width / 2))
-				if v.x + (v.width / 2) > p.x + (p.width / 2) then
-					v.direction = -1
-				else
-					v.direction = 1
-				end
+		if (C == 0 or Player.getNearest(v.x + v.width / 2, v.y + v.height) ~= nil) then
+			C = Player.getNearest(v.x + v.width / 2, v.y + v.height)
+			if v.x + (v.width / 2) > p.x + (p.width / 2) then
+				v.direction = -1
+			else
+				v.direction = 1
 			end
 		end
 	end
@@ -225,10 +263,10 @@ function NPC.spawn(id, x, y)
 		direction = 0,
 		speedX = 0,
 		speedY = 0,
-		projectile = false,
 		
 		holdingPlayer = 0,
-		projectile = 0,
+		projectile = false,
+		cantHurt = 0,
 		
 		offscreenFlag = false,
 		offscreenFlag2 = false,
@@ -255,6 +293,8 @@ function NPC.spawn(id, x, y)
 		ai6 = 0,
 
 		turnAround = false,
+		
+		data = {_settings = {_global = { }}}
 	}
 
 	setmetatable(n,npcMT)
@@ -274,7 +314,7 @@ function NPC.spawn(id, x, y)
 	n.onPhysics = physics
 	
 	NPC[#NPC + 1] = n
-	print(inspect(n))
+	-- print(inspect(n))
 	return n
 end
 
@@ -383,11 +423,11 @@ end
 function NPC.update()
 	for k,v in ipairs(NPC) do
 		local scr = NPC.script[v.id]
-		
+
 		if scr ~= nil then
 			if scr.onPhysicsNPC ~= nil then scr.onPhysicsNPC(v) else physics(v) end
-			if scr.onTickEndNPC ~= nil then scr.onTickEndNPC(v) end
 			if scr.onTickNPC ~= nil then scr.onTickNPC(v) end
+			if scr.onTickEndNPC ~= nil then scr.onTickEndNPC(v) end
 		else
 			physics(v)
 		end

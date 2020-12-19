@@ -1,0 +1,6 @@
+width=32
+height=32
+gfxheight=54
+iswalker=true
+frames=2
+framestyle=1

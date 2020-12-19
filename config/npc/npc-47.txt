@@ -1,0 +1,6 @@
+height = 48
+gfxheight = 64
+noblockcollision = true
+foreground = true
+score = 6
+nogravity = true
