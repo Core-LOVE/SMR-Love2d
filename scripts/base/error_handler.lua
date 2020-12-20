@@ -1,10 +1,11 @@
 local utf8 = require("utf8")
- 
+local er = false
+
 local function error_printer(msg, layer)
 	print((debug.traceback("Error: " .. tostring(msg), 1+(layer or 1)):gsub("\n[^\n]+$", "")))
 end
  
-function love.errorhandler(msg)
+love.errorhandler = function(msg)
 	msg = tostring(msg)
  
 	error_printer(msg, 2)
@@ -54,44 +55,45 @@ function love.errorhandler(msg)
  
 	local err = {}
  
-	table.insert(err, "Error\n")
-	table.insert(err, sanitizedmsg)
+	table.insert(err, "==>"..sanitizedmsg)
  
 	if #sanitizedmsg ~= #msg then
 		table.insert(err, "Invalid UTF-8 string in error message.")
 	end
  
-	table.insert(err, "\n")
+	table.insert(err, "=============")
  
 	for l in trace:gmatch("(.-)\n") do
 		if not l:match("boot.lua") then
-			l = l:gsub("stack traceback:", "Traceback\n")
+			l = l:gsub("stack traceback:", "stack traceback:")
 			table.insert(err, l)
 		end
 	end
  
 	local p = table.concat(err, "\n")
  
-	p = p:gsub("\t", "")
+	p = p:gsub("\t", "	")
 	p = p:gsub("%[string \"(.-)\"%]", "%1")
  
 	local function draw()
-		local pos = 70
-		love.graphics.clear(89/255, 157/255, 220/255)
-		love.graphics.printf(p, pos, pos, love.graphics.getWidth() - pos)
-		love.graphics.present()
+		if not er then
+			love.graphics.clear()
+			love.graphics.present()	
+			love.window.showMessageBox('Debug', p, "error")
+			er = true
+		end
 	end
  
 	local fullErrorText = p
 	local function copyToClipboard()
 		if not love.system then return end
 		love.system.setClipboardText(fullErrorText)
-		p = p .. "\nCopied to clipboard!"
+		p = p .. "\n\nCopied to clipboard!"
 		draw()
 	end
  
 	if love.system then
-		p = p .. "\n\nPress Ctrl+C or tap to copy this error"
+		p = p .. "\nPress Ctrl+C or tap to copy this error"
 	end
  
 	return function()
@@ -126,5 +128,4 @@ function love.errorhandler(msg)
 			love.timer.sleep(0.1)
 		end
 	end
- 
 end

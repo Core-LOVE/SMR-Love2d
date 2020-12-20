@@ -13,10 +13,12 @@ function sounds.loadSounds()
 	
 	mx = sfx['sound-main'].total
 	for i = 1, mx do
-		sounds.sounds[i] = {}
-		sounds.sounds[i].name = sfx['sound-'..tostring(i)].name
-		sounds.sounds[i].sfx = love.audio.newSource("sound/"..sfx['sound-'..tostring(i)].file, 'stream')
-		print("sound/"..sfx['sound-'..tostring(i)].file)
+		if i ~= 98 then
+			sounds.sounds[i] = {}
+			sounds.sounds[i].name = sfx['sound-'..tostring(i)].name
+			sounds.sounds[i].sfx = love.audio.newSource("sound/"..sfx['sound-'..tostring(i)].file, 'stream')
+			print("sound/"..sfx['sound-'..tostring(i)].file)
+		end
 	end
 	
 	-- temp

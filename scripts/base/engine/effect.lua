@@ -50,20 +50,27 @@ for i = 1, EFFECT_MAX_ID do
 		variant = 1,
 		frameOffset = 0
 	}
-	if love.filesystem.getInfo("scripts/effects/effect-"..tostring(i)..".lua") then
-		Effect.script[i] = require("scripts/effect/effect-"..tostring(i))
-	end
+	-- if love.filesystem.getInfo("scripts/effects/effect-"..tostring(i)..".lua") then
+		-- Effect.script[i] = require("scripts/effect/effect-"..tostring(i))
+	-- end
+	if love.filesystem.getInfo("config/effect/effect-"..tostring(i)..".txt") then
+		local Txt = txt_parser.load("config/effect/effect-"..tostring(i)..".txt")
+		for k,v in pairs(Txt) do
+			Effect.config[i][k] = v
+		end
+	end	
 end
 
 function Effect:remove(npcID)
 	local v = Effect[self.idx]
-	local n = nil
+	local n
 	
-	if npcID ~= nil and npcID > 0 and type(npcID) ~= 'number' then
+	if npcID ~= nil and npcID > 0 and type(npcID) == 'number' then
 		n = NPC.spawn(npcID, v.x + (v.width / 2), v.y - 1)
 		n.x = n.x - (n.width / 2)
 	end
-
+	Effect[self.idx] = nil
+	
 	collectgarbage()
 	return v,n
 end
@@ -72,6 +79,7 @@ local function physics(v)
 	v.lifetime = v.lifetime - 1
 	if v.lifetime <= 0 then
 		v:remove(v.npcID)
+		SFX.play(1)
 	end
 end
 
@@ -93,9 +101,12 @@ function Effect.spawn(id, x, y, variant)
 		y = y or 0,
 		width = 32,
 		height = 32,
+		animationFrame = 0,
+		animationTimer = 0,
+		direction = 0,
 	}
 	for k in ipairs(Effect.config[b.id]) do
-		print(Effect.config[b.id][k])
+		b[k] = Effect.config[b.id][k]
 	end
 	b.variant = variant or 1
 	
@@ -146,6 +157,12 @@ function Effect.getIntersecting(x1,y1,x2,y2)
 	end
 	
 	return results
+end
+
+function Effect.update()
+	for k,v in ipairs(Effect) do
+		physics(v)
+	end
 end
 
 function Effect.frames()

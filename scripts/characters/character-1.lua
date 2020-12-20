@@ -87,7 +87,27 @@ function char.onAnimationPlayer(v)
 			v.frame = 1
 		end
 	else
-		v.frame = 3
+		if v.IsSpinjumping then
+			local fspeed = 3
+			v.frameTimer = v.frameTimer + 1
+			if v.frameTimer < fspeed then
+				v.direction = 1
+				v.frame = 1
+			elseif v.frameTimer < fspeed * 2 then
+				v.frame = 15
+			elseif v.frameTimer < fspeed * 3 then
+				v.direction = -1
+				v.frame = 1
+			elseif v.frameTimer < fspeed * 4 then
+				v.frame = 13 
+			elseif v.frameTimer >= fspeed * 5 then
+				v.direction = 1
+				v.frame = 1
+				v.frameTimer = 0
+			end
+		else
+			v.frame = 3
+		end
 	end
 end
 

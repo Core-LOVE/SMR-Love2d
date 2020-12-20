@@ -1,0 +1,5 @@
+framestyle = 1
+frames=2
+spinjumpsafe = true
+jumphurt = true
+iswalker = true

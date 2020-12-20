@@ -207,11 +207,12 @@ local function physics(v)
 	
 	if v.dontMove and v.projectile == 0 then
 		v.speedX = 0
+		
 		local C = 0
 		
 		if (C == 0 or Player.getNearest(v.x + v.width / 2, v.y + v.height) ~= nil) then
 			C = Player.getNearest(v.x + v.width / 2, v.y + v.height)
-			if v.x + (v.width / 2) > p.x + (p.width / 2) then
+			if v.x + (v.width / 2) > C.x + (C.width / 2) then
 				v.direction = -1
 			else
 				v.direction = 1

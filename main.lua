@@ -1,3 +1,4 @@
+require("scripts/base/error_handler")
 GUI = require("libs/gui")
 -- local w = GUI.createWindow{
 	-- name = "Super Mario ReInvent", 
@@ -28,6 +29,7 @@ end
 
 local ms = "scripts/base/"
 
+require(ms.."const")
 require(ms.."io")
 require(ms.."math")
 
@@ -44,7 +46,6 @@ Globals = require(ms.."engine/globals")
 Defines = require(ms.."engine/defines")
 BasicColliders = require(ms.."engine/collision")
 SFX = require(ms.."sfx")
-error_handler = require(ms.."error_handler")
 
 -- Window = love.window
 
@@ -106,7 +107,8 @@ function love.update(dt)
 	Block.frames()
 	BGO.frames()
 	NPC.frames()
-
+	Effect.frames()
+	
 	if dt < 1 / FRAMES_PER_SECOND then
 		love.timer.sleep(1 / FRAMES_PER_SECOND - dt)
 	end

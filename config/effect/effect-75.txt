@@ -1,0 +1,6 @@
+[first]
+import=AI_SINGLE
+framespeed=4
+frames=2
+xOffset=-16:16
+yOffset=-16:16

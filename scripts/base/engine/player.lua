@@ -61,6 +61,8 @@ local function physics(v)
 			v.speedX = v.speedX - Defines.player_runToWalkDeceleration*walkDirection
 		end
 	elseif v.collidesBlockBottom then
+		if v.IsSpinjumping then v.IsSpinjumping = false end
+		
 		if v.speedX > 0 then
 			v.speedX = math.max(0,v.speedX - Defines.player_deceleration*speedModifier)
 		elseif v.speedX < 0 then
@@ -70,10 +72,15 @@ local function physics(v)
 
 
 	-- Jumping
-	if v.keys.jump then
-		if v.keys.jump == KEYS_PRESSED and v.collidesBlockBottom then
+	if v.keys.jump or v.keys.altJump then
+		if (v.keys.jump == KEYS_PRESSED or v.keys.altJump == KEYS_PRESSED) and v.collidesBlockBottom then
 			v.jumpForce = Defines.jumpheight
-			SFX.play(1)
+			if v.keys.altJump then
+				v.IsSpinjumping = true
+				SFX.play(33)	
+			else
+				SFX.play(1)
+			end
 		end
 
 		if v.jumpForce > 0 then
@@ -89,6 +96,17 @@ local function physics(v)
 
 	v.speedY = math.min(Defines.gravity,v.speedY + Defines.player_grav)
 
+	-- Spinjumping
+	if v.IsSpinjumping and v.speedY >= Defines.player_grav then
+		for k,n in ipairs(NPC.getIntersecting(v.x, v.y, v.x + v.width, v.y + v.height)) do
+			if v.y <= n.y and NPC.config[n.id].spinjumpsafe then
+				Effect.spawn(75, v.x + v.width / 2 - 16, v.y + v.height / 2 - 16)
+				SFX.play(2)
+				v.jumpForce = Defines.jumpheight
+				v.speedY = Defines.player_jumpspeed-math.abs(v.speedX*0.2)
+			end
+		end
+	end
 	
 	BasicColliders.applySpeedWithCollision(v)
 end
@@ -124,8 +142,12 @@ function Player.spawn(character, x, y)
 		nogravity = 0,
 		vine = 0,
 		
-		dead = false,
-		deathTimer = 0,
+		DeathState = false,
+		DeathTimer = 0,
+		
+		IsSpinjumping = false,
+		SpinjumpStateCounter = 0,
+		SpinjumpLandDirection = 0,	
 		
 		holdingNPC = nil,
 		keys = newControls(),
