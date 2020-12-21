@@ -1,19 +1,7 @@
 require("scripts/base/error_handler")
-GUI = require("libs/gui")
--- local w = GUI.createWindow{
-	-- name = "Super Mario ReInvent", 
-	-- width = 800, 
-	-- height = 600, 
-	-- alpha = 1,
--- }
--- w.contentDraw = function(self)
-	-- onDrawEnd()
-	-- love.graphics.setColor(1,1,1,self.alpha)
-	-- Game.updateGraphicsLevel()
-	-- onDraw()
--- end
-
+require("scripts/base/sdl2lib")
 require("lovefs")
+
 fs = lovefs(love.filesystem.getWorkingDirectory())
 path = string.gsub(fs.current, [[\]], [[/]])
 
@@ -46,8 +34,7 @@ Globals = require(ms.."engine/globals")
 Defines = require(ms.."engine/defines")
 BasicColliders = require(ms.."engine/collision")
 SFX = require(ms.."sfx")
-
--- Window = love.window
+Window = require(ms.."engine/window")
 
 do
 	love.graphics.clear()
