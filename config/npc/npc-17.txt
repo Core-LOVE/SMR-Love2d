@@ -1,0 +1,6 @@
+frames=1
+framestyle=1
+nogravity=true
+noblockcollision=true
+height=28
+gfxheight=28

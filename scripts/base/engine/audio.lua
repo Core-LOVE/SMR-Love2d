@@ -16,7 +16,7 @@ function sounds.loadSounds()
 		if i ~= 98 then
 			sounds.sounds[i] = {}
 			sounds.sounds[i].name = sfx['sound-'..tostring(i)].name
-			sounds.sounds[i].sfx = love.audio.newSource("sound/"..sfx['sound-'..tostring(i)].file, 'stream')
+			sounds.sounds[i].sfx = love.audio.newSource("sound/"..sfx['sound-'..tostring(i)].file, 'static')
 			print("sound/"..sfx['sound-'..tostring(i)].file)
 		end
 	end

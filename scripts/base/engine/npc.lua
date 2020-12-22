@@ -220,9 +220,17 @@ local function physics(v)
 		end
 	end
 	
-	v.speedY = math.min(v.speedY + config.gravity,config.maxgravity)
-
-	BasicColliders.applySpeedWithCollision(v)
+	if v.grabbedPlayer == nil then
+		if not config.nogravity then
+			v.speedY = math.min(v.speedY + config.gravity,config.maxgravity)
+		end
+		
+		if config.noblockcollision then
+			v.turnAround = false
+		end
+		
+		BasicColliders.applySpeedWithCollision(v)
+	end
 end
 
 local function values(t)
@@ -235,9 +243,9 @@ setmetatable(NPC, {__call=function(NPC, idx)
 end})
 
 
-local npcMT = {__type = "NPC"}
+local npcMT = {__type = "NPC", __index = NPC}
 
-function NPC.spawn(id, x, y)
+function NPC.spawn(id, x, y, section, respawn, centered)
 	local n = {
 		__type = "NPC",
 
@@ -265,7 +273,6 @@ function NPC.spawn(id, x, y)
 		speedX = 0,
 		speedY = 0,
 		
-		holdingPlayer = 0,
 		projectile = false,
 		cantHurt = 0,
 		
@@ -277,7 +284,7 @@ function NPC.spawn(id, x, y)
 		animationTimer = 0,
 		isHidden = false,
 		
-		grabbingPlayerIndex = 0,
+		grabbedPlayer = nil,
 		tempBlock = {},
 		section = 0,
 		
@@ -321,6 +328,39 @@ end
 
 function NPC:harm(harmType, damage, reason)
 
+end
+
+function NPC:grab(playerObj, sfx)
+	if playerObj.__type ~= "Player" then return end
+	
+	if sfx ~= nil then
+		SFX.play(sfx)
+	end
+	
+	self.grabbedPlayer = playerObj
+	playerObj.holdingNPC = self
+end
+
+function NPC:ungrab(throw, sfx)
+	local p = self.grabbedPlayer
+	self.grabbedPlayer = nil
+	p.holdingNPC = nil
+	
+	if throw == true then
+		if sfx ~= nil then
+			SFX.play(sfx)
+		end
+	
+		self.speedX = 5 * p.direction
+		self.speedY = -6
+		self.projectile = true
+	else
+		self.x = p.x + p.width / 2 - self.width / 2
+		self.y = p.y + p.height - self.height
+		self.x = (self.x + ((p.width + p.width / 4) * p.direction))
+		self.speedX = 0
+		self.speedY = 0
+	end
 end
 
 function NPC.count()

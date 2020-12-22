@@ -79,6 +79,7 @@ local function physics(v)
 				v.IsSpinjumping = true
 				SFX.play(33)	
 			else
+				v.IsSpinjumping = false
 				SFX.play(1)
 			end
 		end
@@ -96,19 +97,45 @@ local function physics(v)
 
 	v.speedY = math.min(Defines.gravity,v.speedY + Defines.player_grav)
 
-	-- Spinjumping
-	if v.IsSpinjumping and v.speedY >= Defines.player_grav then
-		for k,n in ipairs(NPC.getIntersecting(v.x, v.y, v.x + v.width, v.y + v.height)) do
-			if v.y <= n.y and NPC.config[n.id].spinjumpsafe then
-				Effect.spawn(75, v.x + v.width / 2 - 16, v.y + v.height / 2 - 16)
-				SFX.play(2)
-				v.jumpForce = Defines.jumpheight
-				v.speedY = Defines.player_jumpspeed-math.abs(v.speedX*0.2)
+	for k,n in ipairs(NPC.getIntersecting(v.x, v.y, v.x + v.width, v.y + v.height)) do
+		local nc = NPC.config[n.id]
+		-- Spinjumping
+		if (v.IsSpinjumping and v.speedY >= Defines.player_grav) and (v.y <= n.y and nc.spinjumpsafe) then
+			Effect.spawn(75, v.x + v.width / 2 - 16, v.y + v.height / 2 - 16)
+			SFX.play(2)
+			v.jumpForce = Defines.jumpheight
+			v.speedY = Defines.player_jumpspeed-math.abs(v.speedX*0.2)
+		end
+		
+		-- Grabbing
+		if (v.holdingNPC == nil and v.keys.run and n.grabbedPlayer == nil) and v.y > n.y and (nc.grabside or nc.isshell) then
+			local sfx = 23
+			if nc.isshell then
+				sfx = nil
 			end
+			n:grab(v, sfx)
 		end
 	end
 	
 	BasicColliders.applySpeedWithCollision(v)
+	
+	-- Grabbed NPC
+	local hnpc = v.holdingNPC
+	if hnpc then
+		local gX = (scr.GrabSpotX[v.powerup] * v.direction) or 0
+		local gY = scr.GrabSpotY[v.powerup] or 0
+		
+		hnpc.x = v.x + gX
+		hnpc.y = v.y + gY
+		
+		if v.keys.run == KEYS_RELEASED then
+			local bool = true
+			if v.keys.down then
+				bool = false
+			end
+			hnpc:ungrab(bool, 9)
+		end
+	end
 end
 
 

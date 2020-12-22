@@ -1,12 +1,15 @@
 -- Do not change this file manually
 -- Generated with dev/create-init.lua
 
+local pth = ...
+pth = pth .. [[/]]
+
 ffi = require 'ffi'
 local C = ffi.load('SDL2')
 sdl = {C=C}
-local registerdefines = require 'defines'
+local registerdefines = require(pth..'sdl_defines')
 
-require 'cdefs'
+require(pth..'cdefs')
 
 local function register(luafuncname, funcname)
    local symexists, msg = pcall(function()

@@ -66,48 +66,67 @@ char.DuckHeight[10] = 30    -- ---------
 char.GrabSpotX[10] = 18     -- ---------
 char.GrabSpotY[10] = 16     -- ---------
 
-function char.onAnimationPlayer(v)
-	if v.collidesBlockBottom then
-		if v.speedX ~= 0 then
-			v.frameTimer = v.frameTimer + 1
-			if v.speedX > Defines.player_walkspeed - 1.5 or v.speedX < -Defines.player_walkspeed + 1.5 then
-				v.frameTimer = v.frameTimer + 1 end
-			if v.speedX > Defines.player_walkspeed or v.speedX < -Defines.player_walkspeed then
-				v.frameTimer = v.frameTimer + 1 end
-			if v.speedX > Defines.player_walkspeed + 1 or v.speedX < -Defines.player_walkspeed - 1 then
-				v.frameTimer = v.frameTimer + 1 end
-			if v.speedX > Defines.player_walkspeed + 2 or v.speedX < -Defines.player_walkspeed - 2 then
-				v.frameTimer = v.frameTimer + 1 end
+local function animation_onFloor(v, fr, i)
+	if v.speedX ~= 0 then
+		v.frameTimer = v.frameTimer + 1
+		if v.speedX > Defines.player_walkspeed - 1.5 or v.speedX < -Defines.player_walkspeed + 1.5 then
+			v.frameTimer = v.frameTimer + 1 end
+		if v.speedX > Defines.player_walkspeed or v.speedX < -Defines.player_walkspeed then
+			v.frameTimer = v.frameTimer + 1 end
+		if v.speedX > Defines.player_walkspeed + 1 or v.speedX < -Defines.player_walkspeed - 1 then
+			v.frameTimer = v.frameTimer + 1 end
+		if v.speedX > Defines.player_walkspeed + 2 or v.speedX < -Defines.player_walkspeed - 2 then
+			v.frameTimer = v.frameTimer + 1 end
 
-			if v.frameTimer >= 10 then
-				v.frameTimer = 0
-				if v.frame == 1 then v.frame = 2 else v.frame = 1 end
-			end
-		else
-			v.frame = 1
+		if v.frameTimer >= 10 then
+			v.frameTimer = 0
+			if v.frame == fr.stand[i] then v.frame = fr.run[i] else v.frame = fr.stand[i] end
 		end
 	else
-		if v.IsSpinjumping then
-			local fspeed = 3
-			v.frameTimer = v.frameTimer + 1
-			if v.frameTimer < fspeed then
-				v.direction = 1
-				v.frame = 1
-			elseif v.frameTimer < fspeed * 2 then
-				v.frame = 15
-			elseif v.frameTimer < fspeed * 3 then
-				v.direction = -1
-				v.frame = 1
-			elseif v.frameTimer < fspeed * 4 then
-				v.frame = 13 
-			elseif v.frameTimer >= fspeed * 5 then
-				v.direction = 1
-				v.frame = 1
-				v.frameTimer = 0
-			end
-		else
-			v.frame = 3
+		v.frame = fr.stand[i] 
+	end
+end
+
+local function animation_inAir(v, fr, i)
+	if v.IsSpinjumping then
+		local fspeed = 3
+		v.frameTimer = v.frameTimer + 1
+		if v.frameTimer < fspeed then
+			v.direction = 1
+			v.frame = fr.stand[i]
+		elseif v.frameTimer < fspeed * 2 then
+			v.frame = 15
+		elseif v.frameTimer < fspeed * 3 then
+			v.direction = -1
+			v.frame = fr.stand[i]
+		elseif v.frameTimer < fspeed * 4 then
+			v.frame = 13 
+		elseif v.frameTimer >= fspeed * 5 then
+			v.direction = 1
+			v.frame = fr.stand[i]
+			v.frameTimer = 0
 		end
+	else
+		v.frame = fr.jump[i]
+	end
+end
+
+function char.onAnimationPlayer(v)
+	local fr = {
+		stand = {[1] = 1, [2] = 5},
+		run = {[1] = 2, [2] = 6},
+		jump = {[1] = 3, [2] = 6},
+	}
+	
+	local i = 1
+	if v.holdingNPC then
+		i = 2
+	end
+	
+	if v.collidesBlockBottom then
+		animation_onFloor(v, fr, i)
+	else
+		animation_inAir(v, fr, i)
 	end
 end
 
