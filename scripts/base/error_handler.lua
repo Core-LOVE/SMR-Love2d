@@ -78,8 +78,11 @@ love.errorhandler = function(msg)
 	local function draw()
 		if not er then
 			love.graphics.clear()
-			love.graphics.present()	
+			love.graphics.present()
+
 			love.window.showMessageBox('Debug', p, "error")
+			love.event.quit()
+
 			er = true
 		end
 	end
