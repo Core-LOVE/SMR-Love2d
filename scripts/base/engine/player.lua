@@ -24,6 +24,14 @@ for i = 1, 5 do
 end
 
 local function physics(v)
+	-- Section check
+	if v.section == nil or v.section == 0 then
+		for k,s in ipairs(Section.getIntersecting(v.x, v.y, v.x + v.width, v.y + v.height)) do
+			v.section = s.idx
+		end
+	end
+
+	-- Direction stuff
 	if v.keys.left then
 		v.direction = -1
 	elseif v.keys.right then

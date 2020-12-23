@@ -79,6 +79,28 @@ function Camera.getIntersecting(x1,y1, x2,y2)
 	return ret
 end
 
+function Camera.update()
+	local v = camera
+	local p = Player(1)
+	local s = Section(p.section)
+	local bd = s.boundary
+	
+	v.x = (p.x - (v.width * 0.5)) + (p.width * 0.5)
+	v.y = (p.y - (v.width * 0.5)) + (p.width * 0.5)
+	
+	if v.x < bd.left then
+		v.x = bd.left
+	elseif v.x + v.width > bd.right then
+		v.x = bd.right - v.width
+	end
+	
+	if v.y < bd.top then
+		v.y = bd.top
+	elseif v.y + v.height > bd.bottom then
+		v.y = bd.bottom - v.height
+	end
+end
+
 camera = Camera.create()
 camera.renderToScreen = true
 

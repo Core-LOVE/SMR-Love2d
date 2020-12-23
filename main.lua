@@ -65,8 +65,6 @@ function love.load()
 	Graphics.loadUi()
 	--Graphics.loadGraphics(false)
 	load_objects()
-
-	Section.createSections(21)
 	-- temp
 	local levelParser = require(ms.."engine/levelparser")
 
@@ -90,6 +88,8 @@ function love.update(dt)
 	Block.update()
 	Player.update()
 	NPC.update()
+	
+	Camera.update()
 	
 	Block.frames()
 	BGO.frames()

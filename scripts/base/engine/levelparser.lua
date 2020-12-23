@@ -34,6 +34,17 @@ do
     }
 
     -- Setup types
+	types.SECTION.spawn = (function(properties)
+		local boundary = {
+			left = properties.L,
+			right = properties.R,
+			top = properties.T,
+			bottom = properties.B
+		}
+		
+		local v = Section.create(properties.SC + 1, boundary, properties.MZ, properties.MF, properties.BG)
+	end)
+	
     types.BLOCK.spawn = (function(properties)
         local v = Block.spawn(properties.ID,properties.X,properties.Y)
 
