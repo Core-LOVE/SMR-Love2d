@@ -152,7 +152,7 @@ local newControls
 
 
 setmetatable(Player, {__call=function(Player, idx)
-	return Player[idx] or Player
+	return Player[idx]
 end})
 
 function Player.spawn(character, x, y)

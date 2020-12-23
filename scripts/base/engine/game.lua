@@ -198,9 +198,9 @@ do
 
 	function Game.updateGraphicsLevel()
 		for k,z in ipairs(Camera) do
-			local s = Player(k).section
+			--local s = Player(k).section
 		
-			Backgrounds.draw(s,z)
+			--Backgrounds.draw(s,z)
 		end
 		
 		for _,v in ipairs(Effect) do

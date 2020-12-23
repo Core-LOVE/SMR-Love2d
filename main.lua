@@ -15,26 +15,32 @@ do
 	compile(false)
 end
 
-local ms = "scripts/base/"
 
-require(ms.."const")
-require(ms.."io")
-require(ms.."math")
+EventManager = require("scripts/base/engine/eventmanager")
+-- EventManager overwrites require, so we can use a shorter path after
 
-ini_parser = require(ms.."ini_parser")
-txt_parser = require(ms.."txt_parser")
-inspect = require(ms.."inspect")
 
-HUDOverride = require(ms.."hudoverride")
-Audio = require(ms.."engine/audio")
-Graphics = require(ms.."engine/graphics")
-Credit = require(ms.."engine/credits")
-Game = require(ms.."engine/game")
-Defines = require(ms.."engine/defines")
-Globals = require(ms.."engine/globals")
-BasicColliders = require(ms.."engine/collision")
-SFX = require(ms.."sfx")
-Window = require(ms.."engine/window")
+require("const")
+require("io")
+require("math")
+
+ini_parser     = require("ini_parser")
+txt_parser     = require("txt_parser")
+inspect        = require("inspect")
+
+HUDOverride    = require("hudoverride")
+Audio          = require("engine/audio")
+Graphics       = require("engine/graphics")
+Credit         = require("engine/credits")
+Game           = require("engine/game")
+Defines        = require("engine/defines")
+Globals        = require("engine/globals")
+BasicColliders = require("engine/collision")
+SFX            = require("sfx")
+Window         = require("engine/window")
+
+local levelParser = require("engine/levelparser")
+
 
 do
 	love.graphics.clear()
@@ -46,16 +52,16 @@ end
 FRAMES_PER_SECOND = 64.102
 
 local function load_objects()
-	Camera = require(ms.. "engine/camera")
-	Layer = require(ms.."engine/layer")
-	Liquid = require(ms.."engine/liquid")
-	Block = require(ms.."engine/block")
-	NPC = require(ms.."engine/npc")
-	BGO = require(ms.."engine/bgo")
-	Player = require(ms.."engine/player")
-	Effect = require(ms.."engine/effect")
-	Section = require(ms.."engine/section")
-	Backgrounds = require(ms.."engine/background2")
+	Camera      = require("engine/camera")
+	Layer       = require("engine/layer")
+	Liquid      = require("engine/liquid")
+	Block       = require("engine/block")
+	NPC         = require("engine/npc")
+	BGO         = require("engine/bgo")
+	Player      = require("engine/player")
+	Effect      = require("engine/effect")
+	Section     = require("engine/section")
+	Backgrounds = require("engine/background2")
 end
 
 function love.load()
@@ -65,23 +71,27 @@ function love.load()
 	Graphics.loadUi()
 	--Graphics.loadGraphics(false)
 	load_objects()
-	-- temp
-	local levelParser = require(ms.."engine/levelparser")
 
+	-- temp
 	levelParser.load("_test levels/a couple blocks.lvlx")
 end
 
 function love.draw()
+	EventManager.callEvent("onDraw")
+
 	onDrawEnd()
 	Game.updateGraphicsLevel()
 	onDraw()
-	-- GUI:draw()
+	
+	EventManager.callEvent("onDrawEnd")
+
+
+	collectgarbage()
 end
 
 function love.update(dt)
-	-- Window = love.window
-	
-	onTickEnd()
+	EventManager.callEvent("onTick")
+
 
 	Player.updateKeys()
 	
@@ -100,9 +110,10 @@ function love.update(dt)
 		love.timer.sleep(1 / FRAMES_PER_SECOND - dt)
 	end
 	
-	onTick()
-	
-	-- GUI:tick()
+
+	EventManager.callEvent("onTickEnd")
+
+
 	collectgarbage()
 end
 
@@ -110,12 +121,11 @@ function love.filedropped(file)
 	file:open("r")
 	local data = file:read()
 	
-	local levelParser = require(ms.."engine/levelparser")
 	levelParser.load(data)
 end
 
 
-local screenshotter = require(ms.. "engine/screenshotter")
+local screenshotter = require("engine/screenshotter")
 
 function love.keypressed(key,scancode,isrepeat)
 	if key == "f12" and not isrepeat then

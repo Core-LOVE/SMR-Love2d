@@ -83,10 +83,10 @@ do
 			}
 			v.direction = t[math.floor(math.random(1,2))]
 		end
-		
-		if properties.BS ~= nil then v.legacyBoss = true end
-		if properties.NM ~= nil then v.dontMove = true end
-		if properties.FD ~= nil then v.friendly = true end
+        
+        v.legacyBoss = properties.BS or false
+        v.dontMove = properties.NM or false
+        v.friendly = properties.FD or false
 		
 		v.msg = properties.MG or ""
 	end)
@@ -96,6 +96,7 @@ do
     end)
     
     types.STARTPOINT.spawn = (function(properties)
+        -- TODO: make this create a start point rather than a player
         if #Player > 0 then return end
 
 		local v = Player.spawn(properties.ID, properties.X, properties.Y)
@@ -104,7 +105,11 @@ do
     
     types.PHYSICS.spawn = (function(properties)
 		local v = Liquid.create(properties.ET + 1, properties.X, properties.Y, properties.W, properties.H)
-	end)
+    end)
+    
+
+
+    -- hi core please keep a gap here 🐱
 
     local stringEscapeCharacters = {
         ["n"] = "\n",
