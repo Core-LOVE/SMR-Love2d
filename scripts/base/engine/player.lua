@@ -116,7 +116,7 @@ local function physics(v)
 		end
 		
 		-- Grabbing
-		if (v.holdingNPC == nil and v.keys.run and n.grabbedPlayer == nil) and v.y > n.y and (nc.grabside or nc.isshell) then
+		if (v.holdingNPC == nil and v.keys.run and n.grabbingPlayer == nil) and v.y > n.y and (nc.grabside or nc.isshell) then
 			local sfx = 23
 			if nc.isshell then
 				sfx = nil

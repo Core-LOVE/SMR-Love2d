@@ -62,6 +62,8 @@ local function load_objects()
 	Effect      = require("engine/effect")
 	Section     = require("engine/section")
 	Backgrounds = require("engine/background2")
+
+	NPC.load()
 end
 
 function love.load()
@@ -79,9 +81,7 @@ end
 function love.draw()
 	EventManager.callEvent("onDraw")
 
-	onDrawEnd()
 	Game.updateGraphicsLevel()
-	onDraw()
 	
 	EventManager.callEvent("onDrawEnd")
 

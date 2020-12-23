@@ -4,79 +4,25 @@ local NPC = {__type="NPC"}
 NPC_MAX_ID = 1000
 
 
-NPC.config = {}
+NPC.config = require("engine/npcConfig")
+
+-- Load npc-n.lua files
 NPC.script = {}
-for i = 1,NPC_MAX_ID do
-	NPC.config[i] = {
-		gfxoffsetx=0,
-		gfxoffsety=2,
-		width=32,
-		height=32,
-		gfxwidth=32,
-		gfxheight=32,
-		frames = 2,
-		framespeed = 8,
-		framestyle = 0,
-		noblockcollision = false,
 
-		playerblock=false,
-		playerblocktop=false,
-		npcblock=false,
-		npcblocktop=false,
+function NPC.load()
+	NPC.config.load()
 
-		score = 2,
-		
-		grabside=false,
-		grabtop=false,
+	for id = 1,NPC_MAX_ID do
+		if love.filesystem.getInfo("scripts/npcs/npc-".. id.. ".lua") then
+			NPC_ID = id
 
-		jumphurt=false,
-		nohurt=false,
+			NPC.script[id] = require("scripts/npcs/npc-".. id)
 
-		noblockcollision=false,
-		cliffturn=false,
-		noyoshi=false,
-
-		foreground=false,
-		priority = nil,
-		
-		nofireball=false,
-		noiceball=false,
-		nogravity=false,
-
-		harmlessgrab=false,
-		harmlessthrown=false,
-		spinjumpsafe=false,
-
-		isshell=false,
-		isinteractable=false,
-		iscoin=false,
-		isvine=false,
-		isplant=false,
-		iscollectablegoal=false,
-		isflying=false,
-		iswaternpc=false,
-		isshoe=false,
-		isyoshi=false,
-		isbot=false,
-		isvegetable=false,
-		iswalker=false,
-		ismushroom=false,
-		
-		gravity = Defines.npc_grav,
-		maxgravity = 8,
-	}
-	if love.filesystem.getInfo("scripts/npcs/npc-"..tostring(i)..".lua") then
-		NPC.script[i] = require("scripts/npcs/npc-"..tostring(i))
-		print(true)
-	end
-	
-	if love.filesystem.getInfo("config/npc/npc-"..tostring(i)..".txt") then
-		local Txt = txt_parser.load("config/npc/npc-"..tostring(i)..".txt")
-		for k,v in pairs(Txt) do
-			NPC.config[i][k] = v
+			NPC_ID = nil
 		end
 	end
 end
+
 
 local function physics(v)
 	--[[local oldSlope = 0
@@ -220,7 +166,7 @@ local function physics(v)
 		end
 	end
 	
-	if v.grabbedPlayer == nil then
+	if v.grabbingPlayer == nil then
 		if not config.nogravity then
 			v.speedY = math.min(v.speedY + config.gravity,config.maxgravity)
 		end
@@ -258,8 +204,8 @@ function NPC.spawn(id, x, y, section, respawn, centered)
 		
 		spawnX = x or 0,
 		spawnY = y or 0,
-		spawnWidth = NPC.config[id].width or 32,
-		spawnHeight = NPC.config[id].height or 32,
+		spawnWidth = NPC.config[id].width,
+		spawnHeight = NPC.config[id].height,
 		spawnSpeedX = 0,
 		spawnSpeedY = 0,
 		spawnDirection = 0,
@@ -267,24 +213,27 @@ function NPC.spawn(id, x, y, section, respawn, centered)
 		spawnAi1 = 0,
 		spawnAi2 = 0,
 	
-		width = NPC.config[id].width or 32,
-		height = NPC.config[id].height or 32,
+		width = NPC.config[id].width,
+		height = NPC.config[id].height,
 		direction = 0,
 		speedX = 0,
 		speedY = 0,
 		
 		projectile = false,
 		cantHurt = 0,
+
+		forcedState = 0, -- also known as "contained within"
+		forcedTimer = 0,
 		
 		offscreenFlag = false,
 		offscreenFlag2 = false,
-		despawnTimer = 0,
+		despawnTimer = 180, -- temp
 		
 		animationFrame = 0,
 		animationTimer = 0,
 		isHidden = false,
 		
-		grabbedPlayer = nil,
+		grabbingPlayer = nil,
 		tempBlock = {},
 		section = 0,
 		
@@ -337,13 +286,13 @@ function NPC:grab(playerObj, sfx)
 		SFX.play(sfx)
 	end
 	
-	self.grabbedPlayer = playerObj
+	self.grabbingPlayer = playerObj
 	playerObj.holdingNPC = self
 end
 
 function NPC:ungrab(throw, sfx)
-	local p = self.grabbedPlayer
-	self.grabbedPlayer = nil
+	local p = self.grabbingPlayer
+	self.grabbingPlayer = nil
 	p.holdingNPC = nil
 	
 	if throw == true then

@@ -63,7 +63,14 @@ do
         return nil
     end
 
+
+    local requireCache = {}
+
     function require(name)
+        if requireCache[name] ~= nil then
+            return requireCache[name]
+        end
+
         -- TODO: update this to include levels and episodes
         local path = tryPath(name) or tryPath("scripts/base/".. name) or tryPath("scripts/".. name)
         assert(path ~= nil,"Module '".. name.. "' not found.")
@@ -75,6 +82,8 @@ do
             library.onInitAPI()
         end
 
+        requireCache[name] = library
+        
 
         print("Module '".. name.. "' successfully loaded. (Path: ".. path.. ".lua)")
 
