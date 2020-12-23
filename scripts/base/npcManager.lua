@@ -77,4 +77,55 @@ function npcManager.registerEvent(id, library, eventName, functionName, isEarly)
 end
 
 
+local harmTypesList = {
+    HARM_TYPE_JUMP,
+	HARM_TYPE_FROMBELOW,
+	HARM_TYPE_NPC,
+	HARM_TYPE_PROJECTILE_USED,
+	HARM_TYPE_LAVA,
+	HARM_TYPE_HELD,
+	HARM_TYPE_TAIL,
+	HARM_TYPE_SPINJUMP,
+	HARM_TYPE_VANISH,
+	HARM_TYPE_SWORD,
+}
+
+npcManager.defaultDeathEffects = {
+    [HARM_TYPE_LAVA] = 13,
+    [HARM_TYPE_SPINJUMP] = 10,
+    [HARM_TYPE_SWORD] = 63,
+}
+
+function npcManager.registerHarmTypes(id, damageMap, effectMap)
+    local config = NPC.config[id]
+
+
+    config.damageMap = {}
+
+    for _,harmTypeID in ipairs(harmTypesList) do
+        local damage = damageMap[harmTypeID]
+
+        if damage == true then
+            damage = 1
+        elseif damage == false or damage == 0 then
+            damage = nil
+        end
+
+        config.damageMap[harmTypeID] = damage
+    end
+
+    if type(effectMap) == "number" then
+        config.effectMap = {}
+
+        for _,harmTypeID in ipairs(harmTypesList) do
+            if harmTypeID ~= HARM_TYPE_VANISH then
+                config.effectMap[harmTypeID] = npcManager.defaultDeathEffects[harmTypeID] or effectMap
+            end
+        end
+    else
+        config.effectMap = effectMap
+    end
+end
+
+
 return npcManager

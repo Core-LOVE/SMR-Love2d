@@ -4,6 +4,9 @@ local EventManager = {}
 EventManager.eventsList = {
     "onTick","onTickEnd",
     "onDraw","onDrawEnd",
+
+    "onNPCHarm","onPostNPCHarm",
+    "onNPCKill","onPostNPCKill",
 }
 
 
@@ -83,7 +86,7 @@ do
         end
 
         requireCache[name] = library
-        
+
 
         print("Module '".. name.. "' successfully loaded. (Path: ".. path.. ".lua)")
 

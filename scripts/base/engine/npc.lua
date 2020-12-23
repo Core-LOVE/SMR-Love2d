@@ -275,9 +275,49 @@ function NPC.spawn(id, x, y, section, respawn, centered)
 	return n
 end
 
-function NPC:harm(harmType, damage, reason)
 
+-- NPC harming / killing
+do
+	HARM_TYPE_JUMP = 1
+	HARM_TYPE_FROMBELOW = 2
+	HARM_TYPE_NPC = 3
+	HARM_TYPE_PROJECTILE_USED = 4
+	HARM_TYPE_LAVA = 5
+	HARM_TYPE_HELD = 6
+	HARM_TYPE_TAIL = 7
+	HARM_TYPE_SPINJUMP = 8
+	HARM_TYPE_VANISH = 9
+	HARM_TYPE_SWORD = 10
+
+	HARM_TYPE_OFFSCREEN = HARM_TYPE_VANISH
+
+
+	function NPC:harm(harmType, damageMultiplier, culprit)
+		harmType = harmType or HARM_TYPE_NPC
+		damageMultiplier = damageMultiplier or 1
+
+
+		local config = NPC.config[self.id]
+
+		if config.damageMap[harmType] == nil or damageMultiplier == 0 then
+			return
+		end
+
+
+		-- Call the onNPCHarm event and see if it's been cancelled
+		local eventObj = {cancelled = false}
+
+		EventManager.callEvent("onNPCHarm", eventObj, self, harmType, culprit, damageMultiplier)
+		if eventObj.cancelled then
+			return
+		end
+		EventManager.callEvent("onPostNPCHarm", self, harmType, culprit, damageMultiplier)
+
+		--Misc.dialog("A")
+	end
 end
+
+
 
 function NPC:grab(playerObj, sfx)
 	if playerObj.__type ~= "Player" then return end

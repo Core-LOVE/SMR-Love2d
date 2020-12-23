@@ -13,6 +13,11 @@ local goombaSettings = {
 
 
 npcManager.setNpcSettings(goombaSettings)
+npcManager.registerHarmTypes(npcID,
+    {
+        [HARM_TYPE_JUMP] = true,
+    }
+)
 
 
 walker.register(npcID)

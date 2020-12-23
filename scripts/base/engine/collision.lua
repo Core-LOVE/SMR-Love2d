@@ -190,6 +190,8 @@ COLLISION_SIDE_LEFT    = 4
 COLLISION_SIDE_UNKNOWN = 5
 
 function Collision.side(Loc1, Loc2, leniencyForTop)
+    leniencyForTop = leniencyForTop or 0
+    
     if(Loc1.y + Loc1.height - Loc1.speedY <= Loc2.y - Loc2.speedY + leniencyForTop) then
         return COLLISION_SIDE_TOP
     elseif(Loc1.x - Loc1.speedX >= Loc2.x + Loc2.width - Loc2.speedX) then

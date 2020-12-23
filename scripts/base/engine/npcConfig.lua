@@ -21,6 +21,53 @@ local function getGFXHeight(configObj,key)
 end
 
 
+local function getWithEmptyTableDefault(configObj,key)
+    local value = configObj._propertyValues[key]
+    if value ~= nil then
+        return value
+    end
+
+    return {}
+end
+
+
+local harmTypesList = {
+    HARM_TYPE_JUMP,
+	HARM_TYPE_FROMBELOW,
+	HARM_TYPE_NPC,
+	HARM_TYPE_PROJECTILE_USED,
+	HARM_TYPE_LAVA,
+	HARM_TYPE_HELD,
+	HARM_TYPE_TAIL,
+	HARM_TYPE_SPINJUMP,
+	HARM_TYPE_VANISH,
+	HARM_TYPE_SWORD,
+}
+
+local function getVulnerableHarmTypes(configObj,key)
+    local ret = {}
+
+    for _,harmTypeID in ipairs(harmTypesList) do
+        local damage = configObj.damageMap[harmTypeID]
+
+        if damage ~= nil and damage > 0 then
+            table.insert(ret,damage)
+        end
+    end
+
+    return ret
+end
+
+local function setVulnerableHarmTypes(configObj,key,value)
+    config.damageMap = {}
+
+    for _,harmTypeID in ipairs(value) do
+        config.damageMap[harmTypeID] = 1
+    end
+end
+
+
+
 local properties = {
     width             = {default = 32},
     height            = {default = 32},
@@ -75,6 +122,12 @@ local properties = {
     
     gravity           = {default = Defines.npc_grav},
     maxgravity        = {default = 8},
+
+
+    damagemap = {get = getWithEmptyTableDefault},
+    effectmap = {get = getWithEmptyTableDefault},
+
+    vulnerableharmtypes = {get = getVulnerableHarmTypes,set = setVulnerableHarmTypes},
 }
 
 
