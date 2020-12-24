@@ -59,12 +59,15 @@ local function load_objects()
 	NPC         = require("engine/npc")
 	BGO         = require("engine/bgo")
 	Player      = require("engine/player")
-	Effect      = require("engine/effect")
 	Section     = require("engine/section")
 	Backgrounds = require("engine/background2")
 	Warp		= require("engine/warp")
-	
+	Effect      = require("game/effect")
+
+	Animation = Effect
+
 	NPC.load()
+	Effect.load()
 end
 
 function love.load()
@@ -99,13 +102,13 @@ function love.update(dt)
 	Block.update()
 	Player.update()
 	NPC.update()
+	Effect.update()
 	
 	Camera.update()
 	
 	Block.frames()
 	BGO.frames()
 	NPC.frames()
-	Effect.frames()
 	
 	if dt < 1 / FRAMES_PER_SECOND then
 		love.timer.sleep(1 / FRAMES_PER_SECOND - dt)

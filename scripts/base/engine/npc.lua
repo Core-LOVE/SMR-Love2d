@@ -313,6 +313,15 @@ do
 		EventManager.callEvent("onPostNPCKill", self, self.killed)
 
 
+		local config = NPC.config[self.id]
+
+		local effect = config.effectMap[self.killed]
+
+		if type(effect) == "number" then
+			Effect.spawn(effect,self)
+		end
+
+
 		-- Manual table remove, to update idx fields
 		local npcCount = #NPC
 

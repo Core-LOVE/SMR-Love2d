@@ -48,7 +48,15 @@ function LIP.load(fileName)
 				value = true;
 			elseif(value == 'false')then
 				value = false;
+			else
+				-- Check if a range
+				local min,max = value:match("^.+:.+$")
+
+				if tonumber(min) and tonumber(max) then
+					value = {min,max, range = true}
+				end
 			end
+
 			if(tonumber(param))then
 				param = tonumber(param);
 			end

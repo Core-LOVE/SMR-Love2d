@@ -218,7 +218,7 @@ do
     local function parseLine(parsingData,path,line)
         -- Check if this is an ending
         if parsingData.currentTypeName ~= nil and line == (parsingData.currentTypeName.. "_END") then
-            print(parsingData.currentTypeName.. " ended")
+            --print(parsingData.currentTypeName.. " ended")
 
             parsingData.currentTypeData = nil
             parsingData.currentTypeName = nil
@@ -235,7 +235,7 @@ do
         if parsingData.currentTypeName ~= nil then
             local obj = parseObject(parsingData,path,line)
 
-            print(inspect(obj))
+            --print(inspect(obj))
 
             if parsingData.currentTypeData.spawn ~= nil then
                 parsingData.currentTypeData.spawn(obj)
@@ -251,7 +251,7 @@ do
             parsingData.currentTypeName = line
             parsingData.currentTypeData = thisTypeData
 
-            print(line.. " started")
+            --print(line.. " started")
 
             return
         elseif currentTypeData == nil then
@@ -270,8 +270,6 @@ do
         for line in love.filesystem.lines(path) do
             parseLine(parsingData,path,line)
         end
-
-        print(#Block)
     end
 
     formats.lvlx = loadLevel

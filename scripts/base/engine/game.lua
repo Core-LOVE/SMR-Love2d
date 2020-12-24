@@ -204,17 +204,7 @@ do
 		
 		Graphics.drawImageToSceneWP(img, v.x + fx, v.y + fy, pfrX(100 + v.frame * v.direction), pfrY(100 + v.frame * v.direction), 100, 100, -25)
 	end
-
-	function Game.drawEffect(v)
-		local img = Graphics.sprites.effect[v.id].img
-		
-		if img == nil then return end
-		
-		local config = Effect.config[v.id]
-		local priority = (config.priority) or (config.foreground and -5) or -60
-		
-		Graphics.drawImageToSceneWP(img, v.x, v.y, 0, v.height, v.width, v.height, priority)
-	end
+	
 	
 	local imgcon = Graphics.sprites.hardcoded['48-0'].img
 	
@@ -234,6 +224,9 @@ do
 		return (a.priority < b.priority)
 	end
 
+
+	local emptyTable = {}
+
 	function Game.updateGraphicsLevel()
 		for k,z in ipairs(Camera) do
 			--local s = Player(k).section
@@ -241,8 +234,8 @@ do
 			--Backgrounds.draw(s,z)
 		end
 		
-		for _,v in ipairs(Effect) do
-			Game.drawEffect(v)
+		for _,v in ipairs(Effect.objs) do
+			v:render(emptyTable)
 		end
 		
 		for _,v in ipairs(Block) do

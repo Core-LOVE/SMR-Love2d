@@ -164,10 +164,15 @@ function configObjMT.__newindex(self, key, value)
     local property = properties[key]
 
     if property ~= nil and property.set ~= nil then
-        return property.set(self, key, value)
+        property.set(self, key, value)
+        return
     end
 
-    self._propertyValues[key] = value
+    if value ~= property.default then
+        self._propertyValues[key] = value
+    else
+        self._propertyValues[key] = nil
+    end
 end
 
 
