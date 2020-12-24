@@ -66,9 +66,9 @@ end
 
 function love.load()
 	--Audio.loadSounds()
+	Graphics.loadUi()
 	love.graphics.setDefaultFilter("nearest", "nearest")
 	Audio.loadSounds()
-	Graphics.loadUi()
 	--Graphics.loadGraphics(false)
 	load_objects()
 

@@ -179,7 +179,8 @@ do
 		Graphics.drawImageToSceneWP(img, v.x, v.y, 0, v.height, v.width, v.height, priority)
 	end
 	
-	local imgcon = love.graphics.newImage("graphics/ui/Container0.png")
+	local imgcon = Graphics.sprites.hardcoded['48-0'].img
+	
 	function Game.drawHud()
 		-- for k,v in ipairs(Player) do
 			width = love.graphics.getWidth()
