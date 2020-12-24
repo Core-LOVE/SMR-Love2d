@@ -27,13 +27,27 @@ do
         BLOCK = {},
         NPC = {},
 		BGO = {},
+		
 		PHYSICS = {},
+		DOORS = {},
 		
         LAYERS = {},
         EVENTS_CLASSIC = {},
     }
 
     -- Setup types
+	types.DOORS.spawn = (function(properties)
+		local v = Warp.create(properties.DT, properties.IX, properties.IY, properties.OX, properties.OY)
+		v.entranceDirection = properties.ID or 1
+		v.exitDirection = properties.OD or 1
+		
+		if properties.TW == 1 then
+			local v2 = Warp.create(properties.DT, properties.OX, properties.OY, properties.IX, properties.IY)
+			v2.entranceDirection = properties.OD or 1
+			v2.exitDirection = properties.ID or 1
+		end
+	end)
+	
 	types.SECTION.spawn = (function(properties)
 		local boundary = {
 			left = properties.L,

@@ -220,13 +220,13 @@ do
 	
 	function Game.drawHud()
 		-- for k,v in ipairs(Player) do
-			width = love.graphics.getWidth()
-			height = love.graphics.getHeight()
+			-- width = love.graphics.getWidth()
+			-- height = love.graphics.getHeight()
 			
-			local offset = {x = HUDOverride.offsets.itembox.x, y = HUDOverride.offsets.itembox.y}
-			local itembox = {img = imgcon, x = (width / 2) - 48, y = 0}
+			-- local offset = {x = HUDOverride.offsets.itembox.x, y = HUDOverride.offsets.itembox.y}
+			-- local itembox = {img = imgcon, x = (width / 2) - 48, y = 0}
 			
-			Graphics.drawImageWP(itembox.img, itembox.x + offset.x, itembox.y + offset.y, HUDOverride.priority)
+			-- Graphics.drawImageWP(itembox.img, itembox.x + offset.x, itembox.y + offset.y, HUDOverride.priority)
 		-- end
 	end
 	
@@ -261,7 +261,7 @@ do
 			Game.drawPlayer(v)
 		end
 		
-		Game.drawHud()
+		-- Game.drawHud()
 		
 		table.sort(Graphics.drawingQueue,sortDrawingQueue)
 
