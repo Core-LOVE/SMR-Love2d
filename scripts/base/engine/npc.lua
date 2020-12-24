@@ -4,154 +4,59 @@ local NPC = {__type="NPC"}
 NPC_MAX_ID = 1000
 
 
-NPC.config = {}
+NPC.config = require("engine/npcConfig")
+
+-- Load npc-n.lua files
 NPC.script = {}
-for i = 1,NPC_MAX_ID do
-	NPC.config[i] = {
-		gfxoffsetx=0,
-		gfxoffsety=2,
-		width=32,
-		height=32,
-		gfxwidth=32,
-		gfxheight=32,
-		frames = 2,
-		framespeed = 8,
-		framestyle = 0,
-		noblockcollision = false,
 
-		playerblock=false,
-		playerblocktop=false,
-		npcblock=false,
-		npcblocktop=false,
+function NPC.load()
+	NPC.config.load()
 
-		score = 2,
-		
-		grabside=false,
-		grabtop=false,
+	for id = 1,NPC_MAX_ID do
+		if love.filesystem.getInfo("scripts/npcs/npc-".. id.. ".lua") then
+			NPC_ID = id
 
-		jumphurt=false,
-		nohurt=false,
+			NPC.script[id] = require("scripts/npcs/npc-".. id)
 
-		noblockcollision=false,
-		cliffturn=false,
-		noyoshi=false,
-
-		foreground=false,
-		priority = nil,
-		
-		nofireball=false,
-		noiceball=false,
-		nogravity=false,
-
-		harmlessgrab=false,
-		harmlessthrown=false,
-		spinjumpsafe=false,
-
-		isshell=false,
-		isinteractable=false,
-		iscoin=false,
-		isvine=false,
-		isplant=false,
-		iscollectablegoal=false,
-		isflying=false,
-		iswaternpc=false,
-		isshoe=false,
-		isyoshi=false,
-		isbot=false,
-		isvegetable=false,
-		iswalker=false,
-		ismushroom=false,
-		
-		gravity = Defines.npc_grav,
-		maxgravity = 8,
-	}
-	if love.filesystem.getInfo("scripts/npcs/npc-"..tostring(i)..".lua") then
-		NPC.script[i] = require("scripts/npcs/npc-"..tostring(i))
-		print(true)
-	end
-	
-	if love.filesystem.getInfo("config/npc/npc-"..tostring(i)..".txt") then
-		local Txt = txt_parser.load("config/npc/npc-"..tostring(i)..".txt")
-		for k,v in pairs(Txt) do
-			NPC.config[i][k] = v
+			NPC_ID = nil
 		end
 	end
 end
 
+
+local function returnToSpawnPosition(v)
+	if v.spawnId <= 0 then
+		v:kill(HARM_TYPE_VANISH)
+		return
+	end
+
+	v.x = v.spawnX
+	v.y = v.spawnY
+	v.width = v.spawnWidth
+	v.height = v.spawnHeight
+	v.speedX = v.spawnSpeedX
+	v.speedY = v.spawnSpeedY
+	v.direction = v.spawnDirection
+	v.id = v.spawnId
+end
+
 local function physics(v)
-	--[[local oldSlope = 0
-	local HitSpot = 0 --used for collision detection
-	local tempHit = 0
-	local tmpBlock = {}
-	local tempHitBlock = 0
-	local tempSpeedA = 0
-	local tempTurn = false
-	local tempLocation = newLocation()
-	local tempLocation2 = newLocation()
-	local preBeltLoc = newLocation()
-	local beltCount = 0
-	local tempBlockHit = {[3] = 0}
-	local winningBlock = 0
-	local numTempBlock = 0
-	local speedVar = 0
-	
-	local tempBool = false
-	local newY = 0
-	local blankBlock = {}
-	local oldBeltSpeed = 0
-	local oldDirection = 0
-	
-	--used for collision detection
-	local fBlock = 0
-	local lBlock = 0
-	local fBlock2 = 0
-	local lBlock2 = 0
-	local bCheck = 0
-	local bCheck2 = 0
-	local addBelt = 0
-	local numAct = 0
-	local beltClear = false --stops belt movement when on a wall
-	local resetBeltSpeed = false
-	local PlrMid = 0
-	local Slope = 0
-	local SlopeTurn = false
-	
-	--for attaching to layers
-	local lyrX = 0
-	local lyrY = 0
-	
-	if not Defines.levelFreeze then
-		v.x = v.x + v.speedX
-		v.y = v.y + v.speedY
-		
-		for k,b in ipairs(Block) do
-			if not BasicColliders.check(b,v) then 
-				v.collidesBlockSide = 5
-				
-				if not NPC.config[v.id].nogravity and NPC.config[v.id].gravity ~= 0 then
-					v.speedY = v.speedY + NPC.config[v.id].gravity
-					if v.speedY > NPC.config[v.id].maxgravity then
-						v.speedY = NPC.config[v.id].maxgravity
-					end
-				end
-			else
-				if BasicColliders.side(v,b) == 1 then v.collidesBlockBottom = true else v.collidesBlockBottom = false end
-				if BasicColliders.side(v,b) == 3 then v.collidesBlockTop = true else v.collidesBlockTop = false end
-				if BasicColliders.side(v,b) == 2 then v.collidesBlockLeft = true else v.collidesBlockLeft = false end
-				if BasicColliders.side(v,b) == 4 then v.collidesBlockRight = true else v.collidesBlockRight = false end
-				
-				v.collidesBlockSide = BasicColliders.side(v,b)
-			
-				if v.y + v.height + 0.1 > b.y then
-					v.speedY = 0
-					v.y = b.y - v.height - 0.1
-					break
-				end
-			end
-		end
-		
-		v.speedX = NPC.config[v.id].const_speed * v.direction
-	end]]
+	if v.isHidden then
+		v.despawnTimer = 0
+		returnToSpawnPosition(v)
+		return
+	elseif v.despawnTimer <= 0 then
+		return
+	end
+
+	v.despawnTimer = v.despawnTimer - 1
+
+	if v.despawnTimer <= 0 then
+		v.despawnTimer = -1
+		returnToSpawnPosition(v)
+		return
+	end
+
 
 	local config = NPC.config[v.id]
 
@@ -220,7 +125,7 @@ local function physics(v)
 		end
 	end
 	
-	if v.grabbedPlayer == nil then
+	if v.grabbingPlayer == nil then
 		if not config.nogravity then
 			v.speedY = math.min(v.speedY + config.gravity,config.maxgravity)
 		end
@@ -258,8 +163,8 @@ function NPC.spawn(id, x, y, section, respawn, centered)
 		
 		spawnX = x or 0,
 		spawnY = y or 0,
-		spawnWidth = NPC.config[id].width or 32,
-		spawnHeight = NPC.config[id].height or 32,
+		spawnWidth = NPC.config[id].width,
+		spawnHeight = NPC.config[id].height,
 		spawnSpeedX = 0,
 		spawnSpeedY = 0,
 		spawnDirection = 0,
@@ -267,24 +172,27 @@ function NPC.spawn(id, x, y, section, respawn, centered)
 		spawnAi1 = 0,
 		spawnAi2 = 0,
 	
-		width = NPC.config[id].width or 32,
-		height = NPC.config[id].height or 32,
+		width = NPC.config[id].width,
+		height = NPC.config[id].height,
 		direction = 0,
 		speedX = 0,
 		speedY = 0,
 		
 		projectile = false,
 		cantHurt = 0,
+
+		forcedState = 0, -- also known as "contained within"
+		forcedTimer = 0,
 		
 		offscreenFlag = false,
 		offscreenFlag2 = false,
-		despawnTimer = 0,
+		despawnTimer = 180, -- temp
 		
 		animationFrame = 0,
 		animationTimer = 0,
 		isHidden = false,
 		
-		grabbedPlayer = nil,
+		grabbingPlayer = nil,
 		tempBlock = {},
 		section = 0,
 		
@@ -301,8 +209,14 @@ function NPC.spawn(id, x, y, section, respawn, centered)
 		ai6 = 0,
 
 		turnAround = false,
+
+
+		health = NPC.config[id].health or 1,
+
+		killed = 0,
+
 		
-		data = {_settings = {_global = { }}}
+		data = {_settings = {_global = { }}},
 	}
 
 	setmetatable(n,npcMT)
@@ -326,9 +240,111 @@ function NPC.spawn(id, x, y, section, respawn, centered)
 	return n
 end
 
-function NPC:harm(harmType, damage, reason)
 
+-- NPC harming / killing
+local updateRemovalQueue
+
+do
+	HARM_TYPE_JUMP = 1
+	HARM_TYPE_FROMBELOW = 2
+	HARM_TYPE_NPC = 3
+	HARM_TYPE_PROJECTILE_USED = 4
+	HARM_TYPE_LAVA = 5
+	HARM_TYPE_HELD = 6
+	HARM_TYPE_TAIL = 7
+	HARM_TYPE_SPINJUMP = 8
+	HARM_TYPE_VANISH = 9
+	HARM_TYPE_SWORD = 10
+
+	HARM_TYPE_OFFSCREEN = HARM_TYPE_VANISH
+
+
+	function NPC:harm(harmType, damageMultiplier, culprit)
+		harmType = harmType or HARM_TYPE_NPC
+		damageMultiplier = damageMultiplier or 1
+
+
+		local config = NPC.config[self.id]
+
+		if config.damageMap[harmType] == nil or damageMultiplier == 0 then
+			return
+		end
+
+
+		-- Call the onNPCHarm event and see if it's been cancelled
+		local eventObj = {cancelled = false}
+
+		EventManager.callEvent("onNPCHarm", eventObj, self, harmType, culprit, damageMultiplier)
+		if eventObj.cancelled then
+			return
+		end
+		EventManager.callEvent("onPostNPCHarm", self, harmType, culprit, damageMultiplier)
+
+
+		local damage = config.damageMap[harmType]
+
+		self.health = self.health - damage
+
+		if self.health <= 0 then
+			self:kill(harmType)
+		end
+	end
+
+
+	local npcRemovalQueue = {}
+
+	function NPC:kill(harmType)
+		if self.killed == 0 then
+			table.insert(npcRemovalQueue,self)
+		end
+
+		self.killed = harmType or HARM_TYPE_JUMP
+	end
+
+
+	local function npcKillInternal(self,queuePos)
+		-- Call the onNPCKill event and see if it's been cancelled
+		local eventObj = {cancelled = false}
+
+		EventManager.callEvent("onNPCKill", eventObj, self, self.killed)
+		if eventObj.cancelled then
+			return
+		end
+		EventManager.callEvent("onPostNPCKill", self, self.killed)
+
+
+		-- Manual table remove, to update idx fields
+		local npcCount = #NPC
+
+		for i = self.idx+1, npcCount do
+			local npcHere = NPC[i]
+
+			npcHere.idx = npcHere.idx - 1
+			NPC[i-1] = npcHere
+		end
+
+		NPC[npcCount] = nil
+
+
+		self.isValid = false
+		self.idx = -1
+
+
+		table.remove(npcRemovalQueue,queuePos)
+	end
+
+	function updateRemovalQueue()
+		for i = #npcRemovalQueue, 1, -1 do
+			local npc = npcRemovalQueue[i]
+
+			if npc.isValid then
+				npcKillInternal(npcRemovalQueue[i],i)
+			end
+		end
+	end
 end
+
+
 
 function NPC:grab(playerObj, sfx)
 	if playerObj.__type ~= "Player" then return end
@@ -337,13 +353,13 @@ function NPC:grab(playerObj, sfx)
 		SFX.play(sfx)
 	end
 	
-	self.grabbedPlayer = playerObj
+	self.grabbingPlayer = playerObj
 	playerObj.holdingNPC = self
 end
 
 function NPC:ungrab(throw, sfx)
-	local p = self.grabbedPlayer
-	self.grabbedPlayer = nil
+	local p = self.grabbingPlayer
+	self.grabbingPlayer = nil
 	p.holdingNPC = nil
 	
 	if throw == true then
@@ -462,6 +478,8 @@ end
 
 
 function NPC.update()
+	updateRemovalQueue()
+
 	for k,v in ipairs(NPC) do
 		local scr = NPC.script[v.id]
 
@@ -475,6 +493,8 @@ function NPC.update()
 	end
 end
 
+
+-- TODO: overhaul this. like, all of it. we don't need a dedicated frames thing.
 function NPC.frames()
 	for k,v in ipairs(NPC) do
 		if(NPC.config[v.id].frames > 0) then

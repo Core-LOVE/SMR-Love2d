@@ -4,6 +4,9 @@ local EventManager = {}
 EventManager.eventsList = {
     "onTick","onTickEnd",
     "onDraw","onDrawEnd",
+
+    "onNPCHarm","onPostNPCHarm",
+    "onNPCKill","onPostNPCKill",
 }
 
 
@@ -63,7 +66,14 @@ do
         return nil
     end
 
+
+    local requireCache = {}
+
     function require(name)
+        if requireCache[name] ~= nil then
+            return requireCache[name]
+        end
+
         -- TODO: update this to include levels and episodes
         local path = tryPath(name) or tryPath("scripts/base/".. name) or tryPath("scripts/".. name)
         assert(path ~= nil,"Module '".. name.. "' not found.")
@@ -74,6 +84,8 @@ do
         if library ~= nil and type(library) == "table" and library.onInitAPI ~= nil then
             library.onInitAPI()
         end
+
+        requireCache[name] = library
 
 
         print("Module '".. name.. "' successfully loaded. (Path: ".. path.. ".lua)")

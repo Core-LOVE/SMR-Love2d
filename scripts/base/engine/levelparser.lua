@@ -72,7 +72,9 @@ do
 	end)
 	
 	types.NPC.spawn = (function(properties)
-		local v = NPC.spawn(properties.ID, properties.X, properties.Y)
+        local v = NPC.spawn(properties.ID, properties.X, properties.Y)
+        
+        v.despawnTimer = 2
 		
 		v.direction = properties.D or 0
 		v.spawnDirection = properties.D or 0

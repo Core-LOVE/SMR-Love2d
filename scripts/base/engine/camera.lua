@@ -21,8 +21,8 @@ local CameraMT = {
 function Camera.create()
     local v = setmetatable({},CameraMT)
 
-    v.x = -200000
-    v.y = -200600
+    v.x = 0
+    v.y = 0
 
     v.width = 800
     v.height = 600

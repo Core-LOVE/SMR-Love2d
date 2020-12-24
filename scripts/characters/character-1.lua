@@ -88,7 +88,7 @@ local function animation_onFloor(v, fr, i)
 end
 
 local function animation_inAir(v, fr, i)
-	if v.IsSpinjumping then
+	if v.isSpinjumping then
 		local fspeed = 3
 		v.frameTimer = v.frameTimer + 1
 		if v.frameTimer < fspeed then
