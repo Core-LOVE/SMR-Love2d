@@ -106,37 +106,39 @@ local function physics(v)
 	v.speedY = math.min(Defines.gravity,v.speedY + Defines.player_grav)
 
 	for k,n in ipairs(NPC.getIntersecting(v.x, v.y, v.x + v.width, v.y + v.height)) do
-		local config = NPC.config[n.id]
+		if n.despawnTimer > 0 then
+			local config = NPC.config[n.id]
 
-		-- Hit from top
-		if BasicColliders.side(v,n) == COLLISION_SIDE_TOP and v.speedY > 0 then
-			local harmType
-			if v.isSpinjumping and (config.damageMap[HARM_TYPE_SPINJUMP] ~= nil or config.spinjumpsafe) then
-				harmType = HARM_TYPE_SPINJUMP
-			elseif (v.isSpinjumping or not config.jumphurt) and config.damageMap[HARM_TYPE_JUMP] ~= nil then
-				harmType = HARM_TYPE_JUMP
+			-- Hit from top
+			if BasicColliders.side(v,n) == COLLISION_SIDE_TOP and v.speedY > 0 then
+				local harmType
+				if v.isSpinjumping and (config.damageMap[HARM_TYPE_SPINJUMP] ~= nil or config.spinjumpsafe) then
+					harmType = HARM_TYPE_SPINJUMP
+				elseif (v.isSpinjumping or not config.jumphurt) and config.damageMap[HARM_TYPE_JUMP] ~= nil then
+					harmType = HARM_TYPE_JUMP
+				end
+
+				if harmType ~= nil then
+					n:harm(harmType, nil, v)
+
+					Effect.spawn(75, v.x + v.width / 2 - 16, v.y + v.height / 2 - 16)
+					SFX.play(2)
+
+					v.jumpForce = Defines.jumpheight_bounce
+					v.speedY = Defines.player_jumpspeed - math.abs(v.speedX*0.2)
+				end
 			end
+			
+			-- Grabbing
+			if (v.holdingNPC == nil and v.keys.run and n.grabbingPlayer == nil) and v.y > n.y and (config.grabside or config.isshell) then
+				local sfx = 23
+				if config.isshell then
+					sfx = nil
+				end
 
-			if harmType ~= nil then
-				n:harm(harmType, nil, v)
-
-				Effect.spawn(75, v.x + v.width / 2 - 16, v.y + v.height / 2 - 16)
-				SFX.play(2)
-
-				v.jumpForce = Defines.jumpheight_bounce
-				v.speedY = Defines.player_jumpspeed - math.abs(v.speedX*0.2)
+				n:grab(v, sfx)
 			end
-		end
-		
-		-- Grabbing
-		if (v.holdingNPC == nil and v.keys.run and n.grabbingPlayer == nil) and v.y > n.y and (config.grabside or config.isshell) then
-			local sfx = 23
-			if config.isshell then
-				sfx = nil
-			end
-
-			n:grab(v, sfx)
-		end
+		end			
 	end
 	
 	BasicColliders.applySpeedWithCollision(v)

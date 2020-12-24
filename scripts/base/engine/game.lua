@@ -110,10 +110,37 @@ do
 		end
 		
 		return A * 100
-	end	
+	end
+
+
+	local function isVisible(x,y,width,height)
+		for _,cam in ipairs(Camera) do
+			if cam.active and x < cam.x+cam.width and x+width > cam.x and y < cam.y+cam.height and y+height > cam.y then
+				return true
+			end
+		end
+
+		return false
+	end
+
 	
 	function Game.drawNPC(v)
-		if v.isHidden or v.id <= 0 then return end
+		if v.isHidden then return end
+
+		if isVisible(v.x,v.y,v.width,v.height) then
+			if v.despawnTimer >= 0 then
+				v.despawnTimer = Defines.npc_timeoffscreen
+			else
+				return
+			end
+		else
+			if v.despawnTimer < 0 then
+				v.despawnTimer = 0
+			end
+
+			return
+		end
+
 		
 		local img = Graphics.sprites.npc[v.id].img
 		
@@ -131,7 +158,12 @@ do
 	end
 	
 	function Game.drawBGO(v)
-		if v.isHidden or v.id <= 0 then return end
+		if v.isHidden then return end
+
+		if not isVisible(v.x,v.y,v.width,v.height) then
+			return
+		end
+
 		
 		local img = Graphics.sprites.background[v.id].img
 		
@@ -145,7 +177,12 @@ do
 	end
 	
 	function Game.drawBlock(v)
-		if v.isHidden or v.hiddenUntilHit or v.id <= 0 then return end
+		if v.isHidden or v.hiddenUntilHit then return end
+
+		if not isVisible(v.x,v.y,v.width,v.height) then
+			return
+		end
+		
 
 		local img = Graphics.sprites.block[v.id].img
 		

@@ -24,80 +24,39 @@ function NPC.load()
 end
 
 
+local function returnToSpawnPosition(v)
+	if v.spawnId <= 0 then
+		v:kill(HARM_TYPE_VANISH)
+		return
+	end
+
+	v.x = v.spawnX
+	v.y = v.spawnY
+	v.width = v.spawnWidth
+	v.height = v.spawnHeight
+	v.speedX = v.spawnSpeedX
+	v.speedY = v.spawnSpeedY
+	v.direction = v.spawnDirection
+	v.id = v.spawnId
+end
+
 local function physics(v)
-	--[[local oldSlope = 0
-	local HitSpot = 0 --used for collision detection
-	local tempHit = 0
-	local tmpBlock = {}
-	local tempHitBlock = 0
-	local tempSpeedA = 0
-	local tempTurn = false
-	local tempLocation = newLocation()
-	local tempLocation2 = newLocation()
-	local preBeltLoc = newLocation()
-	local beltCount = 0
-	local tempBlockHit = {[3] = 0}
-	local winningBlock = 0
-	local numTempBlock = 0
-	local speedVar = 0
-	
-	local tempBool = false
-	local newY = 0
-	local blankBlock = {}
-	local oldBeltSpeed = 0
-	local oldDirection = 0
-	
-	--used for collision detection
-	local fBlock = 0
-	local lBlock = 0
-	local fBlock2 = 0
-	local lBlock2 = 0
-	local bCheck = 0
-	local bCheck2 = 0
-	local addBelt = 0
-	local numAct = 0
-	local beltClear = false --stops belt movement when on a wall
-	local resetBeltSpeed = false
-	local PlrMid = 0
-	local Slope = 0
-	local SlopeTurn = false
-	
-	--for attaching to layers
-	local lyrX = 0
-	local lyrY = 0
-	
-	if not Defines.levelFreeze then
-		v.x = v.x + v.speedX
-		v.y = v.y + v.speedY
-		
-		for k,b in ipairs(Block) do
-			if not BasicColliders.check(b,v) then 
-				v.collidesBlockSide = 5
-				
-				if not NPC.config[v.id].nogravity and NPC.config[v.id].gravity ~= 0 then
-					v.speedY = v.speedY + NPC.config[v.id].gravity
-					if v.speedY > NPC.config[v.id].maxgravity then
-						v.speedY = NPC.config[v.id].maxgravity
-					end
-				end
-			else
-				if BasicColliders.side(v,b) == 1 then v.collidesBlockBottom = true else v.collidesBlockBottom = false end
-				if BasicColliders.side(v,b) == 3 then v.collidesBlockTop = true else v.collidesBlockTop = false end
-				if BasicColliders.side(v,b) == 2 then v.collidesBlockLeft = true else v.collidesBlockLeft = false end
-				if BasicColliders.side(v,b) == 4 then v.collidesBlockRight = true else v.collidesBlockRight = false end
-				
-				v.collidesBlockSide = BasicColliders.side(v,b)
-			
-				if v.y + v.height + 0.1 > b.y then
-					v.speedY = 0
-					v.y = b.y - v.height - 0.1
-					break
-				end
-			end
-		end
-		
-		v.speedX = NPC.config[v.id].const_speed * v.direction
-	end]]
+	if v.isHidden then
+		v.despawnTimer = 0
+		returnToSpawnPosition(v)
+		return
+	elseif v.despawnTimer <= 0 then
+		return
+	end
+
+	v.despawnTimer = v.despawnTimer - 1
+
+	if v.despawnTimer <= 0 then
+		v.despawnTimer = -1
+		returnToSpawnPosition(v)
+		return
+	end
+
 
 	local config = NPC.config[v.id]
 
