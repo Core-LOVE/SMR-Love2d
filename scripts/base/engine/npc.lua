@@ -250,8 +250,14 @@ function NPC.spawn(id, x, y, section, respawn, centered)
 		ai6 = 0,
 
 		turnAround = false,
+
+
+		health = NPC.config[id].health or 1,
+
+		killed = 0,
+
 		
-		data = {_settings = {_global = { }}}
+		data = {_settings = {_global = { }}},
 	}
 
 	setmetatable(n,npcMT)
@@ -277,6 +283,8 @@ end
 
 
 -- NPC harming / killing
+local updateRemovalQueue
+
 do
 	HARM_TYPE_JUMP = 1
 	HARM_TYPE_FROMBELOW = 2
@@ -313,7 +321,67 @@ do
 		end
 		EventManager.callEvent("onPostNPCHarm", self, harmType, culprit, damageMultiplier)
 
-		--Misc.dialog("A")
+
+		local damage = config.damageMap[harmType]
+
+		self.health = self.health - damage
+
+		if self.health <= 0 then
+			self:kill(harmType)
+		end
+	end
+
+
+	local npcRemovalQueue = {}
+
+	function NPC:kill(harmType)
+		if self.killed == 0 then
+			table.insert(npcRemovalQueue,self)
+		end
+
+		self.killed = harmType or HARM_TYPE_JUMP
+	end
+
+
+	local function npcKillInternal(self,queuePos)
+		-- Call the onNPCKill event and see if it's been cancelled
+		local eventObj = {cancelled = false}
+
+		EventManager.callEvent("onNPCKill", eventObj, self, self.killed)
+		if eventObj.cancelled then
+			return
+		end
+		EventManager.callEvent("onPostNPCKill", self, self.killed)
+
+
+		-- Manual table remove, to update idx fields
+		local npcCount = #NPC
+
+		for i = self.idx+1, npcCount do
+			local npcHere = NPC[i]
+
+			npcHere.idx = npcHere.idx - 1
+			NPC[i-1] = npcHere
+		end
+
+		NPC[npcCount] = nil
+
+
+		self.isValid = false
+		self.idx = -1
+
+
+		table.remove(npcRemovalQueue,queuePos)
+	end
+
+	function updateRemovalQueue()
+		for i = #npcRemovalQueue, 1, -1 do
+			local npc = npcRemovalQueue[i]
+
+			if npc.isValid then
+				npcKillInternal(npcRemovalQueue[i],i)
+			end
+		end
 	end
 end
 
@@ -451,6 +519,8 @@ end
 
 
 function NPC.update()
+	updateRemovalQueue()
+
 	for k,v in ipairs(NPC) do
 		local scr = NPC.script[v.id]
 
@@ -464,6 +534,8 @@ function NPC.update()
 	end
 end
 
+
+-- TODO: overhaul this. like, all of it. we don't need a dedicated frames thing.
 function NPC.frames()
 	for k,v in ipairs(NPC) do
 		if(NPC.config[v.id].frames > 0) then

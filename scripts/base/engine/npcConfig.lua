@@ -123,6 +123,8 @@ local properties = {
     gravity           = {default = Defines.npc_grav},
     maxgravity        = {default = 8},
 
+    health            = {default = 1},
+
 
     damagemap = {get = getWithEmptyTableDefault},
     effectmap = {get = getWithEmptyTableDefault},

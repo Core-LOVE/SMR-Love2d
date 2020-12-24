@@ -122,8 +122,10 @@ function npcManager.registerHarmTypes(id, damageMap, effectMap)
                 config.effectMap[harmTypeID] = npcManager.defaultDeathEffects[harmTypeID] or effectMap
             end
         end
-    else
+    elseif effectMap ~= nil then
         config.effectMap = effectMap
+    else
+        config.effectMap = {}
     end
 end
 
