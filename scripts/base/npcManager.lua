@@ -34,7 +34,6 @@ local function tryCalledEvent(npc,isEarly,eventName,...)
     if objs == nil then
         return
     end
-
     
     for _,obj in ipairs(objs) do
         local library = obj[1]
@@ -75,6 +74,40 @@ function npcManager.registerEvent(id, library, eventName, functionName, isEarly)
 
     table.insert(npcManager.eventListeners[isEarly][eventName][id], {library,functionName})
 end
+
+
+npcManager.specialListeners = {}
+
+function npcManager.registerSpecialEvent(id,library,eventName,functionName)
+    npcManager.specialListeners[eventName]     = npcManager.specialListeners[eventName]     or {}
+    npcManager.specialListeners[eventName][id] = npcManager.specialListeners[eventName][id] or {}
+
+    table.insert(npcManager.specialListeners[eventName][id], {library,functionName})
+end
+
+function npcManager.callSpecialEvent(npc,eventName,...)
+    local objs = npcManager.specialListeners[eventName]
+    if objs == nil then
+        return
+    end
+
+    objs = objs[npc.id]
+    if objs == nil then
+        return
+    end
+
+    for _,obj in ipairs(objs) do
+        local library = obj[1]
+        local functionName = obj[2] or eventName
+
+        local func = library[functionName]
+
+        if func ~= nil then
+            func(npc,...)
+        end
+    end
+end
+
 
 
 local harmTypesList = {

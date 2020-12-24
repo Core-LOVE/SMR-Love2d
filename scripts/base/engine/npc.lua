@@ -1,6 +1,9 @@
 local NPC = {__type="NPC"}
 
 
+local npcManager
+
+
 NPC_MAX_ID = 1000
 
 
@@ -24,7 +27,16 @@ function NPC.load()
 end
 
 
+local npcManager
+local function callSpecialEvent(v,eventName)
+	npcManager = npcManager or require("npcManager")
+	npcManager.callSpecialEvent(v,eventName)
+end
+
+
 local function returnToSpawnPosition(v)
+	callSpecialEvent(v,"onDeinitNPC")
+
 	if v.spawnId <= 0 then
 		v:kill(HARM_TYPE_VANISH)
 		return
@@ -41,7 +53,7 @@ local function returnToSpawnPosition(v)
 end
 
 local function physics(v)
-	if v.isHidden then
+	if v.isHidden and v.despawnTimer > 0 then
 		v.despawnTimer = 0
 		returnToSpawnPosition(v)
 		return
@@ -136,6 +148,10 @@ local function physics(v)
 		
 		BasicColliders.applySpeedWithCollision(v)
 	end
+
+
+	callSpecialEvent(v,"onActiveNPC")
+	callSpecialEvent(v,"onAnimateNPC")
 end
 
 local function values(t)
@@ -214,6 +230,8 @@ function NPC.spawn(id, x, y, section, respawn, centered)
 		health = NPC.config[id].health or 1,
 
 		killed = 0,
+
+		renderingDisabled = false,
 
 		
 		data = {_settings = {_global = { }}},

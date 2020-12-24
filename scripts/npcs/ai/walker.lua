@@ -7,17 +7,11 @@ walker.idList = {}
 walker.idMap  = {}
 
 function walker.register(npcID)
-    npcManager.registerEvent(npcID, walker, "onTickNPC")
+    npcManager.registerSpecialEvent(npcID, walker, "onActiveNPC")
 end
 
 
-function walker.onTickNPC(v)
-    if Defines.levelFreeze then return end
-
-    if v.despawnTimer <= 0 then
-        return
-    end
-
+function walker.onActiveNPC(v)
     if v.forcedState ~= 0 or v.projectile or v.grabbingPlayer ~= nil then
         return
     end

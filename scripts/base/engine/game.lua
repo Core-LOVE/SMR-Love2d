@@ -123,12 +123,23 @@ do
 		return false
 	end
 
+	local npcManager
+	local function callNPCSpecialEvent(v,eventName)
+		npcManager = npcManager or require("npcManager")
+		npcManager.callSpecialEvent(v,eventName)
+	end
+
 	
 	function Game.drawNPC(v)
 		if v.isHidden then return end
 
 		if isVisible(v.x,v.y,v.width,v.height) then
 			if v.despawnTimer >= 0 then
+				if v.despawnTimer == 0 then
+					callNPCSpecialEvent(v,"onInitNPC")
+					callNPCSpecialEvent(v,"onAnimateNPC")
+				end
+
 				v.despawnTimer = Defines.npc_timeoffscreen
 			else
 				return
@@ -138,6 +149,15 @@ do
 				v.despawnTimer = 0
 			end
 
+			return
+		end
+
+
+		v.renderingDisabled = false
+
+		callNPCSpecialEvent("onRenderNPC")
+
+		if v.renderingDisabled then
 			return
 		end
 
