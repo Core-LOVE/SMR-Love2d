@@ -147,6 +147,7 @@ end})
 
 local blockMT = {
 	__type = "Block",
+	__index = Block
 }
 
 function Block.spawn(id, x, y)

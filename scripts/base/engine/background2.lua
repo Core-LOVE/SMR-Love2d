@@ -36,12 +36,13 @@ function Backgrounds.draw(s,c)
 		
 		if type(v.img) == 'number' then
 			img = Graphics.sprites.background2[v.img].img
+			print(inspect(l))
 		elseif type(v.img) ~= 'number' and v.img ~= nil then
 			img:setWrap("repeat", "repeat")
 		end
 		
-		local cx = (sec.boundary.left - (c.x + sec.boundary.left)) * v.parallaxX
-		local cy = (sec.boundary.top - (c.y + sec.boundary.top)) * v.parallaxY
+		local cx = sec.boundary.left -- - (c.x + sec.boundary.left)) * v.parallaxX
+		local cy = sec.boundary.top -- - (c.y + sec.boundary.top)) * v.parallaxY
 		
 		if not qd then
 			-- qd = love.graphics.newQuad(cx, cy, , map_height_in_pixels, bg_image:getWidth(), bg_image:getHeight())

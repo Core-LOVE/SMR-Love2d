@@ -105,12 +105,12 @@ local function physics(v)
 
 	v.speedY = math.min(Defines.gravity,v.speedY + Defines.player_grav)
 
-	for k,n in ipairs(NPC.getIntersecting(v.x, v.y, v.x + v.width, v.y + v.height)) do
+	for k,n in ipairs(NPC.getIntersecting(v.x - 1, v.y - v.height, v.x + v.width + 1, v.y + v.height)) do
 		if n.despawnTimer > 0 then
 			local config = NPC.config[n.id]
 
 			-- Hit from top
-			if BasicColliders.side(v,n) == COLLISION_SIDE_TOP and v.speedY > 0 then
+			if BasicColliders.side(v,n) == COLLISION_SIDE_TOP then
 				local harmType
 				if v.isSpinjumping and (config.damageMap[HARM_TYPE_SPINJUMP] ~= nil or config.spinjumpsafe) then
 					harmType = HARM_TYPE_SPINJUMP
@@ -124,7 +124,7 @@ local function physics(v)
 					Effect.spawn(75, v.x + v.width / 2 - 16, v.y + v.height / 2 - 16)
 					SFX.play(2)
 
-					v.jumpForce = Defines.jumpheight_bounce
+					v.jumpForce = Defines.jumpheight_bounce + n.speedY
 					v.speedY = Defines.player_jumpspeed - math.abs(v.speedX*0.2)
 				end
 			end

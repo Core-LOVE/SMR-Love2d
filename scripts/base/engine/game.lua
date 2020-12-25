@@ -229,8 +229,8 @@ do
 		-- for k,v in ipairs(Player) do
 			local imgcon = Graphics.sprites.other['Container1'].img
 			
-			width = love.graphics.getWidth()
-			height = love.graphics.getHeight()
+			local width = love.graphics.getWidth()
+			local height = love.graphics.getHeight()
 			
 			local offset = {x = HUDOverride.offsets.itembox.x, y = HUDOverride.offsets.itembox.y}
 			local itembox = {img = imgcon, x = (width / 2) - 48, y = 0}
@@ -247,12 +247,6 @@ do
 	local emptyTable = {}
 
 	function Game.updateGraphicsLevel()
-		for k,z in ipairs(Camera) do
-			--local s = Player(k).section
-		
-			--Backgrounds.draw(s,z)
-		end
-		
 		for _,v in ipairs(Effect.objs) do
 			v:render(emptyTable)
 		end
@@ -284,6 +278,19 @@ do
 		end
 
 		Graphics.drawingQueue = {}
+	end
+end
+
+function Game.updateMenu()
+	-- Draw logo
+	
+	do
+		local img = Graphics.sprites.other['Logo1'].img
+		
+		local width = love.graphics.getWidth()
+		local height = love.graphics.getHeight()
+			
+		Graphics.drawImageWP(img, width / 2, height / 2, -17)
 	end
 end
 

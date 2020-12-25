@@ -1,0 +1,8 @@
+frames=4
+nogravity = true
+noblockcollision = true
+
+playerblock=true
+playerblocktop=true
+npcblock=true
+npcblocktop=true

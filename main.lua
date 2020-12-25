@@ -93,6 +93,10 @@ function love.draw()
 
 	Game.updateGraphicsLevel()
 	
+	if TitleMenu then
+		Game.updateMenu()
+	end
+	
 	EventManager.callEvent("onDrawEnd")
 
 

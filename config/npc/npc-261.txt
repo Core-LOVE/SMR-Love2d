@@ -1,3 +1,5 @@
 frames=4
 framespeed=18
 framestyle=1
+spinjumpsafe = true
+jumphurt = true

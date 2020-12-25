@@ -1,9 +1,12 @@
 isOverworld = false
+
 LevelMacro = 0
 LevelMacroCounter = 0
 LevelName = ""
 LevelFileName = ""
 LevelScript = nil
+
+TitleMenu = false
 
 newRECT = function()
 	return {top = 0, left = 0, right = 0, bottom = 0}
