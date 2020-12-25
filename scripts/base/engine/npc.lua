@@ -232,7 +232,6 @@ function NPC.spawn(id, x, y, section, respawn, centered)
 		killed = 0,
 
 		renderingDisabled = false,
-
 		
 		data = {_settings = {_global = { }}},
 	}

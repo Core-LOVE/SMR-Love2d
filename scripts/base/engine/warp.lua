@@ -7,6 +7,7 @@ end})
 
 function Warp.create(type, enX, enY, exX, exY)
 	local w = {
+		__type = Warp.__type,
 		idx = #Warp + 1,
 		warpType = type,
 		
@@ -39,6 +40,18 @@ function Warp.create(type, enX, enY, exX, exY)
 	
 	Warp[#Warp + 1] = w
 	return w
+end
+
+function Warp.getIntersectingEntrance(x1, y1, x2, y2)
+	local ret = {}
+
+	for _,v in ipairs(Warp) do
+		if v.entranceX <= x2 and v.entranceY <= y2 and v.entranceX + v.entranceWidth >= x1 and v.entranceY + v.entranceHeight >= y1 then
+			ret[#ret + 1] = v
+		end
+	end
+
+	return ret
 end
 
 return Warp 

@@ -160,23 +160,52 @@ local function physics(v)
 			hnpc:ungrab(bool, 9)
 		end
 	end
+	
+	-- Warping
+	for k,wp in ipairs(Warp.getIntersectingEntrance(v.x, v.y, v.x + v.width, v.y + v.height)) do
+		if v.keys.up then
+			v:warp(wp)
+		end
+	end
+	
+	if v.TargetWarpIndex > 0 then
+		local w = Warp(v.TargetWarpIndex)
+		
+		v.x = math.floor(w.entranceX / 32) * 32 + 4
+		v.y = math.floor(w.entranceY / 32) * 32
+		v.speedY = 0
+		v.speedX = 0
+		
+		v.WarpTimer = v.WarpTimer + 1
+		if v.WarpTimer >= 32 then
+			for _,s in ipairs(Section.getIntersecting(w.exitX, w.exitY, w.exitX + w.exitWidth, w.exitY + w.exitHeight)) do
+				v.section = s.idx
+			end
+			
+			v.x = math.floor(w.exitX / 32) * 32 + 4
+			v.y = math.floor(w.exitY / 32) * 32
+		
+			v.WarpTimer = 0
+			v.WarpCooldownTimer = 16
+			v.TargetWarpIndex = 0
+		end
+	end
 end
 
-
-
 local newControls
-
 
 setmetatable(Player, {__call=function(Player, idx)
 	return Player[idx]
 end})
 
+local playerMT = {__type = Player.__type, __index = Player}
+
 function Player.spawn(character, x, y)
 	local p = {
 		__type = "Player",
-
-		idx = #Player + 1,
+		
 		isValid = true,
+		idx = #Player + 1,
 		
 		character = character or 1,
 		powerup = 1,
@@ -196,6 +225,10 @@ function Player.spawn(character, x, y)
 		DeathState = false,
 		DeathTimer = 0,
 		
+		TargetWarpIndex = 0,
+		WarpCooldownTimer = 0,
+		WarpTimer = 0,
+		
 		isSpinjumping = false,
 		spinjumpTimer = 0,
 		spinJumpDirection = 0,	
@@ -208,6 +241,8 @@ function Player.spawn(character, x, y)
 		
 		jumpForce = 0,
 	}
+	
+	setmetatable(p, playerMT)
 	
 	BasicColliders.addCollisionProperties(p)
 	BasicColliders.addSolidObjectProperties(p)
@@ -254,8 +289,32 @@ function Player.count()
 end
 
 function Player:isGroundTouching()
-	if self.collidesBlockBottom then return true end
-	return false
+	return self.collidesBlockBottom
+end
+
+function Player:isOnGround()
+	return self.collidesBlockBottom
+end
+
+function Player:warp(warpObj, warpType, warpDirection)
+	local v = self
+	if v.WarpCooldownTimer > 0 then return end
+	
+	if warpObj.__type == "Warp" then
+		local w = warpObj
+		
+		v.x = math.floor(w.entranceX / 32) * 32
+		v.y = math.floor(w.entranceY / 32) * 32
+
+		v.WarpCooldownTimer = 32
+		v.TargetWarpIndex = w.idx
+		
+		if w.warpType == 2 then
+			SFX.play(46)
+		end
+	elseif warpObj.__type == nil and #warpIdx == 4 then
+		
+	end
 end
 
 function Player.getIntersecting(x1,y1,x2,y2)

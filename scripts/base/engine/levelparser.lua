@@ -103,6 +103,8 @@ do
         v.legacyBoss = properties.BS or false
         v.dontMove = properties.NM or false
         v.friendly = properties.FD or false
+		v.spawnAi1 = properties.S1 or 0
+		v.spawnAi2 = properties.S2 or 0
 		
 		v.msg = properties.MG or ""
 	end)

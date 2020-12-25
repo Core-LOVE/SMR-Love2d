@@ -123,10 +123,14 @@ function char.onAnimationPlayer(v)
 		i = 2
 	end
 	
-	if v.collidesBlockBottom then
-		animation_onFloor(v, fr, i)
+	if v.TargetWarpIndex == 0 then
+		if v.collidesBlockBottom then
+			animation_onFloor(v, fr, i)
+		else
+			animation_inAir(v, fr, i)
+		end
 	else
-		animation_inAir(v, fr, i)
+		v.frame = 13
 	end
 end
 

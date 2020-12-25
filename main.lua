@@ -71,6 +71,12 @@ local function load_objects()
 end
 
 function love.load()
+	print("Program name", arg[0])
+	print("Arguments:")
+	for l = 1, #arg do
+		print(l," ",arg[l])
+	end
+	
 	--Audio.loadSounds()
 	Graphics.loadUi()
 	love.graphics.setDefaultFilter("nearest", "nearest")

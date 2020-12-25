@@ -84,20 +84,16 @@ function Graphics.loadUi()
 		if v.one == nil then
 			if v.max ~= nil then
 				for n = v.first, v.max do
-					local k = tostring(v.key)
 					local id = tostring(n)
-					Graphics.sprites.hardcoded[k.."-"..id] = {}
-					Graphics.sprites.hardcoded[k.."-"..id].img = love.graphics.newImage("graphics/ui/"..key..id..".png")
-					print("Graphics.sprites.hardcoded["..k.."-"..id.."] = graphics/ui/"..key..id..".png")
+					Graphics.sprites.other[key..id] = {}
+					Graphics.sprites.other[key..id].img = love.graphics.newImage("graphics/ui/"..key..id..".png")
+					print("Graphics.sprites.other["..key..id.."] = graphics/ui/"..key..id..".png")
 				end
 			end
 		else
-			local k = tostring(v.key)
-			local k2 = ""
-			if v.key2 ~= nil then k2 = "-"..tostring(v.key2) end
-			Graphics.sprites.hardcoded[k..k2] = {}
-			Graphics.sprites.hardcoded[k..k2].img = love.graphics.newImage("graphics/ui/"..key..".png")
-			print("Graphics.sprites.hardcoded["..k..k2.."] = graphics/ui/"..key..".png")
+			Graphics.sprites.other[key] = {}
+			Graphics.sprites.other[key].img = love.graphics.newImage("graphics/ui/"..key..".png")
+			print("Graphics.sprites.other["..key.."] = graphics/ui/"..key..".png")
 		end
 	end
 end

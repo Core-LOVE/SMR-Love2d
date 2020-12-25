@@ -224,19 +224,18 @@ do
 		
 		Graphics.drawImageToSceneWP(img, v.x + fx, v.y + fy, pfrX(100 + v.frame * v.direction), pfrY(100 + v.frame * v.direction), 100, 100, -25)
 	end
-	
-	
-	local imgcon = Graphics.sprites.hardcoded['48-0'].img
-	
+		
 	function Game.drawHud()
 		-- for k,v in ipairs(Player) do
-			-- width = love.graphics.getWidth()
-			-- height = love.graphics.getHeight()
+			local imgcon = Graphics.sprites.other['Container1'].img
 			
-			-- local offset = {x = HUDOverride.offsets.itembox.x, y = HUDOverride.offsets.itembox.y}
-			-- local itembox = {img = imgcon, x = (width / 2) - 48, y = 0}
+			width = love.graphics.getWidth()
+			height = love.graphics.getHeight()
 			
-			-- Graphics.drawImageWP(itembox.img, itembox.x + offset.x, itembox.y + offset.y, HUDOverride.priority)
+			local offset = {x = HUDOverride.offsets.itembox.x, y = HUDOverride.offsets.itembox.y}
+			local itembox = {img = imgcon, x = (width / 2) - 48, y = 0}
+			
+			Graphics.drawImageWP(itembox.img, itembox.x + offset.x, itembox.y + offset.y)
 		-- end
 	end
 	
@@ -274,7 +273,7 @@ do
 			Game.drawPlayer(v)
 		end
 		
-		-- Game.drawHud()
+		Game.drawHud()
 		
 		table.sort(Graphics.drawingQueue,sortDrawingQueue)
 

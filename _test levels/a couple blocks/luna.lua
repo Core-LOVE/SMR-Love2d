@@ -1,4 +1,4 @@
-require("libraryTest")
+-- require("libraryTest")
 
 function onCameraDraw()
 	for k,v in ipairs(NPC.get(22)) do

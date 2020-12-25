@@ -1,0 +1,8 @@
+width=16
+height=16
+gfxwidth=16
+gfxheight=16
+framespeed=4
+frames=4
+nogravity=true
+noblockcollision=true

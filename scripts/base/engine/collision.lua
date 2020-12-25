@@ -304,7 +304,7 @@ do
         end
 
 
-        if solidData.passthrough or (side ~= COLLISION_SIDE_TOP and solidData.semisolid) then
+        if solidData.passthrough or (side ~= COLLISION_SIDE_TOP and solidData.semisolid) or (NPC.config[v.id] ~= nil and NPC.config[v.id].noblockcollision) then
             side = COLLISION_SIDE_NONE
         end
 

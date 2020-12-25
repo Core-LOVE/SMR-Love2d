@@ -190,6 +190,8 @@ function effectConfig.load()
         if love.filesystem.getInfo(path) then
             Effect.config[id] = convertParsedIntoConfig(id,ini_parser.load(path))
         end
+		
+		print("config/effect/effect-".. id.. ".txt is loaded!")
     end
 end
 
