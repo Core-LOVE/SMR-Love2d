@@ -110,7 +110,7 @@ local function physics(v)
 			local config = NPC.config[n.id]
 
 			-- Hit from top
-			if BasicColliders.side(v,n) == COLLISION_SIDE_TOP and v.speedY > 0 then
+			if BasicColliders.side(v,n) == COLLISION_SIDE_TOP then
 				local harmType
 				if v.isSpinjumping and (config.damageMap[HARM_TYPE_SPINJUMP] ~= nil or config.spinjumpsafe) then
 					harmType = HARM_TYPE_SPINJUMP
