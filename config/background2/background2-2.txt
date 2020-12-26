@@ -1,3 +1,4 @@
+[background2]
 fill-color = #6898F8
 
 [BG]

@@ -264,6 +264,12 @@ do
 		end
 		
 		for _,v in ipairs(Player) do
+			local cam = Camera(1)
+			if v.idx <= 2 then
+				cam = Camera(v.idx)
+			end
+			
+			Backgrounds.draw(Section(v.section), cam)
 			Game.drawPlayer(v)
 		end
 		

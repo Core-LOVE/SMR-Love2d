@@ -124,6 +124,7 @@ local function physics(v)
 					Effect.spawn(75, v.x + v.width / 2 - 16, v.y + v.height / 2 - 16)
 					SFX.play(2)
 
+					v.y = n.y - n.height - 1
 					v.jumpForce = Defines.jumpheight_bounce + n.speedY
 					v.speedY = Defines.player_jumpspeed - math.abs(v.speedX*0.2)
 				end
