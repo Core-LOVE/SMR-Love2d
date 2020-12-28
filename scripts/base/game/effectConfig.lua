@@ -247,6 +247,10 @@ do
         gravity = 0.5,
         maxSpeedY = 10,
     }
+	
+	effectConfig.defaults.AI_PLAYER = {
+		
+	}
 end
 
 

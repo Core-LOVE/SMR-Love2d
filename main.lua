@@ -99,7 +99,6 @@ function love.draw()
 	
 	EventManager.callEvent("onDrawEnd")
 
-
 	collectgarbage()
 end
 

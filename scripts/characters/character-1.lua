@@ -7,6 +7,8 @@ GrabSpotY = {},
 DuckHeight = {}
 }
 
+char.deathEffect = 3
+
 char.Height[1] = 30        -- Little Mario
 char.Width[1] = 24         -- ------------
 char.GrabSpotX[1] = 18     -- ---------

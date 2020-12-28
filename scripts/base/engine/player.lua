@@ -30,7 +30,7 @@ local function physics(v)
 			v.section = s.idx
 		end
 	end
-
+	
 	-- Direction stuff
 	if v.keys.left then
 		v.direction = -1
@@ -191,6 +191,24 @@ local function physics(v)
 			v.TargetWarpIndex = 0
 		end
 	end
+	
+	-- Clamp hor pos
+	local sb = Section(v.section).boundary
+	
+	if v.clampHorizontalPos then
+		if v.x < sb.left then
+			v.x = sb.left
+			v.speedX = 0
+		elseif v.x + v.width > sb.right then
+			v.x = sb.right - v.width
+			v.speedX = 0
+		end
+	end
+	
+	-- Pit death
+	if v.y + v.height > sb.bottom + 32 then
+		v:harm()
+	end
 end
 
 local newControls
@@ -223,8 +241,8 @@ function Player.spawn(character, x, y)
 		nogravity = 0,
 		vine = 0,
 		
-		DeathState = false,
-		DeathTimer = 0,
+		deathState = false,
+		deathTimer = 0,
 		
 		TargetWarpIndex = 0,
 		WarpCooldownTimer = 0,
@@ -239,6 +257,7 @@ function Player.spawn(character, x, y)
 		rawKeys = newControls(),
 		
 		section = 0,
+		clampHorizontalPos = true,
 		
 		jumpForce = 0,
 	}
@@ -295,6 +314,21 @@ end
 
 function Player:isOnGround()
 	return self.collidesBlockBottom
+end
+
+function Player:harm()
+	local scr = Player.script[self.character]
+	
+	if #Player >= 2 then
+		SFX.play(54)
+	elseif #Player == 1 then
+		SFX.play(8)	
+	end
+
+	if type(scr.deathEffect) == 'number' then Effect.spawn(scr.deathEffect, self.x, self.y) end
+	
+	self.deathState = true
+	return self.deathState
 end
 
 function Player:warp(warpObj, warpType, warpDirection)

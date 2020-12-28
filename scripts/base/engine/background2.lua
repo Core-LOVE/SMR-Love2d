@@ -7,12 +7,13 @@ local default_priority = -101
 
 for i = 1, ORIG_BG_MAX_ID do
 	Backgrounds[i] = {}
-	local file = ini_parser.load("config/background2/background2-"..tostring(i)..".txt")
 	
-	for k in pairs(file) do
-		Backgrounds[i][k] = file[k]
-		
-		print(k)
+	if love.filesystem.getInfo("config/background2/background2-"..tostring(i).. ".txt") then
+		local file = ini_parser.load("config/background2/background2-"..tostring(i)..".txt")
+	
+		for k in pairs(file) do
+			Backgrounds[i][k] = file[k]
+		end
 	end
 end
 
@@ -20,6 +21,10 @@ function Backgrounds.draw(sect, cam)
 	if type(sect) ~= 'table' or sect.backgroundID == 0 then return end
 	
 	local bound = sect.boundary
+	
+	if Backgrounds[sect.backgroundID] == nil then
+
+	end
 	
 	for k in pairs(Backgrounds[sect.backgroundID]) do
 		local layr = Backgrounds[sect.backgroundID][k]

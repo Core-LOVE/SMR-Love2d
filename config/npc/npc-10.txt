@@ -1,0 +1,3 @@
+width=28
+nogravity = true
+noblockcollision = true

@@ -1,11 +1,8 @@
 local NPC = {__type="NPC"}
 
-
 local npcManager
 
-
 NPC_MAX_ID = 1000
-
 
 NPC.config = require("engine/npcConfig")
 
