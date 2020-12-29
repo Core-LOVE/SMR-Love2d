@@ -215,6 +215,8 @@ do
 	end
 
 	function Game.drawPlayer(v)
+		if v.name == "null" or v.deathState then return end
+		
 		local img = Graphics.sprites[v.name][v.powerup].img
 		
 		if img == nil then return end

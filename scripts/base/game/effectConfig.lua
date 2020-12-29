@@ -277,6 +277,8 @@ do
 		speedX = 0,
 		lifetime = 100,
 		accelerationY = 0.25,
+		xOffset = 16,
+		yOffset = 16,
 	}
 	
 	effectConfig.defaults.AI_DOOR = {

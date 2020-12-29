@@ -60,8 +60,8 @@ function Effect.spawn(id,x,y,variant,npcID,shadow)
         spawner.maxDelay = math.max(spawner.maxDelay,objConfig.delay)
     end
 
-
     table.insert(Effect.spawners,spawner)
+	return spawner
 end
 
 

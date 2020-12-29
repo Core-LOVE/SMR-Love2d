@@ -31,6 +31,8 @@ local function physics(v)
 		end
 	end
 	
+	if v.deathState then return end
+	
 	-- Direction stuff
 	if v.keys.left then
 		v.direction = -1
@@ -105,7 +107,7 @@ local function physics(v)
 
 	v.speedY = math.min(Defines.gravity,v.speedY + Defines.player_grav)
 
-	for k,n in ipairs(NPC.getIntersecting(v.x - 1, v.y - v.height, v.x + v.width + 1, v.y + v.height)) do
+	for k,n in ipairs(NPC.getIntersecting(v.x - 1, v.y - v.height - 1, v.x + v.width + 1, v.y + v.height + 1)) do
 		if n.despawnTimer > 0 then
 			local config = NPC.config[n.id]
 
@@ -128,6 +130,8 @@ local function physics(v)
 					v.jumpForce = Defines.jumpheight_bounce + n.speedY
 					v.speedY = Defines.player_jumpspeed - math.abs(v.speedX*0.2)
 				end
+			else
+				v:harm()
 			end
 			
 			-- Grabbing
@@ -225,9 +229,9 @@ local function physics(v)
 	end
 	
 	-- Pit death
-	-- if v.y + v.height > sb.bottom + 32 then
-		-- v:harm()
-	-- end
+	if v.y + v.height > sb.bottom + v.height * 2 + 11 then
+		v:kill()
+	end
 end
 
 local newControls
@@ -338,18 +342,11 @@ function Player:isOnGround()
 end
 
 function Player:harm()
-	local scr = Player.script[self.character]
+	if self.powerup == 1 then
+		self:kill()
+	else
 	
-	if #Player >= 2 then
-		SFX.play(54)
-	elseif #Player == 1 then
-		SFX.play(8)	
 	end
-
-	if type(scr.deathEffect) == 'number' then Effect.spawn(scr.deathEffect, self.x, self.y) end
-	
-	self.deathState = true
-	return self.deathState
 end
 
 function Player:warp(warpObj, warpType, warpDirection)
@@ -425,8 +422,25 @@ function Player.getNearest(x, y)
 end
 
 function Player:kill()
+	if self.deathState then return end
+	
+	local scr = Player.script[self.character]
+	local e
+	
+	self.speedX = 0
+	self.speedY = 0
+	
+	if #Player >= 2 then
+		SFX.play(54)
+	elseif #Player == 1 then
+		SFX.play(8)	
+	end
 
+	if type(scr.deathEffect) == 'number' then e = Effect.spawn(scr.deathEffect, self.x, self.y) end
+	
+	self.deathState = true
 end
+
 -- Keys (heavily based on the x2 rendition)
 do
 	KEYS_UP = false
