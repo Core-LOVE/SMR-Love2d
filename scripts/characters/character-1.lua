@@ -70,19 +70,23 @@ char.GrabSpotY[10] = 16     -- ---------
 
 local function animation_onFloor(v, fr, i)
 	if v.speedX ~= 0 then
-		v.frameTimer = v.frameTimer + 1
-		if v.speedX > Defines.player_walkspeed - 1.5 or v.speedX < -Defines.player_walkspeed + 1.5 then
-			v.frameTimer = v.frameTimer + 1 end
-		if v.speedX > Defines.player_walkspeed or v.speedX < -Defines.player_walkspeed then
-			v.frameTimer = v.frameTimer + 1 end
-		if v.speedX > Defines.player_walkspeed + 1 or v.speedX < -Defines.player_walkspeed - 1 then
-			v.frameTimer = v.frameTimer + 1 end
-		if v.speedX > Defines.player_walkspeed + 2 or v.speedX < -Defines.player_walkspeed - 2 then
-			v.frameTimer = v.frameTimer + 1 end
+		if v.slideCounter <= 0 then
+			v.frameTimer = v.frameTimer + 1
+			if v.speedX > Defines.player_walkspeed - 1.5 or v.speedX < -Defines.player_walkspeed + 1.5 then
+				v.frameTimer = v.frameTimer + 1 end
+			if v.speedX > Defines.player_walkspeed or v.speedX < -Defines.player_walkspeed then
+				v.frameTimer = v.frameTimer + 1 end
+			if v.speedX > Defines.player_walkspeed + 1 or v.speedX < -Defines.player_walkspeed - 1 then
+				v.frameTimer = v.frameTimer + 1 end
+			if v.speedX > Defines.player_walkspeed + 2 or v.speedX < -Defines.player_walkspeed - 2 then
+				v.frameTimer = v.frameTimer + 1 end
 
-		if v.frameTimer >= 10 then
-			v.frameTimer = 0
-			if v.frame == fr.stand[i] then v.frame = fr.run[i] else v.frame = fr.stand[i] end
+			if v.frameTimer >= 10 then
+				v.frameTimer = 0
+				if v.frame == fr.stand[i] then v.frame = fr.run[i] else v.frame = fr.stand[i] end
+			end
+		else
+			v.frame = 4
 		end
 	else
 		v.frame = fr.stand[i] 

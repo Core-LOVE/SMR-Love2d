@@ -23,7 +23,11 @@ do
 		__index = (function(self,key)
 			-- Load it
 			local path = "graphics/".. self._name.. "/".. self._name.. "-".. tostring(key).. ".png"
-
+			local path2 = ""
+			if LevelPath ~= "" then
+				path2 = LevelPath .. "/" .. self._name.. "/".. self._name.. "-".. tostring(key).. ".png"
+			end
+			
 			local imgObj = {}
 
 			if love.filesystem.getInfo(path) ~= nil then
@@ -31,6 +35,11 @@ do
 				print(self._name.. "-".. tostring(key).. ".png successfully loaded")
 			end
 			
+			if love.filesystem.getInfo(path2) ~= nil then
+				print(LevelPath .. "/" .. self._name.. "-".. tostring(key).. ".png")
+				-- imgObj.img = Graphics.loadImage(path2)
+				print(self._name.. "-".. tostring(key).. ".png successfully changed")			
+			end
 
 			self[key] = imgObj
 

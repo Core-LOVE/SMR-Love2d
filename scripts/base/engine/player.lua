@@ -184,7 +184,7 @@ local function physics(v)
 			end
 			
 			v.x = math.floor(w.exitX / 32) * 32 + 4
-			v.y = math.floor(w.exitY / 32) * 32
+			v.y = math.floor(w.exitY / 32) * 32 + 2
 		
 			v.WarpTimer = 0
 			v.WarpCooldownTimer = 16
@@ -192,6 +192,9 @@ local function physics(v)
 		end
 	end
 	
+	if v.WarpCooldownTimer > 0 then
+		v.WarpCooldownTimer = v.WarpCooldownTimer - 1
+	end
 	-- Clamp hor pos
 	local sb = Section(v.section).boundary
 	
@@ -205,10 +208,26 @@ local function physics(v)
 		end
 	end
 	
-	-- Pit death
-	if v.y + v.height > sb.bottom + 32 then
-		v:harm()
+	-- Sliding
+	if ((v.keys.right and v.speedX < 0) or (v.keys.left and v.speedX > 0)) and v.collidesBlockBottom then
+		v.slideCounter = v.slideCounter - 1
+		if v.slideCounter <= 0 then
+			SFX.play(10)
+			Effect.spawn(74, v.x + (v.width / 2) - 4 + 10 * -v.direction, v.y + (v.height - 5))
+			v.slideCounter = 2 + math.random(0,2)
+		end
+		SFX.play(10)
+		v.frame = 4
+	else
+		if v.slideCounter ~= 0 then
+			v.slideCounter = 0
+		end
 	end
+	
+	-- Pit death
+	-- if v.y + v.height > sb.bottom + 32 then
+		-- v:harm()
+	-- end
 end
 
 local newControls
@@ -247,6 +266,8 @@ function Player.spawn(character, x, y)
 		TargetWarpIndex = 0,
 		WarpCooldownTimer = 0,
 		WarpTimer = 0,
+
+		slideCounter = 0,
 		
 		isSpinjumping = false,
 		spinjumpTimer = 0,
@@ -341,6 +362,20 @@ function Player:warp(warpObj, warpType, warpDirection)
 		v.x = math.floor(w.entranceX / 32) * 32
 		v.y = math.floor(w.entranceY / 32) * 32
 
+		local tb = {[1] = "entrance", [2] = "exit"}
+		for i = 1, #tb do
+			local x = w[tb[i].."X"]
+			local y = w[tb[i].."Y"]
+			local wd = x + w[tb[i].."Width"]
+			local hg = y + w[tb[i].."Height"]
+			
+			for k,b in ipairs(BGO.getIntersecting(x,y,wd,hg)) do
+				if BGO.config[b.id].dooreffect ~= 0 then
+					Effect.spawn(BGO.config[b.id].dooreffect, b.x + b.width / 2, b.y + b.height / 2)
+				end
+			end
+		end
+		
 		v.WarpCooldownTimer = 32
 		v.TargetWarpIndex = w.idx
 		
@@ -472,10 +507,10 @@ do
 	end
 end
 
-player = Player(1)
+player = Player[1]
 if Player.count() > 1 then
 	for k = 2, Player.count() do
-		_G['player'..tostring(k)] = Player(k)
+		_G['player'..tostring(k)] = Player[k]
 	end
 end
 

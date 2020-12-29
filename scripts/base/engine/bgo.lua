@@ -19,6 +19,7 @@ for i = 1, BACKGROUND_MAX_ID do
 		priority = nil,
 		water = false,
 		stoponfreeze = false,
+		dooreffect = 0,
 	}
 	
 	BGO.frame[i] = 0
@@ -102,6 +103,18 @@ function BGO.get(idFilter)
 					end
 				end
 			end
+		end
+	end
+
+	return ret
+end
+
+function BGO.getIntersecting(x1,y1,x2,y2)
+	local ret = {}
+
+	for _,v in ipairs(BGO) do
+		if v.x <= x2 and v.y <= y2 and v.x+v.width >= x1 and v.y+v.height >= y1 then
+			ret[#ret + 1] = v
 		end
 	end
 

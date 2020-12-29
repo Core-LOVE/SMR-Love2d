@@ -288,10 +288,9 @@ function levelParser.load(path)
 	
     formatLoad(path)
 	
-	script_path = string.gsub(path, ".lvlx", "")
-	
-	if love.filesystem.getInfo(script_path.."/luna.lua") then
-		LevelScript = require(script_path.."/luna")
+	LevelPath = string.gsub(path, ".lvlx", "")
+	if love.filesystem.getInfo(LevelPath.."/luna.lua") then
+		LevelScript = require(LevelPath.."/luna")
 		onStart()
 	end
 end

@@ -126,7 +126,7 @@ function love.update(dt)
 
 	EventManager.callEvent("onTickEnd")
 
-
+ 
 	collectgarbage()
 end
 

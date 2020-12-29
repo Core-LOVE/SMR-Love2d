@@ -1,5 +1,6 @@
 -- require("libraryTest")
 
-function onDraw()
-	Text.print(1 .. " : " .. 2, 10, 10)
+function onStart()
+	local p = Player[1]
+	Effect.spawn(3, p.x, p.y)
 end

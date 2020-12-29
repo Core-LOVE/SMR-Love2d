@@ -223,7 +223,31 @@ do
         end
     end
 
-
+	function effectConfig.onTick.TICK_PINGPONG(v)
+		if v.reverse == nil then
+			v.animationSpeed = v.framespeed
+			
+			v.framespeed = 0
+			v.reverse = false
+		end
+		
+		v.animationTimer = v.animationTimer + 1
+		if v.animationTimer >= v.animationSpeed then
+			if not v.reverse then v.animationFrame = v.animationFrame + 1 else v.animationFrame = v.animationFrame - 1 end
+			if v.animationFrame == v.frames + 1 then
+				v.reverse = true
+				v.animationFrame = 4
+				v.animationTimer = -v.animationSpeed
+			else
+				v.animationTimer = 0
+			end
+		end
+		
+		if v.animationFrame < 0 then
+			v.timer = -1
+		end
+	end
+	
     -- Defaults
     effectConfig.defaults.AI_STOMPED = {
         lifetime = 20,
@@ -249,7 +273,17 @@ do
     }
 	
 	effectConfig.defaults.AI_PLAYER = {
-		
+		speedY = -11,
+		speedX = 0,
+		lifetime = 100,
+		accelerationY = 0.25,
+	}
+	
+	effectConfig.defaults.AI_DOOR = {
+		onTick = "TICK_PINGPONG",
+		lifetime = 150,
+		frames=5,
+		framespeed=6,
 	}
 end
 

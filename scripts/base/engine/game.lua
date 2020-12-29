@@ -227,13 +227,13 @@ do
 		
 	function Game.drawHud()
 		-- for k,v in ipairs(Player) do
-			local imgcon = Graphics.sprites.other['Container1'].img
+			local imgcon = Graphics.sprites.other['Container0'].img
 			
 			local width = love.graphics.getWidth()
 			local height = love.graphics.getHeight()
 			
 			local offset = {x = HUDOverride.offsets.itembox.x, y = HUDOverride.offsets.itembox.y}
-			local itembox = {img = imgcon, x = (width / 2) - 48, y = 0}
+			local itembox = {img = imgcon, x = (width / 2) - 24, y = 0}
 			
 			Graphics.drawImageWP(itembox.img, itembox.x + offset.x, itembox.y + offset.y)
 		-- end
@@ -273,7 +273,9 @@ do
 			Game.drawPlayer(v)
 		end
 		
-		Game.drawHud()
+		if not TitleMenu then
+			Game.drawHud()
+		end
 		
 		table.sort(Graphics.drawingQueue,sortDrawingQueue)
 
@@ -291,12 +293,13 @@ function Game.updateMenu()
 	-- Draw logo
 	
 	do
-		local img = Graphics.sprites.other['Logo1'].img
+		local logo = Graphics.sprites.other['Logo1'].img
 		
-		local width = love.graphics.getWidth()
-		local height = love.graphics.getHeight()
+		local width = love.graphics.getWidth() - logo:getWidth()
+		local height = love.graphics.getHeight() - logo:getHeight() * 3
 			
-		Graphics.drawImageWP(img, width / 2, height / 2, -17)
+		Graphics.drawImageWP(logo, width / 2, height / 2)
+		SuperPrint("sup big boi")
 	end
 end
 
