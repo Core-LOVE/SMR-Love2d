@@ -1,0 +1,7 @@
+[1]
+import=AI_ARC
+frames=1
+framestyle=1
+speedX = 0
+speedY = 0
+maxSpeedX = 0

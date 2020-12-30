@@ -168,7 +168,6 @@ function love.update(dt)
 	if dt < 1 / FRAMES_PER_SECOND then
 		love.timer.sleep(1 / FRAMES_PER_SECOND - dt)
 	end
-	
 
 	EventManager.callEvent("onTickEnd")
 	

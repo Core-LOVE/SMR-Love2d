@@ -7,7 +7,7 @@ LevelFileName = ""
 LevelPath = ""
 LevelScript = nil
 
-TitleMenu = true
+TitleMenu = false
 
 newRECT = function()
 	return {top = 0, left = 0, right = 0, bottom = 0}
