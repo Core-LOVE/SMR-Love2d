@@ -205,6 +205,31 @@ function Collision.side(Loc1, Loc2, leniencyForTop)
 	end
 end
 
+function Collision.runningSide(Loc1, Loc2, leniencyForTop)
+    leniencyForTop = leniencyForTop or 0
+	
+    if(Loc1.y + Loc1.height - Loc1.speedY - 2.5 <= Loc2.y - Loc2.speedY + leniencyForTop) then
+        return COLLISION_SIDE_TOP
+    elseif(Loc1.x - Loc1.speedX >= Loc2.x + Loc2.width - Loc2.speedX) then
+        return COLLISION_SIDE_RIGHT
+    elseif(Loc1.x + Loc1.width - Loc1.speedX <= Loc2.x - Loc2.speedX) then
+        return COLLISION_SIDE_LEFT
+    elseif(Loc1.y - Loc1.speedY >= Loc2.y + Loc2.height - Loc2.speedY) then
+        return COLLISION_SIDE_BOTTOM
+	else
+	    return COLLISION_SIDE_UNKNOWN
+	end
+end
+
+function Collision.walkingCheck(Loc1, Loc2)
+    if(Loc1.x <= Loc2.x + Loc2.width + Loc1.speedX) then
+        if(Loc1.x + Loc1.width >= Loc2.x + Loc1.speedX) then
+            return true
+        end
+    end
+	
+	return false
+end
 
 -- Actual collision stuff, shared by NPC's and players
 do
@@ -246,7 +271,7 @@ do
             v.solidData.solid = (not v.solidData.passthrough and not v.solidData.semisolid)
         end
     end
-
+	
     local function clamp(val,min,max)
         return math.max(math.min(val,max),min)
     end
@@ -365,8 +390,7 @@ do
         table.insert(v.collidingSolids,solid)
         table.insert(v.collidingSolidsSides,side)
     end
-
-
+	
     function Collision.applySpeedWithCollision(v)
         local vType = v.__type
 
@@ -389,8 +413,8 @@ do
         v.y = v.y + v.speedY
 
         -- Interact with blocks
-        for _,block in Block.iterateIntersecting(v.x,v.y,v.x+v.width,v.y+v.height) do
-            hitSolid(v,vType,block)
+        for _,bl in Block.iterateIntersecting(v.x,v.y,v.x+v.width,v.y+v.height) do
+            hitSolid(v,vType,bl)
         end
 
         for _,npc in NPC.iterateIntersecting(v.x,v.y,v.x+v.width,v.y+v.height) do
