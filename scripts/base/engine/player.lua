@@ -108,42 +108,44 @@ local function physics(v)
 	v.speedY = math.min(Defines.gravity,v.speedY + Defines.player_grav)
 
 	for k,n in ipairs(NPC.getIntersecting(v.x - 1, v.y - v.height - 1, v.x + v.width + 1, v.y + v.height + 1)) do
-		if n.despawnTimer > 0 then
-			local config = NPC.config[n.id]
+		if not n.friendly then
+			if n.despawnTimer > 0 then
+				local config = NPC.config[n.id]
 
-			-- Hit from top
-			if BasicColliders.side(v,n) == COLLISION_SIDE_TOP then
-				local harmType
-				if v.isSpinjumping and (config.damageMap[HARM_TYPE_SPINJUMP] ~= nil or config.spinjumpsafe) then
-					harmType = HARM_TYPE_SPINJUMP
-				elseif (v.isSpinjumping or not config.jumphurt) and config.damageMap[HARM_TYPE_JUMP] ~= nil then
-					harmType = HARM_TYPE_JUMP
+				-- Hit from top
+				if BasicColliders.side(v,n) == COLLISION_SIDE_TOP then
+					local harmType
+					if v.isSpinjumping and (config.damageMap[HARM_TYPE_SPINJUMP] ~= nil or config.spinjumpsafe) then
+						harmType = HARM_TYPE_SPINJUMP
+					elseif (v.isSpinjumping or not config.jumphurt) and config.damageMap[HARM_TYPE_JUMP] ~= nil then
+						harmType = HARM_TYPE_JUMP
+					end
+
+					if harmType ~= nil then
+						n:harm(harmType, nil, v)
+
+						Effect.spawn(75, v.x + v.width / 2 - 16, v.y + v.height / 2 - 16)
+						SFX.play(2)
+
+						v.y = n.y - n.height - 1
+						v.jumpForce = Defines.jumpheight_bounce + n.speedY
+						v.speedY = Defines.player_jumpspeed - math.abs(v.speedX*0.2)
+					end
+				else
+					v:harm()
 				end
+				
+				-- Grabbing
+				if (v.holdingNPC == nil and v.keys.run and n.grabbingPlayer == nil) and v.y > n.y and (config.grabside or config.isshell) then
+					local sfx = 23
+					if config.isshell then
+						sfx = nil
+					end
 
-				if harmType ~= nil then
-					n:harm(harmType, nil, v)
-
-					Effect.spawn(75, v.x + v.width / 2 - 16, v.y + v.height / 2 - 16)
-					SFX.play(2)
-
-					v.y = n.y - n.height - 1
-					v.jumpForce = Defines.jumpheight_bounce + n.speedY
-					v.speedY = Defines.player_jumpspeed - math.abs(v.speedX*0.2)
+					n:grab(v, sfx)
 				end
-			else
-				v:harm()
-			end
-			
-			-- Grabbing
-			if (v.holdingNPC == nil and v.keys.run and n.grabbingPlayer == nil) and v.y > n.y and (config.grabside or config.isshell) then
-				local sfx = 23
-				if config.isshell then
-					sfx = nil
-				end
-
-				n:grab(v, sfx)
-			end
-		end			
+			end	
+		end
 	end
 	
 	BasicColliders.applySpeedWithCollision(v)
@@ -221,7 +223,6 @@ local function physics(v)
 			v.slideCounter = 2 + math.random(0,2)
 		end
 		SFX.play(10)
-		v.frame = 4
 	else
 		if v.slideCounter ~= 0 then
 			v.slideCounter = 0
@@ -431,11 +432,23 @@ function Player:kill()
 	self.speedY = 0
 	
 	if #Player >= 2 then
-		SFX.play(54)
+		local tempBool = false
+		
+		for _,p in ipairs(Player) do
+			if not p.deathState and self ~= p then
+				tempBool = true
+			end
+		end
+		
+		if tempBool then
+			SFX.play(54)
+		else
+			SFX.play(8)
+		end
 	elseif #Player == 1 then
-		SFX.play(8)	
+		SFX.play(8)
 	end
-
+	
 	if type(scr.deathEffect) == 'number' then e = Effect.spawn(scr.deathEffect, self.x, self.y) end
 	
 	self.deathState = true

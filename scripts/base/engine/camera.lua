@@ -80,8 +80,9 @@ function Camera.getIntersecting(x1,y1, x2,y2)
 end
 
 function Camera.update()
-	local v = camera
-	local p = Player(1)
+	local v = Camera[1]
+	local p = Player[1]
+
 	local s = Section(p.section)
 	local bd = s.boundary
 	

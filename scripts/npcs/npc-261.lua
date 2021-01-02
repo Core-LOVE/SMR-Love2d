@@ -12,7 +12,7 @@ local function animation(v)
 	if(v.direction == 1) then
 		v.animationFrame = v.animationFrame + 4
 	end
-	if(v.ai1 > 0 and not v.collidesBlockBottom) then
+	if(v.ai1 > 0 and not v.collidesBlockBottom and v.speedY < 0) then
 		v.animationFrame = v.animationFrame + 2
 	end
 end

@@ -7,6 +7,9 @@ LevelFileName = ""
 LevelPath = ""
 LevelScript = nil
 
+isPaused = false
+
+isOutro = false
 TitleMenu = false
 
 newRECT = function()

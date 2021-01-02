@@ -4,9 +4,9 @@ local EventManager = {}
 EventManager.eventsList = {
     "onTick","onTickEnd",
     "onDraw","onDrawEnd",
-
     "onNPCHarm","onPostNPCHarm",
     "onNPCKill","onPostNPCKill",
+	"onPause", "onUnpause",
 }
 
 

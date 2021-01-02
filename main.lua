@@ -37,6 +37,7 @@ Defines        = require("engine/defines")
 Globals        = require("engine/globals")
 BasicColliders = require("engine/collision")
 SFX            = require("sfx")
+Misc 		   = require("engine/misc")
 Window         = require("engine/window")
 
 local levelParser = require("engine/levelparser")
@@ -52,13 +53,13 @@ end
 FRAMES_PER_SECOND = 64.102
 
 local function load_objects()
+	Player      = require("engine/player")
 	Camera      = require("engine/camera")
 	Layer       = require("engine/layer")
 	Liquid      = require("engine/liquid")
 	Block       = require("engine/block")
 	NPC         = require("engine/npc")
 	BGO         = require("engine/bgo")
-	Player      = require("engine/player")
 	Section     = require("engine/section")
 	Backgrounds = require("engine/background2")
 	Warp		= require("engine/warp")
@@ -150,6 +151,11 @@ function love.draw()
 end
 
 function love.update(dt)
+	Block.frames()
+	BGO.frames()
+	
+	if isPaused then return end
+	
 	EventManager.callEvent("onTick")
 
 	Player.updateKeys()
@@ -161,8 +167,6 @@ function love.update(dt)
 	
 	Camera.update()
 	
-	Block.frames()
-	BGO.frames()
 	NPC.frames()
 	
 	if dt < 1 / FRAMES_PER_SECOND then
