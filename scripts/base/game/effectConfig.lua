@@ -247,7 +247,11 @@ do
 			v.timer = -1
 		end
 	end
-	
+
+	function effectConfig.onInit.INIT_DOUBLESPEED(v)
+		v.speedX = v.speedX * 2
+		v.speedY = v.speedY * 2
+	end
     -- Defaults
     effectConfig.defaults.AI_STOMPED = {
         lifetime = 20,
@@ -286,6 +290,11 @@ do
 		lifetime = 150,
 		frames=5,
 		framespeed=6,
+	}
+	
+	effectConfig.defaults.AI_SPINJUMP = {
+		xAlign=0,
+		yAlign=0,
 	}
 end
 

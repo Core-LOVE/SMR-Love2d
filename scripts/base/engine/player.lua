@@ -86,6 +86,9 @@ local function physics(v)
 		if (v.keys.jump == KEYS_PRESSED or v.keys.altJump == KEYS_PRESSED) and v.collidesBlockBottom then
 			v.jumpForce = Defines.jumpheight
 			if v.keys.altJump then
+				v.jumpForce = Defines.spinjumpheight
+				v.direction = -v.direction
+				
 				v.isSpinjumping = true
 				SFX.play(33)	
 			else
@@ -125,11 +128,18 @@ local function physics(v)
 						n:harm(harmType, nil, v)
 
 						Effect.spawn(75, v.x + v.width / 2 - 16, v.y + v.height / 2 - 16)
-						SFX.play(2)
-
-						v.y = n.y - n.height - 1
-						v.jumpForce = Defines.jumpheight_bounce + n.speedY
-						v.speedY = Defines.player_jumpspeed - math.abs(v.speedX*0.2)
+						
+						if harmType == HARM_TYPE_SPINJUMP and not config.jumphurt then
+							SFX.play(36)
+							Effect.spawn(76, n.x + n.width / 2, n.y + n.height / 2)
+							v.y = n.y - n.height - 1
+							v.speedY = -5.69
+						else
+							SFX.play(2)
+							v.y = n.y - n.height - 1
+							v.jumpForce = Defines.jumpheight_bounce + n.speedY
+							v.speedY = Defines.player_jumpspeed - math.abs(v.speedX*0.2)	
+						end
 					end
 				else
 					v:harm()

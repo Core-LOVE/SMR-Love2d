@@ -3,6 +3,7 @@ local Defines = {}
 Defines.gravity = 12
 Defines.earthquake = 0
 Defines.jumpheight = 20
+Defines.spinjumpheight = 14
 Defines.jumpheight_bounce = 20
 Defines.block_jumpheight = 25
 Defines.head_jumpheight = 22

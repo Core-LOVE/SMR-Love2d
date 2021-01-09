@@ -39,9 +39,10 @@ BasicColliders = require("engine/collision")
 SFX            = require("sfx")
 Misc 		   = require("engine/misc")
 Window         = require("engine/window")
+Level 		   = require("engine/level")
 
 local levelParser = require("engine/levelparser")
-
+local worldParser = require("engine/map/worldparser")
 
 do
 	love.graphics.clear()
@@ -53,6 +54,8 @@ end
 FRAMES_PER_SECOND = 64.102
 
 local function load_objects()
+	-- Level
+	
 	Player      = require("engine/player")
 	Camera      = require("engine/camera")
 	Layer       = require("engine/layer")
@@ -69,6 +72,13 @@ local function load_objects()
 
 	NPC.load()
 	Effect.load()
+	
+	-- World map
+	
+	world = require("engine/map/world")
+	Tile = require("engine/map/tile")
+	Path = require("engine/map/path")
+	Scenery = require("engine/map/scenery")
 end
 
 function love.run()
@@ -133,13 +143,18 @@ function love.load()
 	load_objects()
 
 	-- temp
-	levelParser.load("_test levels/a couple blocks.lvlx")
+	-- levelParser.load("_test levels/a couple blocks.lvlx")
+	worldParser.load("_test levels/a couple tiles.wldx")
 end
 
 function love.draw()
 	EventManager.callEvent("onDraw")
 
-	Game.updateGraphicsLevel()
+	if not isOverworld then
+		Game.updateGraphicsLevel()
+	else
+		Game.updateGraphicsWorld()
+	end
 	
 	if TitleMenu then
 		Game.updateMenu()
@@ -151,23 +166,25 @@ function love.draw()
 end
 
 function love.update(dt)
-	Block.frames()
-	BGO.frames()
-	
 	if isPaused then return end
 	
 	EventManager.callEvent("onTick")
 
 	Player.updateKeys()
 	
-	Block.update()
-	Player.update()
-	NPC.update()
+	if not isOverworld then
+		Block.frames()
+		BGO.frames()
+		Block.update()
+		Player.update()
+		NPC.update()
+		Camera.update()	
+		NPC.frames()
+	else
+		world.update()
+	end
+	
 	Effect.update()
-	
-	Camera.update()
-	
-	NPC.frames()
 	
 	if dt < 1 / FRAMES_PER_SECOND then
 		love.timer.sleep(1 / FRAMES_PER_SECOND - dt)

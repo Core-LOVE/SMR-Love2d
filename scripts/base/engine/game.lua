@@ -227,6 +227,79 @@ do
 		Graphics.drawImageToSceneWP(img, v.x + fx, v.y + fy, pfrX(100 + v.frame * v.direction), pfrY(100 + v.frame * v.direction), 100, 100, -25)
 	end
 		
+	function Game.drawTile(v)
+		if v.isHidden then return end
+		
+		if not isVisible(v.x,v.y,v.width,v.height) then
+			return
+		end
+
+		
+		local img = Graphics.sprites.tile[v.id].img
+		
+		if img == nil then return end
+		
+		local frame = 0
+		local priority = -65
+		
+		Graphics.drawImageToSceneWP(img, v.x, v.y, 0, frame, v.width, v.height, priority)
+	end
+	
+	function Game.drawPath(v)
+		if v.isHidden then return end
+		
+		if not isVisible(v.x,v.y,v.width,v.height) then
+			return
+		end
+
+		
+		local img = Graphics.sprites.path[v.id].img
+		
+		if img == nil then return end
+		
+		local frame = 0
+		local priority = -60
+		
+		Graphics.drawImageToSceneWP(img, v.x, v.y, 0, frame, v.width, v.height, priority)
+	end
+	
+	function Game.drawScene(v)
+		if v.isHidden then return end
+		
+		if not isVisible(v.x,v.y,v.width,v.height) then
+			return
+		end
+
+		
+		local img = Graphics.sprites.scene[v.id].img
+		
+		if img == nil then return end
+		
+		local frame = 0
+		local priority = -60
+		
+		Graphics.drawImageToSceneWP(img, v.x, v.y, 0, frame, v.width, v.height, priority)
+	end
+	
+	function Game.drawLevel(v)
+		if v.isHidden then return end
+		
+		if not isVisible(v.x,v.y,v.width,v.height) then
+			return
+		end
+
+		
+		local img = Graphics.sprites.level[v.id].img
+		
+		if img == nil then return end
+		
+		local frame = 0
+		local priority = -60
+		
+		Graphics.drawImageToSceneWP(img, v.x, v.y, 0, frame, v.width, v.height, priority)
+	end
+	
+	
 	function Game.drawHud()
 		-- for k,v in ipairs(Player) do
 			local imgcon = Graphics.sprites.other['Container0'].img
@@ -244,7 +317,6 @@ do
 	local function sortDrawingQueue(a,b)
 		return (a.priority < b.priority)
 	end
-
 
 	local emptyTable = {}
 
@@ -278,6 +350,53 @@ do
 		if not TitleMenu then
 			Game.drawHud()
 		end
+		
+		table.sort(Graphics.drawingQueue,sortDrawingQueue)
+
+		for _,self in ipairs(Camera) do
+			if self.active then
+				self:draw()
+			end
+		end
+
+		Graphics.drawingQueue = {}
+	end
+	
+	function Game.updateGraphicsWorld()
+		for _,v in ipairs(Tile) do
+			Game.drawTile(v)
+		end
+		
+		for _,v in ipairs(Path) do
+			Game.drawPath(v)
+		end
+		
+		for _,v in ipairs(Level) do
+			Game.drawLevel(v)
+		end
+		
+		for _,v in ipairs(Scenery) do
+			Game.drawScene(v)
+		end
+		
+		for _,v in ipairs(Effect.objs) do
+			v:render(emptyTable)
+		end
+		
+		-- Draw world map's player
+		
+		do
+			local img = Graphics.sprites.player[1].img
+			
+			world.playerWalkingFrameTimer = (world.playerWalkingFrameTimer + 1) % 9
+			if world.playerWalkingFrameTimer >= 8 then
+				world.playerWalkingFrame = (world.playerWalkingFrame + 1) % 2
+			end
+			
+			Graphics.drawImageToSceneWP(img, world.playerX, world.playerY, 
+			0, 32 * world.playerWalkingFrame, 32, 32, -50)
+		end
+		
 		
 		table.sort(Graphics.drawingQueue,sortDrawingQueue)
 

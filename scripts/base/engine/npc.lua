@@ -167,7 +167,9 @@ function NPC.spawn(id, x, y, section, respawn, centered)
 	local n = {
 		__type = "NPC",
 
-
+		layerName = "",
+		attachedLayerName = "",
+		
 		idx = #NPC + 1,
 		id = id or 1,
 		isValid = true,
@@ -223,6 +225,8 @@ function NPC.spawn(id, x, y, section, respawn, centered)
 
 		turnAround = false,
 
+		underwater = false,
+		inQuicksand = false,
 
 		health = NPC.config[id].health or 1,
 
@@ -253,7 +257,6 @@ function NPC.spawn(id, x, y, section, respawn, centered)
 	-- print(inspect(n))
 	return n
 end
-
 
 -- NPC harming / killing
 local updateRemovalQueue

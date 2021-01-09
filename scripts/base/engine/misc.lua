@@ -1,5 +1,7 @@
 local Misc = {}
 
+Misc.compatibilityMode = false
+
 function Misc.isPaused()
 	return isPaused
 end
@@ -22,6 +24,7 @@ end
 function Misc.score()
 
 end
+
 
 function Misc.givePoints(addScore, x, y, multiplier)
 	-- if TitleMenu or isOverworld or isOutro then return end

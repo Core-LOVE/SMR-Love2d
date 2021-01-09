@@ -1,0 +1,22 @@
+[first]
+import=AI_SPINJUMP
+speedX=4.5
+speedY=-2.5
+lifetime = 16
+
+[2]
+template=first
+speedX=-4.5
+
+[3]
+template=first
+speedX=-4.5
+speedY=2.5
+
+[4]
+template=first
+speedY=2.5
+
+[5]
+template=first
+speedY=-2.5
