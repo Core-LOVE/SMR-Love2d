@@ -143,8 +143,8 @@ function love.load()
 	load_objects()
 
 	-- temp
-	-- levelParser.load("_test levels/a couple blocks.lvlx")
-	worldParser.load("_test levels/a couple tiles.wldx")
+	levelParser.load("_test levels/a couple blocks.lvlx")
+	-- worldParser.load("_test levels/a couple tiles.wldx")
 end
 
 function love.draw()

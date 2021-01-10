@@ -7,6 +7,9 @@ LevelFileName = ""
 LevelPath = ""
 LevelScript = nil
 
+WorldPath = ""
+WorldPath2 = ""
+
 isPaused = false
 
 isOutro = false

@@ -2,7 +2,7 @@ local Level = {}
 
 local worldLevel = {__type = "Level"}
 
-local LevelParser = require("scripts/base/engine/Levelparser")
+local LevelParser = require("engine/Levelparser")
 
 function Level.filename()
 	return LevelFileName
@@ -51,6 +51,8 @@ function Level.spawn(id, x, y)
 		x = x or 0,
 		y = y or 0,
 		isHidden = false,
+		
+		filename = "",
 		
 		width = 32,
 		height = 32,

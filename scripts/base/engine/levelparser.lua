@@ -278,6 +278,8 @@ do
 end
 
 function levelParser.load(path)
+	isOverworld = false
+	
     local data = love.filesystem.read(path)
     parsingAssert(data ~= nil,"Could not find file",path)
 

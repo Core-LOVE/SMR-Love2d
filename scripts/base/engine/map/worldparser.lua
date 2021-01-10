@@ -35,6 +35,7 @@ do
 		end
 		
 		local o = Level.spawn(pr.ID, pr.X, pr.Y)
+		o.filename = pr.LF or ""
 	end)
 
 	types.TILES.spawn = (function(pr)
@@ -206,13 +207,16 @@ function worldParser.load(path)
     parsingAssert(data ~= nil,"Could not find file",path)
 
     local format = path:match("^.*%.(.+)$")
+	print(path:match("^.*%."))
+	
     local formatLoad = formats[format]
 	
     parsingAssert(formatLoad ~= nil,"Unknown level format",path)
 	
     formatLoad(path)
 	
-	LevelPath = string.gsub(path, ".wldx", "")
+	WorldPath = string.gsub(path, ".wldx", "")
+	
 	if love.filesystem.getInfo(LevelPath.."/luna.lua") then
 		LevelScript = require(LevelPath.."/luna")
 		onStart()

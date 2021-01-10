@@ -244,7 +244,7 @@ do
 		v.collidesBlockBottom = false
 		v.collidesBlockLeft = false
 		v.collidesBlockRight = false
-        v.collidesBlockUp = false
+        v.collidesBlockTop = false
     end
 
     function Collision.addSolidObjectProperties(v)
@@ -316,7 +316,7 @@ do
             if side == slopeEjectSide or side == COLLISION_SIDE_UNKNOWN or (slopeDirection == -1 and side == COLLISION_SIDE_LEFT) or (slopeDirection == 1 and side == COLLISION_SIDE_RIGHT) then
                 slopeEjectionPosition = getSlopeEjectionPosition(v,vType,solid,solidData,slopeDirection)
 
-                local topLeniency = 1.5
+                local topLeniency = math.abs(v.speedX)
                 local bottomLeniency = -2
                 local positionCheckSpeed = v.speedY * ((ceiling and -1) or 1)
                 
@@ -380,7 +380,7 @@ do
                 v.collidingSlope = solid
             end
 
-            v.collidesBlockUp = true
+            v.collidesBlockTop = true
         elseif side == COLLISION_SIDE_LEFT then
             v.x = solid.x-v.width
             v.collidesBlockRight = true
