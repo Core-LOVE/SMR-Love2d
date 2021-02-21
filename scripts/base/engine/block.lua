@@ -13,6 +13,19 @@ Block.script = {}
 Block.frame = {}
 Block.framecount = {}
 
+
+Block.bumped = {}
+setmetatable(Block.bumped, {__call = function(self)
+	local ret = {}
+	
+	for k,v in ipairs(self) do
+		table.insert(self, v)
+	end
+	
+	return ret
+end})
+
+
 for i = 1,BLOCK_MAX_ID do
 	Block.config[i] = {
 		sizable = false,
@@ -55,8 +68,6 @@ for i = 1,BLOCK_MAX_ID do
 end
 
 local function physics(v)
-	if v == nil then return end
-	
 	if v.isHidden then
 		v.shakeX = 0
 		v.shakeY = 0
@@ -124,17 +135,21 @@ local function physics(v)
 	
 	if v.shakeY3 ~= 0 then
 		for _,n in ipairs(NPC.get()) do
-			if not n.isValid or n.grabbingPlayerIndex ~= 0 or 
-			(NPC.config[n.id].noblockcollision or not NPC.config[n.id].iscoin) or n.tempBlock == v or
-			v.isReally == n or v.shakeY3 > 0 or not NPC.config[n.id].iscoin then break end
+		
+			if n.isValid and n.grabbingPlayerIndex == 0 and
+			not NPC.config[n.id].noblockcollision and n.tempBlock ~= v and
+			v.isReally ~= n and v.shakeY3 == 0 and NPC.config[n.id].iscoin then
 			
-			if not Block.config[v.id].sizeable and not Block.config[v.id].semisolid then
-				n:harm(2, 1, v)
-			else
-				if v.y + 1 >= n.y + n.height - 1 then
+				if not Block.config[v.id].sizeable and not Block.config[v.id].semisolid then
 					n:harm(2, 1, v)
+				else
+					if v.y + 1 >= n.y + n.height - 1 then
+						n:harm(2, 1, v)
+					end
 				end
+			
 			end
+			
 		end
 	end
 end
@@ -235,7 +250,9 @@ function Block:translate(dx, dy)
 end
 
 function Block:hit(fromUpperSide, plr, hittingCount)
+	
 
+	table.insert(Block.bumped, self)
 end
 
 
@@ -272,7 +289,7 @@ do
 		local ret = {}
 
 		for _,v in ipairs(Block) do
-			if v.x <= x2 and v.y <= y2 and v.x+v.width >= x1 and v.y+v.height >= y1 then
+			if v.x < x2 and v.y < y2 and v.x+v.width > x1 and v.y+v.height > y1 then
 				ret[#ret + 1] = v
 			end
 		end
@@ -316,7 +333,7 @@ do
 		while (i <= args[1]) do
 			local v = Block[i]
 
-			if v.x <= args[4] and v.y <= args[5] and v.x+v.width >= args[2] and v.y+v.height >= args[3] then
+			if v.x < args[4] and v.y < args[5] and v.x+v.width > args[2] and v.y+v.height > args[3] then
 				return i+1,v
 			end
 
@@ -334,10 +351,10 @@ end
 
 
 function Block.update()
-	for k,b in ipairs(Block.get()) do
+	for k,b in ipairs(Block.bumped()) do
 		b.onPhysicsBlock(b)
-		b.onTickEndBlock(b)
-		b.onTickBlock(b)
+		-- b.onTickEndBlock(b)
+		-- b.onTickBlock(b)
 	end
 end
 

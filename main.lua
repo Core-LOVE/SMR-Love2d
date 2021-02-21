@@ -147,6 +147,8 @@ function love.load()
 	-- worldParser.load("_test levels/a couple tiles.wldx")
 end
 
+local some_img = Graphics.loadImage("graphics/effect-5.png")
+
 function love.draw()
 	EventManager.callEvent("onDraw")
 
@@ -162,6 +164,11 @@ function love.draw()
 	
 	EventManager.callEvent("onDrawEnd")
 
+
+	Graphics.glDraw{
+		texture = some_img,
+	}
+	
 	collectgarbage()
 end
 
@@ -198,8 +205,8 @@ end
 function love.filedropped(file)
 	file:open("r")
 	local data = file:read()
-	
-	levelParser.load(data)
+	print(file:seek())
+	levelParser.load(nil, data)
 end
 
 

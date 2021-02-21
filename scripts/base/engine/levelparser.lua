@@ -277,12 +277,21 @@ do
     formats.lvlx = loadLevel
 end
 
-function levelParser.load(path)
+function levelParser.load(path, dat)
 	isOverworld = false
 	
-    local data = love.filesystem.read(path)
+    local data
+	
+	if path ~= nil then
+		data = love.filesystem.read(path)
+	end
+	
     parsingAssert(data ~= nil,"Could not find file",path)
-
+	
+	if dat ~= nil then
+		data = dat
+	end
+	
     local format = path:match("^.*%.(.+)$")
     local formatLoad = formats[format]
 	

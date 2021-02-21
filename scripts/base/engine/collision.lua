@@ -192,16 +192,19 @@ COLLISION_SIDE_UNKNOWN = 5
 function Collision.side(Loc1, Loc2, leniencyForTop)
     leniencyForTop = leniencyForTop or 0
     
-    if(Loc1.y + Loc1.height - Loc1.speedY <= Loc2.y - Loc2.speedY + leniencyForTop) then
-        return COLLISION_SIDE_TOP
-    elseif(Loc1.x - Loc1.speedX >= Loc2.x + Loc2.width - Loc2.speedX) then
-        return COLLISION_SIDE_RIGHT
-    elseif(Loc1.x + Loc1.width - Loc1.speedX <= Loc2.x - Loc2.speedX) then
-        return COLLISION_SIDE_LEFT
-    elseif(Loc1.y - Loc1.speedY > Loc2.y + Loc2.height - Loc2.speedY - 0.1) then
-        return COLLISION_SIDE_BOTTOM
-    else
-        return COLLISION_SIDE_UNKNOWN
+	local right = (Loc1.x + Loc1.width) - Loc2.x - Loc2.speedX
+	local left = (Loc2.x + Loc2.width) - Loc1.x - Loc1.speedX
+	local bottom = (Loc1.y + Loc1.height) - Loc2.y - Loc2.speedY
+	local top = (Loc2.y + Loc2.height) - Loc1.y - Loc1.speedY
+	
+	if right < left and right < top and right < bottom then
+		return COLLISION_SIDE_RIGHT
+	elseif left < top and left < bottom then
+		return COLLISION_SIDE_LEFT
+	elseif top < bottom then
+		return COLLISION_SIDE_TOP
+	else
+		return COLLISION_SIDE_BOTTOM
 	end
 end
 
@@ -299,10 +302,9 @@ do
     end
 
     local function hitSolid(v,vType,solid)
-        local side = Collision.side(v,solid,0.5)
+        local side = Collision.side(v,solid,3.5)
 
         local solidData = solid.solidData
-
         
         -- Slope handling
         if v.collidingSlope ~= nil and solidData.floorSlope == 0 and solidData.ceilingSlope == 0 then

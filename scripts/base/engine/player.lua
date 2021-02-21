@@ -83,6 +83,8 @@ local function physics(v)
 
 	-- Jumping
 	if v.keys.jump or v.keys.altJump then
+		if v.slidingSlope then v.slidingSlope = false end
+		
 		if (v.keys.jump == KEYS_PRESSED or v.keys.altJump == KEYS_PRESSED) and v.collidesBlockBottom then
 			v.jumpForce = Defines.jumpheight
 			if v.keys.altJump then
@@ -243,6 +245,36 @@ local function physics(v)
 	if v.y + v.height > sb.bottom + v.height * 2 + 11 then
 		v:kill()
 	end
+	
+	-- Slope stuff
+	if v.collidingSlope ~= nil then
+		if not v.slidingSlope then
+			local cs = Block.config[v.collidingSlope.id]
+			
+			if cs.floorslope == -1 and v.speedX > 5.25 then
+				v.speedX = 5.25
+			elseif cs.floorslope == 1 and v.speedX < -5.25 then
+				v.speedX = -5.25
+			end
+			
+			if v.keys.down and not v.holdingNPC then
+				v.slidingSlope = true
+			end
+		else
+			local so = v.collidingSlope 
+			
+			local x1, x2 = v.x + v.width, v.x
+			local y1, y2 = v.y + v.height, v.y
+			
+			local acl = math.atan2(x1 - x2, y1 - y2) * 0.5
+			
+			v.speedX = v.speedX + (acl * v.direction)
+		end
+	else
+		if v.speedX == 0 then
+			v.slidingSlope = false
+		end
+	end
 end
 
 local newControls
@@ -283,6 +315,7 @@ function Player.spawn(character, x, y)
 		WarpTimer = 0,
 
 		slideCounter = 0,
+		slidingSlope = false,
 		
 		isSpinjumping = false,
 		spinjumpTimer = 0,
@@ -544,11 +577,6 @@ do
 	end
 end
 
-player = Player[1]
-if Player.count() > 1 then
-	for k = 2, Player.count() do
-		_G['player'..tostring(k)] = Player[k]
-	end
-end
+_G.player = Player[1]
 
 return Player

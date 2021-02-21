@@ -131,9 +131,17 @@ function char.onAnimationPlayer(v)
 	
 	if v.TargetWarpIndex == 0 then
 		if v.collidesBlockBottom then
-			animation_onFloor(v, fr, i)
+			if not v.slidingSlope then
+				animation_onFloor(v, fr, i)
+			else
+				v.frame = 24
+			end
 		else
-			animation_inAir(v, fr, i)
+			if not v.slidingSlope then
+				animation_inAir(v, fr, i)
+			else
+				v.frame = 24
+			end
 		end
 	else
 		v.frame = 13

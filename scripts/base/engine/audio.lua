@@ -5,6 +5,10 @@ sounds.musics.world = {}
 sounds.musics.level = {}
 sounds.musics.special = {}
 
+local mt = {__index = function(_,k)
+	
+end}
+
 function sounds.loadSounds()
 	if ini_parser == nil then return end
 	

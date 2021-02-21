@@ -4,8 +4,13 @@ local EventManager = {}
 EventManager.eventsList = {
     "onTick","onTickEnd",
     "onDraw","onDrawEnd",
+	
     "onNPCHarm","onPostNPCHarm",
     "onNPCKill","onPostNPCKill",
+	
+	"onBlockHit", "onPostBlockHit",
+	"onBlockDestroyed", "onPostBlockDestroyed",
+	
 	"onPause", "onUnpause",
 }
 

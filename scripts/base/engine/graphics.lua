@@ -13,7 +13,14 @@ function Graphics.CaptureBuffer(w,h,settings)
 end
 
 function Graphics.loadImage(file)
-	return love.graphics.newImage(file)
+	local i = love.graphics.newImage(file)
+	i:setWrap('clampzero', 'clampzero')
+	
+	local t = getmetatable(i)
+	t.width = i:getWidth()
+	t.height = i:getHeight()
+	
+	return i
 end
 
 
@@ -148,7 +155,7 @@ do
 
 			texture = texture,x = x,y = y,
 			sourceX = sourceX or 0,sourceY = sourceY or 0,
-			sourceWidth = sourceWidth or texture:getWidth(),sourceHeight = sourceHeight or texture:getHeight(),
+			sourceWidth = sourceWidth or texture.width , sourceHeight = sourceHeight or texture.height,
 			opacity = opacity,priority = priority or RENDER_PRIORITY_DEFAULT,sceneCoords = sceneCoords,
 		}
 	end
@@ -197,6 +204,20 @@ do
 		end
 
 		drawImageGeneric(texture,x,y,sourceX,sourceY,sourceWidth,sourceHeight,opacity,true,priority)
+	end
+end
+
+-- TEMPORARY GLDRAW FUNCTION!
+do
+	Graphics.GL_TRIANGLE_FAN = "fan"
+	Graphics.GL_TRIANGLE_STRIP = "strip"
+	Graphics.GL_TRIANGLES = "triangles"
+	Graphics.GL_POINTS = "points"
+	
+	Graphics.glDraw = function(t)
+		if t.texture == nil then return end
+		
+		
 	end
 end
 

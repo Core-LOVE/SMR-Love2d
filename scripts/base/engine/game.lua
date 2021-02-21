@@ -1,4 +1,4 @@
-local Game = {}
+local Game = {cursor = 0, cursorDelay = 0}
 
 function Game.SetupScreens()
 
@@ -58,61 +58,60 @@ end
 
 
 -- Level drawing
+local function pfrX(plrFrame)
+	local A
+	A = plrFrame
+	A = A - 50
+	
+	while(A > 100) do
+		A = A - 100
+	end
+	
+	if(A > 90) then
+		A = 9
+	elseif(A > 90) then
+		A = 9
+	elseif(A > 80) then
+		A = 8
+	elseif(A > 70) then
+		A = 7
+	elseif(A > 60) then
+		A = 6
+	elseif(A > 50) then
+		A = 5
+	elseif(A > 40) then
+		A = 4
+	elseif(A > 30) then
+		A = 3
+	elseif(A > 20) then
+		A = 2
+	elseif(A > 10) then
+		A = 1
+	else
+		A = 0
+	end
+	
+	return A * 100
+end
+
+local function pfrY(plrFrame)
+	local A
+	A = plrFrame
+	A = A - 50
+	
+	while(A > 100) do
+		A = A - 100
+	end
+	
+	A = A - 1
+	while(A > 9) do
+		A = A - 10
+	end
+	
+	return A * 100
+end
+	
 do
-	local function pfrX(plrFrame)
-		local A
-		A = plrFrame
-		A = A - 50
-		
-		while(A > 100) do
-			A = A - 100
-		end
-		
-		if(A > 90) then
-			A = 9
-		elseif(A > 90) then
-			A = 9
-		elseif(A > 80) then
-			A = 8
-		elseif(A > 70) then
-			A = 7
-		elseif(A > 60) then
-			A = 6
-		elseif(A > 50) then
-			A = 5
-		elseif(A > 40) then
-			A = 4
-		elseif(A > 30) then
-			A = 3
-		elseif(A > 20) then
-			A = 2
-		elseif(A > 10) then
-			A = 1
-		else
-			A = 0
-		end
-		
-		return A * 100
-	end
-
-	local function pfrY(plrFrame)
-		local A
-		A = plrFrame
-		A = A - 50
-		
-		while(A > 100) do
-			A = A - 100
-		end
-		
-		A = A - 1
-		while(A > 9) do
-			A = A - 10
-		end
-		
-		return A * 100
-	end
-
-
 	local function isVisible(x,y,width,height)
 		for _,cam in ipairs(Camera) do
 			if cam.active and x < cam.x+cam.width and x+width > cam.x and y < cam.y+cam.height and y+height > cam.y then
@@ -224,9 +223,9 @@ do
 		local fx = Player.frames[v.name]['FrameX'][(v.powerup * 100) + (v.frame * v.direction)]
 		local fy = Player.frames[v.name]['FrameY'][(v.powerup * 100) + (v.frame * v.direction)]
 		
-		Graphics.drawImageToSceneWP(img, v.x + fx, v.y + fy, pfrX(100 + v.frame * v.direction), pfrY(100 + v.frame * v.direction), 100, 100, -25)
+		Graphics.drawImageToSceneWP(img, v.x + fx, v.y + fy, pfrX(100 + v.frame * v.direction), pfrY(100 + v.frame * v.direction), 100, 100, priority or -25)
 	end
-		
+	
 	function Game.drawTile(v)
 		if v.isHidden then return end
 		
@@ -308,7 +307,7 @@ do
 			local height = love.graphics.getHeight()
 			
 			local offset = {x = HUDOverride.offsets.itembox.x, y = HUDOverride.offsets.itembox.y}
-			local itembox = {img = imgcon, x = (width / 2) - 24, y = 0}
+			local itembox = {img = imgcon, x = (width / 2) - (24 + 6), y = 0}
 			
 			Graphics.drawImageWP(itembox.img, itembox.x + offset.x, itembox.y + offset.y)
 		-- end
@@ -413,14 +412,90 @@ end
 function Game.updateMenu()
 	-- Draw logo
 	
-	do
-		local logo = Graphics.sprites.other['Logo1'].img
+	local w = love.graphics.getWidth()
+	local h = love.graphics.getHeight()
+	
+	local logo = Graphics.sprites.other['Logo1'].img
 		
-		local width = love.graphics.getWidth() - logo:getWidth()
-		local height = love.graphics.getHeight() - logo:getHeight() * 3
-			
+	local width = w - logo:getWidth()
+	local height = h - logo:getHeight() * 3	
+	
+	local menu = {
+		[1] = "1 Player Game",
+		[2] = "2 Player Game",
+		[3] = "Battle Game",
+		[4] = "Options",
+		[5] = "Exit",
+	}
+	
+	do
 		Graphics.drawImageWP(logo, width / 2, height / 2)
-		SuperPrint("sup big boi")
+		
+		-- for i = 1, #menu do
+			-- SuperPrint(menu[i], 3, w / 2.75, (height * 2.5) + (32 * (i - 1)))
+		-- end
+	end
+	
+	-- Menu 1
+	
+	-- do
+		-- local p = Player(1)
+		
+		-- if p then
+			-- local cursor1 = Graphics.sprites.other['MCursor0'].img
+		
+			-- if Game.cursorDelay > 0 then
+				-- Game.cursorDelay = Game.cursorDelay - 1
+			-- elseif Game.cursorDelay <= 0 then
+				-- if p.keys.down then
+					-- SFX.play(26)
+					-- Game.cursor = (Game.cursor + 1) % #menu
+					-- Game.cursorDelay = 6
+				-- elseif p.keys.up then
+					-- SFX.play(26)
+					-- Game.cursor = Game.cursor - 1
+					-- if Game.cursor < 0 then
+						-- Game.cursor = #menu - 1
+					-- end
+					-- Game.cursorDelay = 6
+				-- end
+			-- end
+			
+			-- Graphics.drawImageWP(cursor1, w / 2.75 - (cursor1:getWidth() * 1.5), (height * 2.5) + (32 * Game.cursor))
+		-- end
+	-- end
+	
+	-- Menu 2
+	do
+		for i = 1, #Player.script do
+			local s = Player.script[i]
+			
+			local img = Graphics.sprites.other['Container4'].img
+			
+			local iw = img:getWidth() * 1.5
+			
+			Graphics.drawImageWP(img, 128 + (iw * i), 300)
+			
+			if type(s) == 'table' then				
+				local v = {
+					powerup = 1,
+					direction = 1,
+					
+					x = 128 + (iw * i) + 16,
+					y = 312,
+					
+					frame = 15
+				}
+				
+				local simg = Graphics.sprites[s.name][v.powerup].img
+				
+				local fx = Player.frames[s.name]['FrameX'][(v.powerup * 100) + (v.frame * v.direction)]
+				local fy = Player.frames[s.name]['FrameY'][(v.powerup * 100) + (v.frame * v.direction)]
+				
+				Graphics.drawImageWP(simg, v.x + fx, v.y + fy, pfrX(100 + v.frame * v.direction), pfrY(100 + v.frame * v.direction), 100, 100, 5)
+				SuperPrint(s.name, 3, (128 + (iw * i)) - (s.name:len() * 3), v.y + 48)
+			end
+		end
 	end
 end
 

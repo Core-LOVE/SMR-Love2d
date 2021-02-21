@@ -13,7 +13,11 @@ WorldPath2 = ""
 isPaused = false
 
 isOutro = false
-TitleMenu = false
+TitleMenu = true
+
+function tobool(v)
+    return v and ( (type(v)=="number") and (v==1) or ( (type(v)=="string") and (v=="true") ) )
+end
 
 function tohex(num)
 	local hexstr = '0123456789abcdef'
@@ -39,11 +43,11 @@ newLocation = function()
 	return {x = 0, y = 0, width = 0, height = 0, speedX = 0, speedY = 0}
 end
  
-SuperPrint = function(...)
-	local strg = tostring(arg[1])
-	local typ = arg[2] or 3
-	local x = arg[3] or 0
-	local y = arg[4] or 0
+SuperPrint = function(strg, typ, x, y)
+	strg = tostring(strg) or ""
+	typ = typ or 3
+	x = x or 0
+	y = y or 0
 	
 	local B = 0
 	local C = 0
