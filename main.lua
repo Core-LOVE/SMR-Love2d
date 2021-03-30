@@ -21,13 +21,14 @@ EventManager = require("scripts/base/engine/eventmanager")
 
 
 require("const")
-require("io")
+require("io") 
 require("math")
 
 ini_parser     = require("ini_parser")
 txt_parser     = require("txt_parser")
 inspect        = require("inspect")
 
+Physics		   = require("game/physics")
 HUDOverride    = require("hudoverride")
 Audio          = require("engine/audio")
 Graphics       = require("engine/graphics")
@@ -175,6 +176,7 @@ end
 function love.update(dt)
 	if isPaused then return end
 	
+	Physics.update(dt)
 	EventManager.callEvent("onTick")
 
 	Player.updateKeys()

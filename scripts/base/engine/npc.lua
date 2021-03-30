@@ -143,7 +143,7 @@ local function physics(v)
 			v.turnAround = false
 		end
 		
-		BasicColliders.applySpeedWithCollision(v)
+		-- BasicColliders.applySpeedWithCollision(v)
 	end
 
 
@@ -236,7 +236,8 @@ function NPC.spawn(id, x, y, section, respawn, centered)
 		
 		data = {_settings = {_global = { }}},
 	}
-
+	Physics.add(n)
+	
 	setmetatable(n,npcMT)
 
 	BasicColliders.addCollisionProperties(n)

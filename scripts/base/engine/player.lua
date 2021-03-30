@@ -160,7 +160,7 @@ local function physics(v)
 		end
 	end
 	
-	BasicColliders.applySpeedWithCollision(v)
+	-- BasicColliders.applySpeedWithCollision(v)
 	
 	-- Grabbed NPC
 	local hnpc = v.holdingNPC
@@ -224,6 +224,9 @@ local function physics(v)
 			v.x = sb.right - v.width
 			v.speedX = 0
 		end
+		
+		v.x = math.clamp(v.x, sb.left, sb.right - v.width)
+		-- v.y = math.clamp(v.y, sb.top, sb.bottom - v.height)
 	end
 	
 	-- Sliding
@@ -333,8 +336,8 @@ function Player.spawn(character, x, y)
 	
 	setmetatable(p, playerMT)
 	
-	BasicColliders.addCollisionProperties(p)
-	BasicColliders.addSolidObjectProperties(p)
+	-- BasicColliders.addCollisionProperties(p)
+	-- BasicColliders.addSolidObjectProperties(p)
 	
 	local scr = Player.script[p.character]
 	if scr ~= nil then
@@ -353,6 +356,8 @@ function Player.spawn(character, x, y)
 			p.name = "null"
 		end
 	end
+	
+	Physics.add(p)
 	
 	Player[#Player + 1] =  p
 	return p

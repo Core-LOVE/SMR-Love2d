@@ -211,10 +211,29 @@ function Block.spawn(id, x, y)
 		ai5 = 0,
 		ai6 = 0
 	}
-
+	local c = Block.config[b.id]
+	
+	-- if c.floorslope ~= 0 or c.ceilingslope ~= 0 then
+		-- local concept = {
+			-- 1,1, 
+			-- 0,1, 
+			-- 0,0,
+			-- 1,0
+		-- }
+		
+		-- local t = {
+			-- b.x + b.width,			b.y + b.height,
+			-- b.x,					b.y + b.height,
+			-- b.x,					b.y,
+			-- b.x + b.width,			b.y,
+		-- }
+	
+		-- Physics.add(b, 'static', 'Polygon', t)
+	-- else
+		Physics.add(b, 'static')
+	-- end
+	
 	setmetatable(b,blockMT)
-
-	BasicColliders.addSolidObjectProperties(b)
 
 	b.onPhysicsBlock = physics
 	b.onTickEndBlock = function(b) end
