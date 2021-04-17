@@ -62,13 +62,10 @@ do
 
     rawrequire = normalRequire
 
-
     local function tryPath(path)
-        if love.filesystem.getInfo(path.. ".lua") then
-            return path
-        end
-
-        return nil
+		if love.filesystem.getInfo(path .. '.lua') then
+			return path
+		end
     end
 
 

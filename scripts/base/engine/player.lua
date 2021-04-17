@@ -357,7 +357,7 @@ function Player.spawn(character, x, y)
 		end
 	end
 	
-	Physics.add(p)
+	Physics.add{parent = p}
 	
 	Player[#Player + 1] =  p
 	return p

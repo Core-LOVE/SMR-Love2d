@@ -86,8 +86,8 @@ function Camera.update()
 	local s = Section(p.section)
 	local bd = s.boundary
 	
-	v.x = (p.x - (v.width * 0.5)) + (p.width * 0.5)
-	v.y = (p.y - (v.height * 0.5)) + (p.height * 0.5)
+	v.x = (p.x - (v.width * 0.5)) + (p.width * 0.5) * 2
+	v.y = (p.y - (v.height * 0.5)) + (p.height * 0.5) * 2
 	
 	if v.x < bd.left then
 		v.x = bd.left

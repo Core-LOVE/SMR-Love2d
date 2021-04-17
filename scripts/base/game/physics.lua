@@ -1,92 +1,88 @@
 local Physics = {}
-love.physics.setMeter(32) -- the height of a meter our worlds will be 32px
-Physics.world = love.physics.newWorld(0, 0, true)
 
---[[this function represents rectangular body]]
-function Physics.add(obj, bodyType, shape, t)
-	obj = obj or {x = 0, y = 0, width = 32, height = 32}
-	bodyType = bodyType or 'dynamic'
-	shape = shape or 'Rectangle' 
-	
-	obj.collidesBlockBottom = false
-	obj.collidesBlockTop = false
-	obj.collidesBlockRight = false
-	obj.collidesBlockLeft = false
+local HC = require 'game/HC/init'
 
-	obj.body = love.physics.newBody(Physics.world, obj.x, obj.y, bodyType)
+function Physics.rect(x, y, w, h)
+	return HC.rectangle(x, y, w, h)
+end
+
+function Physics.circle(x, y, r)
+	return HC.circle(x, y, r or 16)
+end
+
+function Physics.add(t)
+	local t = t or {}
+	local o = {}
 	
-	if shape == 'Rectangle' then
-		obj.shape = love.physics.newRectangleShape(obj.width, obj.height)
-	elseif shape == 'Circle' then
-		obj.shape = love.physics.newCircleShape(obj.x, obj.y, obj.radius)
-	elseif shape == 'Polygon' then
-		obj.shape = love.physics.newPolygonShape(unpack(t))
+	t.shape = t.shape or 'rect'
+	t.parent = t.parent or {x = 0, y = 0, width = 32, height = 32, radius = 16}
+	
+	t.parent.collidesBlockBottom = false
+	t.parent.collidesBlockLeft = false
+	t.parent.collidesBlockRight = false
+	t.parent.collidesBlockTop = false
+	
+	t.type = t.type or 'dynamic'
+	
+	if t.shape == 'rect' or t.shape == 'circle' then
+		t.x = t.x or t.parent.x
+		t.y = t.y or t.parent.y
+		
+		if t.shape == 'rect' then
+			t.width = t.width or t.parent.width
+			t.height = t.height or t.parent.height
+			
+			o = Physics.rect(t.x, t.y, t.width, t.height)
+		else
+			t.radius = t.radius or t.parent.radius
+			
+			o = Physics.circle(t.x, t.y, t.radius)
+		end
+		
 	end
 	
-	obj.fixture = love.physics.newFixture(obj.body, obj.shape)
-	obj.fixture:setUserData(obj)
+	o.object_type = t.type
+	o.object_parent = t.parent
+	table.insert(Physics, o)
+	return o
+end
 
-	Physics[#Physics + 1] = obj
+function Physics.onCollision(p, shape, delta)
+	print(delta.x, delta.y)
+	
+	p.x = p.x + delta.x
+	p.y = p.y + delta.y
+	if delta.y >= 0 then
+		p.speedY = 0
+		p.collidesBlockBottom = true
+	end
+	
+	if delta.x >= 0 then
+		p.speedX = 0
+		p.collidesBlockRight = true
+	end
 end
 
 function Physics.update(dt)
-	Physics.world:update(dt)
-	
 	for i = 1, #Physics do
 		local v = Physics[i]
 		
 		if v then
-			local b = v.body
+			local p = v.object_parent
+			if p.x and p.y then
+				v:moveTo(p.x, p.y) 
+			end
 			
-			v.x = b:getX()
-			v.y = b:getY()
-			b:setLinearVelocity(v.speedX * 96, v.speedY * 96)
+			if v.object_type == 'dynamic' then
+				for shape, delta in pairs(HC.collisions(v)) do
+					Physics.onCollision(p, shape, delta)
+				end
+				
+				p.x = p.x + p.speedX
+				p.y = p.y + p.speedY
+			end
 		end
 	end
 end
 
---[[
-a is the first fixture object in the collision.
-b is the second fixture object in the collision.
-c is the contact object created.
-n is the amount of impulse applied along the normal of the first point of collision. It only applies to the postsolve callback, and we can ignore it for now.
-t is the amount of impulse applied along the tangent of the first point of collision. It only applies to the postsolve callback, and we can ignore it for now.
-]]
-
---beginContact gets called when two fixtures start overlapping (two objects collide).
-function Physics.beginContact(a, b, c)
-	local x,y = c:getNormal()
-	local v = a:getUserData()
-	
-	if y > 0 then
-		v.collidesBlockBottom = true
-	elseif y < 0 then
-		v.collidesBlockTop = true
-	end	
-	
-	if x < 0 then
-		v.collidesBlockLeft = true
-	elseif x > 0 then
-		v.collidesBlockRight = true
-	end
-end
-
---endContact gets called when two fixtures stop overlapping (two objects disconnect).
-function Physics.endContact(a, b, c)
-	local x,y = c:getNormal()
-	local v = a:getUserData()
-	
-end
-
---preSolve is called just before a frame is resolved for a current collision
-function Physics.preSolve(a, b, c)
-
-end
-
---postSolve is called just after a frame is resolved for a current collision.
-function Physics.postSolve(a, b, c, n, t)
-
-end
-
-Physics.world:setCallbacks(Physics.beginContact, Physics.endContact, Physics.preSolve, Physics.postSolve)
 return Physics

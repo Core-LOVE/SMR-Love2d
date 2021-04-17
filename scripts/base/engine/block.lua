@@ -230,7 +230,7 @@ function Block.spawn(id, x, y)
 	
 		-- Physics.add(b, 'static', 'Polygon', t)
 	-- else
-		Physics.add(b, 'static')
+		Physics.add{parent = b, type = 'static'}
 	-- end
 	
 	setmetatable(b,blockMT)

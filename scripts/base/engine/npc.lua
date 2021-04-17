@@ -236,7 +236,7 @@ function NPC.spawn(id, x, y, section, respawn, centered)
 		
 		data = {_settings = {_global = { }}},
 	}
-	Physics.add(n)
+	Physics.add{parent = n}
 	
 	setmetatable(n,npcMT)
 
