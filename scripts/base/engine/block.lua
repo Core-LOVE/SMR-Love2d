@@ -213,25 +213,23 @@ function Block.spawn(id, x, y)
 	}
 	local c = Block.config[b.id]
 	
-	-- if c.floorslope ~= 0 or c.ceilingslope ~= 0 then
-		-- local concept = {
-			-- 1,1, 
-			-- 0,1, 
-			-- 0,0,
-			-- 1,0
-		-- }
-		
-		-- local t = {
-			-- b.x + b.width,			b.y + b.height,
-			-- b.x,					b.y + b.height,
-			-- b.x,					b.y,
-			-- b.x + b.width,			b.y,
-		-- }
-	
-		-- Physics.add(b, 'static', 'Polygon', t)
-	-- else
+	if c.floorslope == 0 and c.ceilingslope == 0 then
 		Physics.add{parent = b, type = 'static'}
-	-- end
+	else
+		-- I don't know how to work with this ._.
+		local verticies = {
+			b.x, b.y,
+			b.x + b.width, b.y + b.height,
+			b.x, b.y + b.height,
+		}
+		
+		Physics.add{
+			shape = 'polygon',
+			verticies = verticies,
+			parent = b, 
+			type = 'static'
+		}
+	end
 	
 	setmetatable(b,blockMT)
 

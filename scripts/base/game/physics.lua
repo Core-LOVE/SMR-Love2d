@@ -10,6 +10,14 @@ function Physics.circle(x, y, r)
 	return HC.circle(x, y, r or 16)
 end
 
+function Physics.point(x, y)
+	return HC.point(x, y)
+end
+
+function Physics.polygon(t)
+	return HC.polygon(unpack(t))
+end
+
 function Physics.add(t)
 	local t = t or {}
 	local o = {}
@@ -24,7 +32,7 @@ function Physics.add(t)
 	
 	t.type = t.type or 'dynamic'
 	
-	if t.shape == 'rect' or t.shape == 'circle' then
+	if t.shape == 'rect' or t.shape == 'circle' or t.shape == 'point' then
 		t.x = t.x or t.parent.x
 		t.y = t.y or t.parent.y
 		
@@ -33,12 +41,18 @@ function Physics.add(t)
 			t.height = t.height or t.parent.height
 			
 			o = Physics.rect(t.x, t.y, t.width, t.height)
-		else
+		elseif t.shape == 'circle' then
 			t.radius = t.radius or t.parent.radius
 			
 			o = Physics.circle(t.x, t.y, t.radius)
+		else
+			o = Physics.point(t.x, t.y)
 		end
 		
+	else
+		t.vertices = t.vertices or {t.parent.x, t.parent.y, t.parent.x + t.parent.width, t.parent.y + t.parent.height}
+		
+		o = Physics.polygon(t.vertices)
 	end
 	
 	o.object_type = t.type
@@ -48,19 +62,22 @@ function Physics.add(t)
 end
 
 function Physics.onCollision(p, shape, delta)
-	print(delta.x, delta.y)
-	
 	p.x = p.x + delta.x
 	p.y = p.y + delta.y
-	if delta.y >= 0 then
+	
+	if delta.y < 0 then
 		p.speedY = 0
 		p.collidesBlockBottom = true
+	elseif delta.y > 0 then
+		p.y = p.y + 1
+		p.speedY = 0.1
+		p.collidesBlockTop = true
 	end
 	
-	if delta.x >= 0 then
-		p.speedX = 0
-		p.collidesBlockRight = true
-	end
+	-- if delta.x > 0 then
+		-- p.speedX = 0
+		-- p.collidesBlockRight = true
+	-- end
 end
 
 function Physics.update(dt)
@@ -73,13 +90,13 @@ function Physics.update(dt)
 				v:moveTo(p.x, p.y) 
 			end
 			
-			if v.object_type == 'dynamic' then
+			if v.object_type == 'dynamic' then	
 				for shape, delta in pairs(HC.collisions(v)) do
 					Physics.onCollision(p, shape, delta)
 				end
 				
 				p.x = p.x + p.speedX
-				p.y = p.y + p.speedY
+				p.y = p.y + p.speedY			
 			end
 		end
 	end

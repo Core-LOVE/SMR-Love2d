@@ -217,7 +217,9 @@ do
 	Graphics.glDraw = function(t)
 		if t.texture == nil then return end
 		
+		if t.sceneCoords then
 		
+		end
 	end
 end
 
