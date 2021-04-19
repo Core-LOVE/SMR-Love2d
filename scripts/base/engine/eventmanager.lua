@@ -83,7 +83,7 @@ do
 
         local library = normalRequire(path)
 
-        if library ~= nil and type(library) == "table" and library.onInitAPI ~= nil then
+        if library ~= nil and type(library) == "table" and type(library.onInitAPI) == 'function' then
             library.onInitAPI()
         end
 

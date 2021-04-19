@@ -217,18 +217,18 @@ function Block.spawn(id, x, y)
 		Physics.add{parent = b, type = 'static'}
 	else
 		-- I don't know how to work with this ._.
-		local verticies = {
-			b.x, b.y,
-			b.x + b.width, b.y + b.height,
-			b.x, b.y + b.height,
-		}
+		-- local verticies = {
+			-- b.x, b.y,
+			-- b.x + b.width, b.y + b.height,
+			-- b.x, b.y + b.height,
+		-- }
 		
-		Physics.add{
-			shape = 'polygon',
-			verticies = verticies,
-			parent = b, 
-			type = 'static'
-		}
+		-- Physics.add{
+			-- shape = 'polygon',
+			-- verticies = verticies,
+			-- parent = b, 
+			-- type = 'static'
+		-- }
 	end
 	
 	setmetatable(b,blockMT)
