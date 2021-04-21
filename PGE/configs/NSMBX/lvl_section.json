@@ -1,0 +1,19 @@
+{
+	"style" : "frame",
+	"title" : "Section Settings",
+	"layout": [{
+			"control": "group",
+			"name": "effects",
+			"title": "Effects",
+			"children": [{
+						"control": "comboBox",
+						"name": "weather",
+						"title": "Weather",
+						"tooltip": "Which weather effect (if any) should be visible in this section.",
+						"elements": ["None", "Rain", "Snow", "Fog", "Sandstorm", "Cinders", "Wisps"],
+						"value-default": 0
+						}
+			]
+    }
+	]
+}

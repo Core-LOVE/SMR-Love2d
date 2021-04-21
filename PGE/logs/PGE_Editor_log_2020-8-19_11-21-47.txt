@@ -1,0 +1,8 @@
+Warning: Wrong splash image: C:/Users/User/.PGE_Project/thextech/PGE/commonGFX/editor_splash.png, using internal default
+Warning: (:0, ): libpng warning: iCCP: known incorrect sRGB profile
+Warning: (:0, ): libpng warning: iCCP: cHRM chunk does not match sRGB
+Warning: (:0, ): libpng warning: IDAT: Extra compressed data
+Warning: Error of the script : 
+Uncaught exception at line 10:
+SyntaxError: Unexpected token `?'
+Warning: Error while loading main.js in test-plugin-with-error, skipping...

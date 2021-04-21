@@ -300,17 +300,19 @@ do
 	
 	
 	function Game.drawHud()
-		-- for k,v in ipairs(Player) do
-			local imgcon = Graphics.sprites.other['Container0'].img
-			
-			local width = love.graphics.getWidth()
-			local height = love.graphics.getHeight()
-			
-			local offset = {x = HUDOverride.offsets.itembox.x, y = HUDOverride.offsets.itembox.y}
-			local itembox = {img = imgcon, x = (width / 2) - (24 + 6), y = 0}
-			
-			Graphics.drawImageWP(itembox.img, itembox.x + offset.x, itembox.y + offset.y)
-		-- end
+		for k,v in ipairs(Camera) do
+			if v.renderToScreen then
+				local imgcon = Graphics.sprites.other['Container0'].img
+				
+				local width = v.width
+				local height = v.height
+				
+				local offset = {x = HUDOverride.offsets.itembox.x, y = HUDOverride.offsets.itembox.y}
+				local itembox = {img = imgcon, x = (width / 2) - (24 + 6), y = 0}
+				
+				Graphics.drawImageWP(itembox.img, itembox.x + offset.x, itembox.y + offset.y, 5)
+			end
+		end
 	end
 	
 	local function sortDrawingQueue(a,b)

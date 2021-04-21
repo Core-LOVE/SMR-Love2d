@@ -1,0 +1,23 @@
+Warning: (:0, ): QObject::connect: signal not found in ImageSelectorMenu
+Warning: (:0, ): QObject::connect: signal not found in ImageSelectorMenu
+Warning: (:0, ): QObject::connect: signal not found in ImageSelectorMenu
+Warning: (:0, ): QObject::connect: signal not found in ImageSelectorMenu
+Warning: (:0, ): libpng warning: iCCP: known incorrect sRGB profile
+Warning: (:0, ): libpng warning: iCCP: cHRM chunk does not match sRGB
+Critical: LoadConfig -> ERROR LOADING C:/Users/User/.PGE_Project/thextech/PGE/configs/NSMBX/items/npc/npc-384.ini: [npc] section is missed!
+Critical: LoadConfig -> ERROR LOADING C:/Users/User/.PGE_Project/thextech/PGE/configs/NSMBX/items/npc/npc-385.ini: [npc] section is missed!
+Critical: LoadConfig -> ERROR LOADING C:/Users/User/.PGE_Project/thextech/PGE/configs/NSMBX/items/npc/npc-386.ini: [npc] section is missed!
+Critical: LoadConfig -> ERROR LOADING C:/Users/User/.PGE_Project/thextech/PGE/configs/NSMBX/items/npc/npc-387.ini: [npc] section is missed!
+Critical: LoadConfig -> ERROR LOADING C:/Users/User/.PGE_Project/thextech/PGE/configs/NSMBX/items/npc/npc-388.ini: [npc] section is missed!
+Warning: LoadConfig -> Not all NPCs loaded! Total: 388, Loaded: 383)
+Warning: (:0, ): Failed to initialize LunaLua capabilities!
+Warning: Error of the script : 
+Uncaught exception at line 10:
+SyntaxError: Unexpected token `?'
+Warning: Error while loading main.js in test-plugin-with-error, skipping...
+Critical: Error! *.INI configs not loaded
+Warning: (:0, ): QString::arg: Argument missing: ���������� ������� ����:
+���������������� ����� �������� � ��������., C:/Users/User/.PGE_Project/thextech/PGE/configs/NSMBX/
+Warning: (:0, ): QAbstractItemModel::endInsertRows:  Invalid index ( 200 , 0 ) in model ElementsListModel(0x19731310)
+Warning: (:0, ): QAbstractItemModel::endInsertRows:  Invalid index ( 21 , 0 ) in model ElementsListModel(0x19731310)
+Warning: (:0, ): QAbstractItemModel::endInsertRows:  Invalid index ( 196 , 0 ) in model ElementsListModel(0x19731310)

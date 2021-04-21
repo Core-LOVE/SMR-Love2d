@@ -1,0 +1,29 @@
+{
+	"style" : "tree",
+	"title" : "Level Settings",
+	"layout": [
+			{
+				"control": "group",
+				"name": "timer",
+				"title": "Level Timer",
+				"children": [{
+								"control": "checkbox",
+								"name": "time_enable",
+								"title": "Enable",
+								"tooltip": "When checked, the timer will be active in this level.",
+								"text-visible": false,
+								"value-default": false
+							},
+							{
+								"control": "spinBox",
+								"type": "int",
+								"name": "time",
+								"title": "Time",
+								"tooltip": "The length of the timer, in seconds. When the timer hits 0, the player will be killed.",
+								"value-default": 500,
+								"value-min": 1,
+								"value-max": 999999999
+							}]
+			}
+	]
+}

@@ -51,10 +51,17 @@ require("scripts/base/error_handler")
 EventManager = require("scripts/base/engine/eventmanager")
 -- EventManager overwrites require, so we can use a shorter path after
 
+push = require 'maid64'
 
 require("const")
 require("io") 
 require("math")
+
+local gameWidth, gameHeight = 800, 600 --fixed game resolution
+local windowWidth, windowHeight = 800, 600
+
+push.setup(gameWidth, gameHeight)
+love.window.setMode(gameWidth, gameHeight, {resizable = true})
 
 ini_parser     = require("ini_parser")
 txt_parser     = require("txt_parser")
@@ -73,6 +80,8 @@ SFX            = require("sfx")
 Misc 		   = require("engine/misc")
 Window         = require("engine/window")
 Level 		   = require("engine/level")
+Base64		   = require("base64")
+Interprocess   = require("game/interprocessing")
 
 local levelParser = require("engine/levelparser")
 local worldParser = require("engine/map/worldparser")
@@ -114,9 +123,11 @@ local function load_objects()
 	Scenery = require("engine/map/scenery")
 end
 
-function love.run()
-	if love.load then love.load(love.arg.parseGameArguments(arg), arg) end
- 
+function love.run()	
+	if love.load then
+		love.load(love.arg.parseGameArguments(arg), arg)
+	end
+
 	-- We don't want the first frame's dt to include time taken by love.load.
 	if love.timer then love.timer.step() end
  
@@ -161,28 +172,28 @@ function love.run()
 	end
 end
 
-function love.load()
-	print("Program name", arg[0])
-	print("Arguments:")
-	for l = 1, #arg do
-		print(l," ",arg[l])
-	end
-	
-	--Audio.loadSounds()
+function love.load(arg)
+	Audio.loadSounds()
 	Graphics.loadUi()
 	love.graphics.setDefaultFilter("nearest", "nearest")
 	Audio.loadSounds()
-	--Graphics.loadGraphics(false)
+	-- Graphics.loadGraphics(false)
 	load_objects()
+	Interprocess(arg)
 
 	-- temp
 	levelParser.load("_test levels/a couple blocks.lvlx")
-	-- worldParser.load("_test levels/a couple tiles.wldx")
 end
 
 local some_img = Graphics.loadImage("graphics/effect-5.png")
 
 function love.draw()
+	-- local w, h = love.graphics.getWidth(), love.graphics.getHeight()
+	-- local scale = math.min(w / gameWidth, (h / 600) )
+	-- scale = math.floor(scale)
+	-- love.graphics.translate(
+	-- love.graphics.scale(scale, scale)
+	
 	EventManager.callEvent("onDraw")
 
 	if not isOverworld then
@@ -202,7 +213,7 @@ function love.draw()
 		texture = some_img,
 	}
 	
-	collectgarbage()
+	collectgarbage()	
 end
 
 function love.update(dt)
@@ -250,4 +261,8 @@ function love.keypressed(key,scancode,isrepeat)
 	if key == "f12" and not isrepeat then
 		screenshotter.takeScreenshot()
 	end
+end
+
+function love.resize(w, h)
+	push.resize(w, h)
 end

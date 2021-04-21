@@ -46,7 +46,7 @@ function Camera:draw()
     love.graphics.setCanvas(self.canvas)
 
     love.graphics.clear()
-
+	
     for _,draw in ipairs(Graphics.drawingQueue) do
         if draw.internalDrawFunction ~= nil then
             draw.internalDrawFunction(draw.args,self)
@@ -55,8 +55,13 @@ function Camera:draw()
 
     love.graphics.setCanvas(nil)
 
+	local p = 0
+	if push.scaler ~= 1 then
+		p = 0.5
+	end
+	
     if self.renderToScreen then
-        love.graphics.draw(self.canvas,self.renderX,self.renderY)
+        love.graphics.draw(self.canvas,self.renderX + push.x + p,self.renderY + push.y + p, 0, push.scaler)
     end
 end
 

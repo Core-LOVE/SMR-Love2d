@@ -102,13 +102,13 @@ function Graphics.loadUi()
 				for n = v.first, v.max do
 					local id = tostring(n)
 					Graphics.sprites.other[key..id] = {}
-					Graphics.sprites.other[key..id].img = love.graphics.newImage("graphics/ui/"..key..id..".png")
+					Graphics.sprites.other[key..id].img = Graphics.loadImage("graphics/ui/"..key..id..".png")
 					print("Graphics.sprites.other["..key..id.."] = graphics/ui/"..key..id..".png")
 				end
 			end
 		else
 			Graphics.sprites.other[key] = {}
-			Graphics.sprites.other[key].img = love.graphics.newImage("graphics/ui/"..key..".png")
+			Graphics.sprites.other[key].img = Graphics.loadImage("graphics/ui/"..key..".png")
 			print("Graphics.sprites.other["..key.."] = graphics/ui/"..key..".png")
 		end
 	end

@@ -1,0 +1,121 @@
+--------Platform Game Engine----------
+This is a part of PGE Project which provides gameplay core implementation
+allows you to play levels and episodes.
+
+===Contents===
+- Requirements
+- Adding Episodes
+- Adding Levels
+- Defautl controlls
+- Engine reserved keys and key combinations
+     - Level specific commands
+     - World specific commands
+     - Common commands
+
+==============================================
+Requirements:
+==============================================
+- Operating system:
+  + Linux x86/x64 kernel version 2.6 and higher
+  + Windows XP and higher
+  + Mac OS X 10.7 and higher (Intel x64, Intel x86 and PowerPC are not supported!)
+- OpenGL 3.x compatible video card with 128 MB Video RAM and higher
+- 512 MB RAM
+
+==============================================
+Adding Episodes
+==============================================
+To add episode to be able play it with engine, find the "worlds" folder
+=== Linux ===
+On the UNIX-like operating system worlds folder can be found at home in the special folder
+        ~/.PGE_Project/worlds
+Note: If you have portable version, "worlds" folder will be in same folder with pge_engine application file
+
+=== Windows ===
+On the Windows Operating system it will have this path:
+        %UserProfile%\.PGE_Project\worlds
+Note: If you have portable version, "worlds" folder will be in same folder with pge_engine application file
+
+=== Mac OS X ===
+On the Mac OS X worlds folder always locating in the special folder:
+        ~/Library/Application Support/PGE Project
+Note: you will found a shortcut "Data folder" in the folder with PGE installation since you will launch PGE apps first time.
+
+==============================================
+Adding Levels
+==============================================
+Levels which are listing in the "Play level" menu are must be placed in the "worlds" folder without subfdolers
+while episodes are in their subfolders
+
+==============================================
+Note: If you want have everything in SAME folder like in the SMBX, create "pge_engine.ini" file with next contents:
+----------------------------
+[Main]
+force-portable=true
+----------------------------
+And everything: worlds, screenshots, logs will be stored in same folder where pge_engine application is located.
+[will not work with Mac version. Use "Data Directory" symlink to get data folder!]
+==============================================
+
+You should be up to date with any configuration packages,
+there are in dev-state: I fixing old mistakes, misses, adding new important features which
+should be presented in your ini files of each config pack. Else you may get wrongs and more bugs
+because wrong config settings.
+
+
+==============================================
+Defautl controlls: <can be cusetomized in the controllers menu>
+==============================================
+Arrows:
+--------------------
+left-right - walk
+Up/Down - enter into door/pipe
+--------------------
+Z - (jump) / enter to level from world map [on German keyboard will work Y key instead by unknown for me reasons :P]
+X - (run)
+A - (alt-jump) (Temporary, fly up, use it to get inaccessible heights without vines!)
+S - (alt-run) (Temporary, tail-whipping to destroy any blocks over face,
+    S+UP - destroy blocks over head,
+    S+Down - destroy blocks under self)
+
+==============================================
+  Engine reserved keys and key combinations
+==============================================
+Ctrl+F - Toggle fullscreen mode
+
+"~" - opens text input box in the levels where you can type special commands:
+------------------
+==Level specific commands:==
+    donthurtme  - enable/disable god mode (player will don't get damage from dangerouse surfaces and will dont burn in lava)
+    iamsuperman - player has ability to fly up via alt-jump key
+    chucknorris - player via alt-run key will be able destroy any nearest object except BGO's, warps and other playable characters
+    iwishexitas X - exit from level with code X (replace X with unsigned integer
+            (usually from 1 to 8. Exit code hints you can take from a world map editor))
+    takesecretkeychain - enable/disable debug keys
+
+==World specific commands:==
+ illparkwhereiwant - allows walking anywhere on world map
+
+==Common commands==
+    redigitiscool - spawns a dummy message box, doing nothing. Try to type same command in the SMBX engine!
+    wohlstandiscool, kevsoftiscool, raocowiscool, joeyiscool - same as redigitiscool, but with another messages.
+----------------------------------------------------------------------------------------------------------
+Enter, Esc - pause/resume game, show pause menu
+
+F2 - enable/disable drawing a debug rectangles of physical engine (render all hitboxes)
+F3 - enable/disable printing of debug information
+
+F12 - take screenshot (will be saved in the 'screenshots' folder which will be in PGE folder or in the %UserProfile%\.PGE_Project).
+Screenshots will be written into PNG format and will have timedate based filename.
+
+=======Debug keys=(disabled by default, to enable them, press "~" key and type 'takesecretkeychain')=======
+F5 - pause/resume physical loopsteps. Used while collisions are debugged
+F6 - enable slow mode of physical loopsteps. Everything will go slow. Used while collisions are debugged.
+
+1, 2, 3, 4, 5 degits keys - spawn something effect (made temporary while effects system are debugged)
+7, 8, 9, 0 - Toggle playable character and it's state: 
+ - 7 decrease character ID
+ - 8 increase character ID
+ - 9 decrease character state ID
+ - 0 increase character state ID
+

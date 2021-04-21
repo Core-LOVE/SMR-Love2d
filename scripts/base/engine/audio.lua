@@ -4,26 +4,32 @@ sounds.musics = {}
 sounds.musics.world = {}
 sounds.musics.level = {}
 sounds.musics.special = {}
-
-local mt = {__index = function(_,k)
+local sfx = ini_parser.load("sounds.ini")
 	
+local mt = {__index = function(t,k)
+	t[k] = {}
+	t[k].name = sfx['sound-'..tostring(k)].name
+	t[k].sfx = love.audio.newSource("sound/"..sfx['sound-'..tostring(k)].file, 'static')
+
+	return t[k]
 end}
+setmetatable(sounds.sounds, mt)
 
 function sounds.loadSounds()
-	if ini_parser == nil then return end
+	-- if ini_parser == nil then return end
 	
-	local mx = 102
-	local sfx = ini_parser.load("sounds.ini")
+	-- local mx = 102
+	-- local sfx = ini_parser.load("sounds.ini")
 	
-	mx = sfx['sound-main'].total
-	for i = 1, mx do
-		if i ~= 98 then
-			sounds.sounds[i] = {}
-			sounds.sounds[i].name = sfx['sound-'..tostring(i)].name
-			sounds.sounds[i].sfx = love.audio.newSource("sound/"..sfx['sound-'..tostring(i)].file, 'static')
-			print("sound/"..sfx['sound-'..tostring(i)].file)
-		end
-	end
+	-- mx = sfx['sound-main'].total
+	-- for i = 1, mx do
+		-- if i ~= 98 then
+			-- sounds.sounds[i] = {}
+			-- sounds.sounds[i].name = sfx['sound-'..tostring(i)].name
+			-- sounds.sounds[i].sfx = love.audio.newSource("sound/"..sfx['sound-'..tostring(i)].file, 'static')
+			-- print("sound/"..sfx['sound-'..tostring(i)].file)
+		-- end
+	-- end
 	
 	-- temp
 	-- local w_mx = 17

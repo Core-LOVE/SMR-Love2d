@@ -1,0 +1,12 @@
+Warning: (:0, ): QObject::connect: signal not found in ImageSelectorMenu
+Warning: (:0, ): QObject::connect: signal not found in ImageSelectorMenu
+Warning: (:0, ): QObject::connect: signal not found in ImageSelectorMenu
+Warning: (:0, ): QObject::connect: signal not found in ImageSelectorMenu
+Warning: (:0, ): libpng warning: iCCP: known incorrect sRGB profile
+Warning: (:0, ): libpng warning: iCCP: cHRM chunk does not match sRGB
+Warning: (:0, ): Failed to initialize LunaLua capabilities!
+Warning: Error of the script : 
+Uncaught exception at line 10:
+SyntaxError: Unexpected token `?'
+Warning: Error while loading main.js in test-plugin-with-error, skipping...
+Warning: (:0, ): "Failed to start TheXTech!D:/Games/MapMaker/run.batwith args--interprocessing --magic-hand --never-pause --num-players 1 --player1 c1;s1;m0;t0 --player2 c1;s1;m0;t0 --render hw"
