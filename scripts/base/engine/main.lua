@@ -1,3 +1,4 @@
+
 do
 	local i = love.graphics.newImage
 	love.graphics.newImage = function(path)
@@ -93,7 +94,7 @@ do
 	love.graphics.present()
 end
 
-FRAMES_PER_SECOND = 64.102
+FRAMES_PER_SECOND = 65
 
 local function load_objects()
 	-- Level
@@ -173,6 +174,8 @@ function love.run()
 end
 
 function love.load(arg)
+	love.filesystem.write("savegame.txt", 'hey')
+	
 	Audio.loadSounds()
 	Graphics.loadUi()
 	love.graphics.setDefaultFilter("nearest", "nearest")

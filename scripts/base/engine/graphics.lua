@@ -114,6 +114,10 @@ function Graphics.loadUi()
 	end
 end
 
+function Graphics.custom()
+
+end
+
 Graphics.drawingQueue = {}
 
 -- Basic rendering functions

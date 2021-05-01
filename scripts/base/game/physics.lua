@@ -61,7 +61,11 @@ function Physics.add(t)
 	return o
 end
 
-function Physics.onCollision(p, shape, delta)
+function Physics.onCollision(i, p, shape, delta)
+	-- if not shape:collidesWith(i) then
+		-- p.coll
+	-- end
+								
 	p.x = p.x + delta.x
 	p.y = p.y + delta.y
 	
@@ -72,12 +76,18 @@ function Physics.onCollision(p, shape, delta)
 		p.y = p.y + 1
 		p.speedY = 0.1
 		p.collidesBlockTop = true
+	-- else
+		-- p.collidesBlockBottom = false
+		-- p.collidesBlockTop = false
 	end
 	
-	-- if delta.x > 0 then
-		-- p.speedX = 0
-		-- p.collidesBlockRight = true
-	-- end
+	if delta.x ~= 0 then
+		if p.__type == "NPC" then
+			p.turnAround = true
+		end
+	end
+	
+	i:moveTo(p.x, p.y) 
 end
 
 function Physics.update(dt)
@@ -86,17 +96,25 @@ function Physics.update(dt)
 		
 		if v then
 			local p = v.object_parent
-			if p.x and p.y then
-				v:moveTo(p.x, p.y) 
-			end
+
+			local col = false
 			
-			if v.object_type == 'dynamic' then	
+			local x,y = p.x, p.y
+			x = x + p.speedX
+			y = y + p.speedY
+			
+			p.x = x
+			p.y = y
+			
+			v:moveTo(x, y)
+			
+			if v.object_type == 'dynamic' then
 				for shape, delta in pairs(HC.collisions(v)) do
-					Physics.onCollision(p, shape, delta)
+					p.x = p.x + delta.x
+					p.y = p.y + delta.y
+					
+					v:moveTo(p.x, p.y)		
 				end
-				
-				p.x = p.x + p.speedX
-				p.y = p.y + p.speedY			
 			end
 		end
 	end
