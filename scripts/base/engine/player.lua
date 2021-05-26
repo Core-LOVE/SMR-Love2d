@@ -278,6 +278,8 @@ local function physics(v)
 			v.slidingSlope = false
 		end
 	end
+	
+	Physics.applyCollisions(v)
 end
 
 local newControls
@@ -357,7 +359,7 @@ function Player.spawn(character, x, y)
 		end
 	end
 	
-	Physics.add{parent = p}
+	Physics.add(p)
 	
 	Player[#Player + 1] =  p
 	return p

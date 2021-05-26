@@ -10,9 +10,35 @@ BLOCK_MAX_ID = 1000
 
 Block.config = {}
 Block.script = {}
+
 Block.frame = {}
 Block.framecount = {}
 
+Block.configs = {
+	sizable = false,
+	connecting = false,
+	playerpassthrough = false,
+	npcpassthrough = false,
+	passthrough = false,
+	floorslope = 0,
+	ceilingslope = 0,
+	width = 32,
+	height = 32,
+	semisolid = false,
+	lava = false,
+	bumpable = false,
+	smashable = false,
+	destroyeffect = 1,
+	explodable = false,
+	hammer = false,
+	noicebrick = false,
+	bounceside = false,
+	diggable = false,
+	frames = 1,
+	framespeed = 8,
+	foreground = false,
+	priority = nil,
+}
 
 Block.bumped = {}
 setmetatable(Block.bumped, {__call = function(self)
@@ -25,46 +51,30 @@ setmetatable(Block.bumped, {__call = function(self)
 	return ret
 end})
 
+setmetatable(Block.config, {__index = function(t, i)
+	t[i] = Block.configs
 
-for i = 1,BLOCK_MAX_ID do
-	Block.config[i] = {
-		sizable = false,
-		connecting = false,
-		playerpassthrough = false,
-		npcpassthrough = false,
-		passthrough = false,
-		floorslope = 0,
-		ceilingslope = 0,
-		width = 32,
-		height = 32,
-		semisolid = false,
-		lava = false,
-		bumpable = false,
-		smashable = false,
-		destroyeffect = 1,
-		explodable = false,
-		hammer = false,
-		noicebrick = false,
-		bounceside = false,
-		diggable = false,
-		frames = 1,
-		framespeed = 8,
-		foreground = false,
-		priority = nil,
-	}
-	Block.frame[i] = 0
-	Block.framecount[i] = 0
-	
-	if love.filesystem.getInfo("scripts/blocks/block-"..tostring(i)..".lua") then
-		Block.script[i] = require("scripts/blocks/block-"..tostring(i))
-	end
-	
-	if love.filesystem.getInfo("config/block/block-"..tostring(i)..".txt") then
-		local BlockTxt = txt_parser.load("config/block/block-"..tostring(i)..".txt")
+	if love.filesystem.getInfo("config/block/block-".. i ..".txt") then
+		local BlockTxt = txt_parser.load("config/block/block-".. i ..".txt")
 		for k,v in pairs(BlockTxt) do
-			Block.config[i][k] = v
+			t[i][k] = v
 		end
 	end
+	
+	return t[i]
+end})
+
+setmetatable(Block.script, {__index = function(t, i)
+	if love.filesystem.getInfo("scripts/blocks/block-"..tostring(i)..".lua") then
+		t[i] = require("scripts/blocks/block-"..tostring(i))
+	
+		return t[i]	
+	end
+end})
+
+for i = 1,BLOCK_MAX_ID do
+	Block.frame[i] = 0
+	Block.framecount[i] = 0
 end
 
 local function physics(v)
@@ -214,7 +224,7 @@ function Block.spawn(id, x, y)
 	local c = Block.config[b.id]
 	
 	if c.floorslope == 0 and c.ceilingslope == 0 then
-		Physics.add{parent = b, type = 'static'}
+		Physics.add(b, {type = 'static'})
 	else
 		-- I don't know how to work with this ._.
 		-- local verticies = {

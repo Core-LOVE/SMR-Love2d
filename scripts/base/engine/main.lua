@@ -222,7 +222,6 @@ end
 function love.update(dt)
 	if isPaused then return end
 	
-	Physics.update(dt)
 	EventManager.callEvent("onTick")
 
 	Player.updateKeys()

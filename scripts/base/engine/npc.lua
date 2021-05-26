@@ -8,19 +8,20 @@ NPC.config = require("engine/npcConfig")
 
 -- Load npc-n.lua files
 NPC.script = {}
+setmetatable(NPC.script, {__index = function(t, id)
+	if love.filesystem.getInfo("scripts/npcs/npc-".. id.. ".lua") then
+		NPC_ID = id
+
+		t[id] = require("scripts/npcs/npc-".. id)
+
+		NPC_ID = nil
+		
+		return t[id]
+	end
+end})
 
 function NPC.load()
-	NPC.config.load()
 
-	for id = 1,NPC_MAX_ID do
-		if love.filesystem.getInfo("scripts/npcs/npc-".. id.. ".lua") then
-			NPC_ID = id
-
-			NPC.script[id] = require("scripts/npcs/npc-".. id)
-
-			NPC_ID = nil
-		end
-	end
 end
 
 
@@ -236,7 +237,7 @@ function NPC.spawn(id, x, y, section, respawn, centered)
 		
 		data = {_settings = {_global = { }}},
 	}
-	Physics.add{parent = n}
+	Physics.add(n)
 	
 	setmetatable(n,npcMT)
 
