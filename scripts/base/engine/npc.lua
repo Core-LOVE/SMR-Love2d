@@ -5,6 +5,7 @@ local npcManager
 NPC_MAX_ID = 1000
 
 NPC.config = require("engine/npcConfig")
+NPC.config.load()
 
 -- Load npc-n.lua files
 NPC.script = {}

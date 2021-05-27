@@ -8,7 +8,7 @@ local Block = {__type="Block"}
 BLOCK_MAX_ID = 1000
 
 
-Block.config = {}
+Block.config = require("engine/blockConfig")
 Block.script = {}
 
 Block.frame = {}
@@ -37,7 +37,6 @@ Block.configs = {
 	frames = 1,
 	framespeed = 8,
 	foreground = false,
-	priority = nil,
 }
 
 Block.bumped = {}
@@ -49,19 +48,6 @@ setmetatable(Block.bumped, {__call = function(self)
 	end
 	
 	return ret
-end})
-
-setmetatable(Block.config, {__index = function(t, i)
-	t[i] = Block.configs
-
-	if love.filesystem.getInfo("config/block/block-".. i ..".txt") then
-		local BlockTxt = txt_parser.load("config/block/block-".. i ..".txt")
-		for k,v in pairs(BlockTxt) do
-			t[i][k] = v
-		end
-	end
-	
-	return t[i]
 end})
 
 setmetatable(Block.script, {__index = function(t, i)

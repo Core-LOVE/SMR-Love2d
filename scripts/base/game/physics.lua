@@ -61,13 +61,13 @@ local function col(v, delta)
 		v.collidesBlockRight = false
 	end
 	
-	-- if delta.y ~= 0 then
-		-- v.speedY = 0
-	-- end
+	if delta.y ~= 0 then
+		v.speedY = 0
+	end
 	
-	-- if delta.x ~= 0 then
-		-- v.speedX = 0
-	-- end
+	if delta.x ~= 0 then
+		v.speedX = 0
+	end
 	
 	v.object:moveTo(v.x, v.y)
 	
@@ -95,7 +95,7 @@ function Physics.applyCollisions(v)
 	v.x = v.x + v.speedX
 	v.y = v.y + v.speedY
 	
-	o:moveTo(v.x, v.y)
+	o:moveTo(v.x + v.width / 2, v.y + v.height / 2)
 	
 	Physics.onCollision(v,b)
 end

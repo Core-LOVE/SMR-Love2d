@@ -211,21 +211,5 @@ function npcConfig.addGlobalProperty(name, settings)
     properties[name] = settings
 end
 
-local ncMt = {
-	__index = function(t, id)
-        local path = "config/npc/npc-".. id.. ".txt"
-
-        if love.filesystem.getInfo(path) then
-			 local parsed = txt_parser.load(path)
-			 
-            for k,v in pairs(parsed) do
-                t[id][k] = v
-            end
-		end
-		
-		return t[id]
-	end
-}
-
 
 return npcConfig
